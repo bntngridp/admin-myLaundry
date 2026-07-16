@@ -150,6 +150,103 @@ modernStyles.innerHTML = `
         color: #ffffff !important;
         border-color: #dc3545 !important;
     }
+
+    /* Auth Pages Styling Overrides */
+    body.bg-login-password-register {
+        background: radial-gradient(circle at 10% 20%, rgba(235, 248, 253, 0.5) 0%, rgba(255, 255, 255, 1) 90%) !important;
+        min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+    #layoutAuthentication {
+        min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+    .div-logo {
+        text-align: center !important;
+        margin-top: 40px !important;
+        margin-bottom: 10px !important;
+    }
+    .logo-laundry {
+        width: 9rem !important;
+        height: auto !important;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.02)) !important;
+    }
+    .bg-login-password-register .card {
+        border: none !important;
+        border-radius: 20px !important;
+        box-shadow: 0 15px 35px rgba(11, 23, 57, 0.05) !important;
+        background-color: #ffffff !important;
+        margin-bottom: 40px !important;
+    }
+    .bg-login-password-register .card-header {
+        background-color: transparent !important;
+        border-bottom: none !important;
+        padding: 35px 35px 10px 35px !important;
+        text-align: center !important;
+    }
+    .bg-login-password-register .card-header h3 {
+        font-weight: 700 !important;
+        color: #0B1739 !important;
+        font-size: 1.75rem !important;
+        letter-spacing: -0.02em !important;
+    }
+    .bg-login-password-register .card-body {
+        padding: 10px 35px 35px 35px !important;
+    }
+    .bg-login-password-register .card-footer {
+        background-color: transparent !important;
+        border-top: 1px solid #f1f5f9 !important;
+        padding: 20px 35px !important;
+    }
+    .bg-login-password-register .form-control {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 14px 16px !important;
+        font-size: 0.9rem !important;
+        color: #1e293b !important;
+        background-color: #f8fafc !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    .bg-login-password-register .form-control:focus {
+        border-color: #0d6efd !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
+    }
+    .bg-login-password-register .form-floating > label {
+        padding-left: 16px !important;
+        color: #94a3b8 !important;
+    }
+    .bg-login-password-register .btn-primary {
+        width: 100% !important;
+        padding: 12px 24px !important;
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: #0d6efd !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    .bg-login-password-register .btn-primary:hover {
+        background-color: #0b5ed7 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 18px rgba(13, 110, 253, 0.25) !important;
+    }
+    .bg-login-password-register a.small {
+        color: #0d6efd !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        transition: color 0.15s ease !important;
+    }
+    .bg-login-password-register a.small:hover {
+        color: #0b5ed7 !important;
+        text-decoration: underline !important;
+    }
 `;
 document.head.appendChild(modernStyles);
 
