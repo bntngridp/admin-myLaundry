@@ -248,106 +248,107 @@ modernStyles.innerHTML = `
         text-decoration: underline !important;
     }
 
-    /* ========================================== */
-    /* CUSTOM SIDEBAR TOGGLE OVERRIDES (ROCK SOLID) */
-    /* ========================================== */
-    
-    /* Sidebar goes all the way to the top */
-    .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
-        z-index: 1040 !important;
-        height: 100vh !important;
-        top: 0 !important;
+    /* =============================================
+     * SIDEBAR & TOPNAV LAYOUT
+     * Uses direct element IDs — no dependency on
+     * class-based cascades from the original template.
+     * ============================================= */
+
+    /* Sidebar: fixed, full height, always on top */
+    #layoutSidenav_nav {
         position: fixed !important;
-        transition: transform 0.15s ease-in-out !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        width: 225px !important;
+        z-index: 1040 !important;
+        transition: transform 0.2s ease-in-out !important;
+        transform: translateX(0);
     }
-    .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+    #layoutSidenav_nav .sb-sidenav {
         padding-top: 0 !important;
         background-color: #ffffff !important;
         border-right: 1px solid #f1f5f9 !important;
         height: 100vh !important;
+        overflow-y: auto !important;
     }
-    .sb-sidenav-dark {
+    .sb-sidenav-dark, .sb-sidenav-menu {
         background-color: #ffffff !important;
     }
-    .sb-sidenav-menu {
-        background-color: #ffffff !important;
-    }
-    
-    /* Navbar styling and smooth transitions */
-    .sb-nav-fixed .sb-topnav {
-        z-index: 1039 !important;
+
+    /* Topnav: fixed across the top */
+    .sb-topnav {
+        position: fixed !important;
+        top: 0 !important;
         left: 0 !important;
-        width: 100% !important;
+        right: 0 !important;
+        z-index: 1039 !important;
         background-color: #ffffff !important;
         border-bottom: 1px solid #f1f5f9 !important;
         box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.02) !important;
-        transition: padding-left 0.15s ease-in-out !important;
+        transition: padding-left 0.2s ease-in-out !important;
     }
 
-    /* Logo in navbar visibility toggles */
+    /* Content area: shifted right by sidebar width */
+    #layoutSidenav_content {
+        margin-left: 225px !important;
+        transition: margin-left 0.2s ease-in-out !important;
+        padding-top: 56px !important;
+    }
+
+    /* Hamburger button */
+    #sidebarToggle {
+        z-index: 1050 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+
+    /* Logo in navbar: hidden by default (sidebar shows logo) */
     .sb-topnav .logo-collapsed {
         display: none !important;
     }
-    .sb-sidenav-toggled .sb-topnav .logo-collapsed {
+
+    /* =============================================
+     * TOGGLE STATE: body class 'sb-sidenav-toggled'
+     * ============================================= */
+    body.sb-sidenav-toggled #layoutSidenav_nav {
+        transform: translateX(-225px) !important;
+    }
+    body.sb-sidenav-toggled #layoutSidenav_content {
+        margin-left: 0 !important;
+    }
+    body.sb-sidenav-toggled .sb-topnav {
+        padding-left: 0 !important;
+    }
+    body.sb-sidenav-toggled .sb-topnav .logo-collapsed {
         display: inline-block !important;
     }
 
-    /* Ensure hamburger toggle is always clickable and above sidebar/overlays */
-    #sidebarToggle {
-        position: relative !important;
-        z-index: 1050 !important;
-        pointer-events: auto !important;
-    }
-
-    /* Desktop View (width >= 992px) */
+    /* Desktop default: sidebar visible, topnav pushed right */
     @media (min-width: 992px) {
-        /* Default: Sidebar Open */
-        .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
-            transform: translateX(0) !important;
-        }
-        .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+        .sb-topnav {
             padding-left: 225px !important;
-            margin-left: 0 !important;
-            transition: padding-left 0.15s ease-in-out !important;
-        }
-        .sb-nav-fixed .sb-topnav {
-            padding-left: 225px !important;
-        }
-        
-        /* Toggled: Sidebar Closed */
-        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
-            transform: translateX(-225px) !important;
-        }
-        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-            padding-left: 0 !important;
-        }
-        body.sb-sidenav-toggled .sb-topnav {
-            padding-left: 0 !important;
         }
     }
 
-    /* Mobile View (width < 992px) */
+    /* Mobile default: sidebar hidden, full-width content */
     @media (max-width: 991.98px) {
-        /* Default: Sidebar Closed */
-        .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+        #layoutSidenav_nav {
             transform: translateX(-225px) !important;
         }
-        .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-            padding-left: 0 !important;
+        #layoutSidenav_content {
             margin-left: 0 !important;
+        }
+        .sb-topnav {
+            padding-left: 0 !important;
         }
         .sb-topnav .logo-collapsed {
             display: inline-block !important;
         }
-        
-        /* Toggled: Sidebar Open (overlay) */
-        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+        /* Mobile toggled: sidebar slides in as overlay */
+        body.sb-sidenav-toggled #layoutSidenav_nav {
             transform: translateX(0) !important;
         }
-    }
-    /* Reset Web Component wrapper elements to display: contents so they don't break flex layouts */
-    admin-sidebar, admin-navbar {
-        display: contents !important;
     }
 `;
 document.head.appendChild(modernStyles);
@@ -527,66 +528,85 @@ customElements.define('admin-footer', AdminFooter);
     }
 })();
 
-// Penanganan interaktif untuk simulasi Login dan Logout
-function initializeInteractions() {
-    // Hamburger Toggle menggunakan EVENT DELEGATION
-    document.addEventListener('click', (event) => {
-        const toggleBtn = event.target.closest('#sidebarToggle, #sidebarCloseMobile');
-        if (toggleBtn) {
-            event.preventDefault();
-            console.log('Sidebar toggle clicked via closest selector!');
-            
-            // Toggle body class
-            document.body.classList.toggle('sb-sidenav-toggled');
-            const isToggled = document.body.classList.contains('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', isToggled);
-            
-            console.log('Toggled class. Current state of toggled:', isToggled);
+// =============================================
+// SIDEBAR TOGGLE — Bulletproof Implementation
+// Uses MutationObserver to watch for the toggle
+// button rendered inside Web Components, then
+// attaches onclick directly so no event delegation
+// chain can break it.
+// =============================================
+function attachSidebarToggle() {
+    const toggleSidebar = () => {
+        document.body.classList.toggle('sb-sidenav-toggled');
+        const isCollapsed = document.body.classList.contains('sb-sidenav-toggled');
+        localStorage.setItem('sb|sidebar-toggle', String(isCollapsed));
+    };
 
-            // Tampilkan feedback visual sementara di layar (membantu diagnosis manual)
-            const feedback = document.createElement('div');
-            feedback.style.position = 'fixed';
-            feedback.style.bottom = '20px';
-            feedback.style.right = '20px';
-            feedback.style.padding = '8px 16px';
-            feedback.style.backgroundColor = '#0B1739';
-            feedback.style.color = '#ffffff';
-            feedback.style.borderRadius = '30px';
-            feedback.style.fontSize = '12px';
-            feedback.style.zIndex = '99999';
-            feedback.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-            feedback.innerHTML = `Sidebar toggled: <b>${isToggled ? 'CLOSED/COLLAPSED' : 'OPEN'}</b>`;
-            document.body.appendChild(feedback);
-            setTimeout(() => {
-                feedback.remove();
-            }, 1200);
+    // Restore saved state
+    if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+        document.body.classList.add('sb-sidenav-toggled');
+    }
+
+    // Attach to buttons if they already exist
+    const tryAttach = () => {
+        const mainToggle = document.getElementById('sidebarToggle');
+        const closeToggle = document.getElementById('sidebarCloseMobile');
+
+        if (mainToggle && !mainToggle.dataset.toggleBound) {
+            mainToggle.dataset.toggleBound = 'true';
+            mainToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleSidebar();
+            });
         }
-    });
+        if (closeToggle && !closeToggle.dataset.toggleBound) {
+            closeToggle.dataset.toggleBound = 'true';
+            closeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleSidebar();
+            });
+        }
+    };
 
-    // 1. Tangani Klik Tombol "Masuk" di login.html
+    // Run immediately in case elements are already in the DOM
+    tryAttach();
+
+    // Watch for Web Components rendering their content asynchronously
+    const observer = new MutationObserver(() => {
+        tryAttach();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// =============================================
+// LOGIN / LOGOUT INTERACTIONS
+// =============================================
+function initializeAuthInteractions() {
+    // Login button
     const loginButton = document.getElementById('btn-masuk');
     if (loginButton) {
         loginButton.addEventListener('click', (e) => {
             e.preventDefault();
-            // Set token simulasi di localStorage
             localStorage.setItem('admin_token', 'mylaundry-admin-mock-token-12345');
             window.location.href = 'dashboard.html';
         });
     }
 
-    // 2. Tangani Klik Tombol "Keluar" di Sidebar & Navbar Dropdown
-    const logoutButtons = document.querySelectorAll('a[href="login.html"]');
-    logoutButtons.forEach(btn => {
+    // Logout buttons
+    document.querySelectorAll('a[href="login.html"]').forEach(btn => {
         btn.addEventListener('click', () => {
-            // Hapus token session saat logout
             localStorage.removeItem('admin_token');
         });
     });
 }
 
-// Jalankan inisialisasi secara aman, baik saat DOM masih loading maupun sudah selesai
+// Run as soon as possible
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeInteractions);
+    document.addEventListener('DOMContentLoaded', () => {
+        attachSidebarToggle();
+        initializeAuthInteractions();
+    });
 } else {
-    initializeInteractions();
+    attachSidebarToggle();
+    initializeAuthInteractions();
 }
