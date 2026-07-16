@@ -249,10 +249,13 @@ modernStyles.innerHTML = `
     }
 
     /* =============================================
-     * SIDEBAR & TOPNAV LAYOUT
-     * Uses direct element IDs — no dependency on
-     * class-based cascades from the original template.
+     * SIDEBAR & CONTENT LAYOUT SYSTEM (UNIFIED)
      * ============================================= */
+
+    /* Reset Web Component wrapper elements to display: contents so they don't break flex layouts */
+    admin-sidebar, admin-navbar {
+        display: contents !important;
+    }
 
     /* Sidebar: fixed, full height, always on top */
     #layoutSidenav_nav {
@@ -262,7 +265,7 @@ modernStyles.innerHTML = `
         height: 100vh !important;
         width: 225px !important;
         z-index: 1040 !important;
-        transition: transform 0.2s ease-in-out !important;
+        transition: transform 0.15s ease-in-out !important;
         transform: translateX(0);
     }
     #layoutSidenav_nav .sb-sidenav {
@@ -286,19 +289,18 @@ modernStyles.innerHTML = `
         background-color: #ffffff !important;
         border-bottom: 1px solid #f1f5f9 !important;
         box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.02) !important;
-        transition: padding-left 0.2s ease-in-out !important;
+        transition: padding-left 0.15s ease-in-out !important;
     }
 
-    /* Content area: shifted right by sidebar width */
+    /* Content area: shifted right by sidebar width, but overrides styles.css padding-left to prevent double-shift */
     #layoutSidenav_content {
         margin-left: 225px !important;
-        transition: margin-left 0.2s ease-in-out !important;
+        padding-left: 0 !important; /* CRITICAL: overrides styles.css 225px padding to prevent double shift */
+        transition: margin-left 0.15s ease-in-out !important;
         padding-top: 56px !important;
     }
 
-    /* =============================================
-     * TOP NAVBAR TOGGLE & LOGO DISPLAY LOGIC
-     * ============================================= */
+    /* Hamburger toggle button */
     #sidebarToggle {
         background: none !important;
         border: none !important;
@@ -324,19 +326,24 @@ modernStyles.innerHTML = `
         display: flex !important;
     }
 
-    /* Desktop default: content area shifted right by sidebar width, navbar padded */
+    /* Desktop default settings */
     @media (min-width: 992px) {
         .sb-topnav {
             padding-left: 225px !important;
         }
+        body.sb-sidenav-toggled #layoutSidenav_nav {
+            transform: translateX(-225px) !important;
+        }
+        body.sb-sidenav-toggled #layoutSidenav_content {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+        }
+        body.sb-sidenav-toggled .sb-topnav {
+            padding-left: 0 !important;
+        }
     }
 
-    /* Toggled: navbar padding goes to 0 */
-    body.sb-sidenav-toggled .sb-topnav {
-        padding-left: 0 !important;
-    }
-
-    /* Mobile default: sidebar hidden, full-width content, navbar padding 0 */
+    /* Mobile settings */
     @media (max-width: 991.98px) {
         #sidebarToggle {
             margin-left: 10px !important;
@@ -347,15 +354,20 @@ modernStyles.innerHTML = `
         .sb-topnav .navbar-brand {
             display: flex !important;
         }
-        /* Mobile toggled: sidebar slides in as overlay, covering the navbar */
+        #layoutSidenav_nav {
+            transform: translateX(-225px) !important;
+        }
         body.sb-sidenav-toggled #layoutSidenav_nav {
             transform: translateX(0) !important;
+        }
+        #layoutSidenav_content {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
         }
     }
 
     /* =============================================
      * GLOBAL TABLE RESPONSIVENESS OVERRIDES
-     * Ensures all tables fit inside their cards nicely.
      * ============================================= */
     .card-body .datatable-wrapper,
     .card-body .table-responsive,
@@ -368,11 +380,6 @@ modernStyles.innerHTML = `
     .datatable-table {
         width: 100% !important;
         min-width: 650px !important; /* Force scrollbar on small viewports instead of squishing columns */
-    }
-
-    /* Reset Web Component wrapper elements to display: contents so they don't break flex layouts */
-    admin-sidebar, admin-navbar {
-        display: contents !important;
     }
 `;
 document.head.appendChild(modernStyles);
