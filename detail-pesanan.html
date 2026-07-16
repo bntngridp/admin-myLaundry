@@ -7,103 +7,219 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Order Details — myLaundry Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Custom Web Components -->
     <script src="js/components.js" defer></script>
+    <style>
+        .detail-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .detail-card h5 {
+            color: #0B1739;
+            font-weight: 700;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .info-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .info-value {
+            font-size: 1rem;
+            color: #0B1739;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .info-value-highlight {
+            font-weight: 750;
+            color: #0007B0;
+        }
+    </style>
 </head>
 <body class="sb-nav-fixed">
 <admin-navbar></admin-navbar>
 <div id="layoutSidenav">
-        <admin-sidebar></admin-sidebar>
+    <admin-sidebar></admin-sidebar>
     <div id="layoutSidenav_content">
         <main>
-            <div class="wadah">
-                <div class="header-detail-pesanan">
-                    <h3>Order Details</h3>
-                    <a href="pesanan.html" class="btn-exit">Close
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                        </svg>
+            <div class="container-fluid px-4 py-4">
+                <!-- Page Title and Back Button (Clean, Reachable Header UI) -->
+                <div class="d-flex align-items-center mb-4">
+                    <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders">
+                        <i class="fas fa-arrow-left"></i>
                     </a>
+                    <h1 class="h3 m-0" style="color: #0B1739; font-weight: 700;">Order Details <span class="text-muted" style="font-weight: 400;">#1532</span></h1>
                 </div>
-                <div class="penampung   ">
-                    <div class="bagian-satu">
-                        <h4>General Information</h4>
-                        <div class="control-group">
-                            <label>Order Number</label>
-                            <input type="text" value="#1532" readonly>
+
+                <div class="row">
+                    <!-- Left Column: Details & Items -->
+                    <div class="col-lg-8">
+                        <!-- Customer & Delivery Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-user-circle me-2" style="color: #0007B0;"></i>Customer & Delivery Info</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-label">Customer Name</div>
+                                    <div class="info-value">Andi Manda</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Order Date</div>
+                                    <div class="info-value">July 15, 2024 10:30 AM</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="info-label">Delivery Address</div>
+                                    <div class="info-value">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                        Jl. Telekomunikasi 1, Terusan Buahbatu - Bojongsoang, Telkom University, Sukapura, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="info-label">Special Notes</div>
+                                    <div class="info-value mb-0" style="background-color: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                        <i class="fas fa-sticky-note text-warning me-1"></i>
+                                        Please separate white clothes from colored ones.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="control-group">
-                            <label>Customer</label>
-                            <input type="text" value="Andi Manda" readonly>
-                        </div>
-                        <div class="control-group">
-                            <label>Date</label>
-                            <input type="text" value="15/7/2024" readonly>
-                        </div>
-                        <div class="control-group">
-                            <label>Address</label>
-                            <textarea readonly>Jl. Telekomunikasi 1, Terusan Buahbatu - Bojongsoang, Telkom University, Sukapura, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257</textarea>
-                        </div>
-                        <div class="control-group">
-                            <label>Status</label>
-                            <input type="text" value="Courier En Route" readonly class="status">
+
+                        <!-- Order Items Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-box-open me-2" style="color: #0007B0;"></i>Order Items</h5>
+                            <div class="table-responsive">
+                                <table class="table align-middle" style="min-width: 500px;">
+                                    <thead style="background-color: #C2E9F9;">
+                                        <tr>
+                                            <th style="color: #0B1739; font-weight: 600;">Item / Service</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-center">Qty / Weight</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Unit Price</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Total Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold" style="color: #0B1739;">Wash & Fold Regular</div>
+                                                <small class="text-muted">Laundry service</small>
+                                            </td>
+                                            <td class="text-center">8 kg</td>
+                                            <td class="text-end">Rp6.000,00 / kg</td>
+                                            <td class="text-end fw-semibold">Rp48.000,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold" style="color: #0B1739;">Sheet (Single)</div>
+                                                <small class="text-muted">Bedding service</small>
+                                            </td>
+                                            <td class="text-center">1 pcs</td>
+                                            <td class="text-end">Rp12.000,00 / pcs</td>
+                                            <td class="text-end fw-semibold">Rp12.000,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold" style="color: #0B1739;">Suit Jacket</div>
+                                                <small class="text-muted">Dry cleaning</small>
+                                            </td>
+                                            <td class="text-center">1 pcs</td>
+                                            <td class="text-end">Rp10.000,00 / pcs</td>
+                                            <td class="text-end fw-semibold">Rp10.000,00</td>
+                                        </tr>
+                                        
+                                        <!-- Price Summaries -->
+                                        <tr style="border-top: 2px solid #dee2e6;">
+                                            <td colspan="2" class="border-0"></td>
+                                            <td class="text-end text-muted border-0">Subtotal:</td>
+                                            <td class="text-end fw-semibold border-0">Rp70.000,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="border-0"></td>
+                                            <td class="text-end text-muted border-0">Tax (10%):</td>
+                                            <td class="text-end fw-semibold border-0">Rp7.000,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="border-0"></td>
+                                            <td class="text-end text-muted border-0">Service Fee:</td>
+                                            <td class="text-end fw-semibold border-0">Rp2.000,00</td>
+                                        </tr>
+                                        <tr style="font-size: 1.15rem; border-top: 1px solid #dee2e6;">
+                                            <td colspan="2" class="border-0"></td>
+                                            <td class="text-end border-0" style="color: #0B1739; font-weight: 700;">Grand Total:</td>
+                                            <td class="text-end border-0 info-value-highlight">Rp79.000,00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div class="bagian-dua">
-                        <h4>Payment</h4>
-                        <div class="control-group">
-                            <label>Payment Method</label>
-                            <input type="text" value="Mandiri Virtual Account" readonly>
-                        </div>
-                        <div class="control-group">
-                            <label>Amount</label>
-                            <input type="text" value="Rp70.000,00" readonly>
-                        </div>
-                    </div>
-                    <div class="bagian-tiga">
-                        <h4>Order Items</h4>
-                        <div class="control-group">
-                            <label>Item List</label>
-                            <ol>
-                                <li>Wash & Fold Regular 8 kg</li>
-                                <li>Sheet (Single)</li>
-                                <li>Suit Jacket</li>
-                            </ol>
-                        </div>
-                        <div class="control-group">
-                            <label>Notes</label>
-                            <textarea readonly>Please separate white clothes from colored ones</textarea>
+
+                    <!-- Right Column: Status & Operations -->
+                    <div class="col-lg-4">
+                        <!-- Status & Action Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-info-circle me-2" style="color: #0007B0;"></i>Order Status</h5>
+                            
+                            <div class="info-label">Current Status</div>
+                            <div class="mb-4">
+                                <span class="badge d-inline-block py-2 px-3 fs-6" style="background-color: #ffc107; color: #0B1739; border-radius: 8px;">
+                                    <i class="fas fa-truck-moving me-1"></i>Courier En Route
+                                </span>
+                            </div>
+                            
+                            <div class="info-label">Payment Method</div>
+                            <div class="info-value">Mandiri Virtual Account</div>
+                            
+                            <div class="info-label">Payment Status</div>
+                            <div class="info-value mb-4">
+                                <span class="badge bg-success py-2 px-3 fs-6" style="border-radius: 8px;">
+                                    <i class="fas fa-check-circle me-1"></i>Paid
+                                </span>
+                            </div>
+                            
+                            <hr class="mb-4" style="border-color: #f1f5f9;">
+                            
+                            <!-- Operations Buttons -->
+                            <div class="d-flex flex-column gap-2">
+                                <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-complete">
+                                    <i class="fas fa-check me-2"></i>Mark as Completed
+                                </button>
+                                <button class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-print">
+                                    <i class="fas fa-print me-2"></i>Print Receipt
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
         <admin-footer></admin-footer>
     </div>
 </div>
-<script src="js/scripts.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', event => {
-        const datatablesSimple = document.getElementById('datatablesSimple');
-        if (datatablesSimple) {
-            const dataTable = new simpleDatatables.DataTable(datatablesSimple);
 
-            document.getElementById('searchInput').addEventListener('keyup', function() {
-                dataTable.search(this.value);
-            });
-        }
+<script>
+    // Handle mock button events
+    document.getElementById('btn-complete').addEventListener('click', function() {
+        alert('Order #1532 status updated to Completed!');
+        window.location.href = 'pesanan.html';
+    });
+    document.getElementById('btn-print').addEventListener('click', function() {
+        alert('Sending receipt to printing queue...');
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/scripts.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="js/datatables-simple-demo.js"></script>
 </body>
 </html>
-
-
-
-
