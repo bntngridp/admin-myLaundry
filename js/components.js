@@ -7,6 +7,13 @@
 // Injeksi CSS Modern Overrides untuk meremajakan UI yang tampak jadul
 const modernStyles = document.createElement('style');
 modernStyles.innerHTML = `
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    /* Global Font Override */
+    body, .sb-nav-fixed, input, button, select, textarea, table, .card-header, h1, h2, h3, h4, h5, h6, .nav-link, .sb-sidenav {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+
     /* Overrides Card */
     .card {
         border: none !important;
