@@ -8,7 +8,7 @@
 class AdminNavbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-            <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <nav class="sb-topnav navbar navbar-expand navbar-dark bg-white">
                 <!-- Navbar Brand-->
                 <a id="foto" href="dashboard.html" class="ps-3">
                     <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
