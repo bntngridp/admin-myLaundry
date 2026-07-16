@@ -248,12 +248,17 @@ modernStyles.innerHTML = `
         text-decoration: underline !important;
     }
 
+    /* ========================================== */
+    /* CUSTOM SIDEBAR TOGGLE OVERRIDES (ROCK SOLID) */
+    /* ========================================== */
+    
     /* Sidebar goes all the way to the top */
     .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
         z-index: 1040 !important;
         height: 100vh !important;
         top: 0 !important;
         position: fixed !important;
+        transition: transform 0.15s ease-in-out !important;
     }
     .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
         padding-top: 0 !important;
@@ -287,18 +292,62 @@ modernStyles.innerHTML = `
         display: inline-block !important;
     }
 
+    /* Ensure hamburger toggle is always clickable and above sidebar/overlays */
+    #sidebarToggle {
+        position: relative !important;
+        z-index: 1050 !important;
+        pointer-events: auto !important;
+    }
+
+    /* Desktop View (width >= 992px) */
     @media (min-width: 992px) {
+        /* Default: Sidebar Open */
+        .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+            transform: translateX(0) !important;
+        }
+        .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+            padding-left: 225px !important;
+            margin-left: 0 !important;
+            transition: padding-left 0.15s ease-in-out !important;
+        }
         .sb-nav-fixed .sb-topnav {
             padding-left: 225px !important;
         }
-        .sb-sidenav-toggled.sb-nav-fixed .sb-topnav {
+        
+        /* Toggled: Sidebar Closed */
+        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+            transform: translateX(-225px) !important;
+        }
+        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+            padding-left: 0 !important;
+        }
+        body.sb-sidenav-toggled .sb-topnav {
             padding-left: 0 !important;
         }
     }
+
+    /* Mobile View (width < 992px) */
     @media (max-width: 991.98px) {
+        /* Default: Sidebar Closed */
+        .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+            transform: translateX(-225px) !important;
+        }
+        .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
         .sb-topnav .logo-collapsed {
             display: inline-block !important;
         }
+        
+        /* Toggled: Sidebar Open (overlay) */
+        body.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+            transform: translateX(0) !important;
+        }
+    }
+    /* Reset Web Component wrapper elements to display: contents so they don't break flex layouts */
+    admin-sidebar, admin-navbar {
+        display: contents !important;
     }
 `;
 document.head.appendChild(modernStyles);
@@ -479,21 +528,38 @@ customElements.define('admin-footer', AdminFooter);
 })();
 
 // Penanganan interaktif untuk simulasi Login dan Logout
-document.addEventListener('DOMContentLoaded', () => {
-    // =========================================================
-    // FIX: Hamburger Toggle menggunakan EVENT DELEGATION.
-    // Karena Web Components di-render secara async via
-    // connectedCallback, getElementById('sidebarToggle') bisa
-    // return null jika dipanggil terlalu awal. Dengan event
-    // delegation di document, kita tidak perlu bergantung pada
-    // kapan elemen tersebut ada di DOM.
-    // =========================================================
+function initializeInteractions() {
+    // Hamburger Toggle menggunakan EVENT DELEGATION
     document.addEventListener('click', (event) => {
         const toggleBtn = event.target.closest('#sidebarToggle, #sidebarCloseMobile');
         if (toggleBtn) {
             event.preventDefault();
+            console.log('Sidebar toggle clicked via closest selector!');
+            
+            // Toggle body class
             document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            const isToggled = document.body.classList.contains('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', isToggled);
+            
+            console.log('Toggled class. Current state of toggled:', isToggled);
+
+            // Tampilkan feedback visual sementara di layar (membantu diagnosis manual)
+            const feedback = document.createElement('div');
+            feedback.style.position = 'fixed';
+            feedback.style.bottom = '20px';
+            feedback.style.right = '20px';
+            feedback.style.padding = '8px 16px';
+            feedback.style.backgroundColor = '#0B1739';
+            feedback.style.color = '#ffffff';
+            feedback.style.borderRadius = '30px';
+            feedback.style.fontSize = '12px';
+            feedback.style.zIndex = '99999';
+            feedback.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            feedback.innerHTML = `Sidebar toggled: <b>${isToggled ? 'CLOSED/COLLAPSED' : 'OPEN'}</b>`;
+            document.body.appendChild(feedback);
+            setTimeout(() => {
+                feedback.remove();
+            }, 1200);
         }
     });
 
@@ -516,4 +582,11 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('admin_token');
         });
     });
-});
+}
+
+// Jalankan inisialisasi secara aman, baik saat DOM masih loading maupun sudah selesai
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeInteractions);
+} else {
+    initializeInteractions();
+}
