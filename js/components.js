@@ -366,6 +366,14 @@ class AdminSidebar extends HTMLElement {
                 </nav>
             </div>
         `;
+
+        // Restore sidebar toggle state setelah komponen selesai di-render.
+        // Ini penting karena connectedCallback bisa dipanggil sebelum
+        // DOMContentLoaded, jadi kita set state di sini agar langsung berlaku.
+        const sidebarToggleState = localStorage.getItem('sb|sidebar-toggle');
+        if (sidebarToggleState === 'true') {
+            document.body.classList.add('sb-sidenav-toggled');
+        }
     }
 }
 customElements.define('admin-sidebar', AdminSidebar);
@@ -410,24 +418,21 @@ customElements.define('admin-footer', AdminFooter);
 // Penanganan interaktif untuk simulasi Login dan Logout
 document.addEventListener('DOMContentLoaded', () => {
     // =========================================================
-    // FIX: Hamburger Toggle — dipasang di sini (setelah Web
-    // Component sudah selesai di-render ke dalam DOM) agar
-    // #sidebarToggle sudah ada saat event listener dipasang.
+    // FIX: Hamburger Toggle menggunakan EVENT DELEGATION.
+    // Karena Web Components di-render secara async via
+    // connectedCallback, getElementById('sidebarToggle') bisa
+    // return null jika dipanggil terlalu awal. Dengan event
+    // delegation di document, kita tidak perlu bergantung pada
+    // kapan elemen tersebut ada di DOM.
     // =========================================================
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', event => {
+    document.addEventListener('click', (event) => {
+        const toggleBtn = event.target.closest('#sidebarToggle');
+        if (toggleBtn) {
             event.preventDefault();
             document.body.classList.toggle('sb-sidenav-toggled');
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-        });
-    }
-
-    // Restore state sidebar dari localStorage saat halaman dimuat
-    const sidebarToggleState = localStorage.getItem('sb|sidebar-toggle');
-    if (sidebarToggleState === 'true') {
-        document.body.classList.add('sb-sidenav-toggled');
-    }
+        }
+    });
 
     // 1. Tangani Klik Tombol "Masuk" di login.html
     const loginButton = document.getElementById('btn-masuk');
