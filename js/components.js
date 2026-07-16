@@ -297,92 +297,77 @@ modernStyles.innerHTML = `
     }
 
     /* =============================================
-     * SIDEBAR FIXED TOGGLE PILL BUTTON
-     * Always accessible — floats on the right edge
-     * of the sidebar and follows it when it moves.
+     * TOP NAVBAR TOGGLE & LOGO DISPLAY LOGIC
      * ============================================= */
     #sidebarToggle {
-        position: fixed !important;
-        top: 72px !important;
-        left: 211px !important; /* 225px sidebar - 14px (half of 28px button) */
-        width: 28px !important;
-        height: 28px !important;
-        background: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 50% !important;
-        display: flex !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        cursor: pointer !important;
-        z-index: 1060 !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.10) !important;
-        transition: left 0.2s ease-in-out !important;
-        padding: 0 !important;
-        pointer-events: auto !important;
+        transition: transform 0.2s ease !important;
     }
     #sidebarToggle:hover {
-        background: #f8fafc !important;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.14) !important;
+        transform: scale(1.1) !important;
     }
-    /* Hide the expand icon by default (sidebar is open) */
-    #sidebarToggle .icon-expand { display: none !important; }
-    #sidebarToggle .icon-collapse { display: block !important; }
 
-    /* When toggled: button moves to left edge, icon flips */
-    body.sb-sidenav-toggled #sidebarToggle {
-        left: 10px !important;
+    /* Hide navbar brand logo when sidebar is open (desktop default) */
+    .sb-topnav .navbar-brand {
+        display: none !important;
     }
-    body.sb-sidenav-toggled #sidebarToggle .icon-expand { display: block !important; }
-    body.sb-sidenav-toggled #sidebarToggle .icon-collapse { display: none !important; }
+    
+    /* Show navbar brand logo when sidebar is closed (toggled) or on mobile */
+    body.sb-sidenav-toggled .sb-topnav .navbar-brand {
+        display: flex !important;
+    }
 
-    /* Mobile adjustments */
-    @media (max-width: 991.98px) {
-        /* On mobile: sidebar hidden by default, toggle sits at left edge below topnav */
-        #sidebarToggle {
-            top: 15px !important;
-            left: 10px !important;
+    /* Desktop default: content area shifted right by sidebar width, navbar padded */
+    @media (min-width: 992px) {
+        .sb-topnav {
+            padding-left: 225px !important;
         }
-        /* Mobile: when sidebar open, toggle slides to right edge of sidebar */
-        body.sb-sidenav-toggled #sidebarToggle {
-            left: 211px !important;
+    }
+
+    /* Toggled: navbar padding goes to 0 */
+    body.sb-sidenav-toggled .sb-topnav {
+        padding-left: 0 !important;
+    }
+
+    /* Mobile default: sidebar hidden, full-width content, navbar padding 0 */
+    @media (max-width: 991.98px) {
+        #sidebarToggle {
+            margin-left: 10px !important;
+        }
+        .sb-topnav {
+            padding-left: 0 !important;
+        }
+        .sb-topnav .navbar-brand {
+            display: flex !important;
+        }
+        /* Mobile toggled: sidebar slides in as overlay, covering the navbar */
+        body.sb-sidenav-toggled #layoutSidenav_nav {
+            transform: translateX(0) !important;
         }
     }
 
     /* =============================================
-     * TOGGLE STATE: body class 'sb-sidenav-toggled'
+     * GLOBAL TABLE RESPONSIVENESS OVERRIDES
+     * Ensures all tables fit inside their cards nicely.
      * ============================================= */
-    body.sb-sidenav-toggled #layoutSidenav_nav {
-        transform: translateX(-225px) !important;
+    .card-body .datatable-wrapper,
+    .card-body .table-responsive,
+    .card-body .datatable-container {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
-    body.sb-sidenav-toggled #layoutSidenav_content {
-        margin-left: 0 !important;
-    }
-
-    /* Desktop default: content area shifted right by sidebar width */
-    @media (min-width: 992px) {
-        .sb-topnav {
-            padding-left: 0 !important;
-        }
-    }
-
-    /* Mobile default: sidebar hidden, full-width content */
-    @media (max-width: 991.98px) {
-        #layoutSidenav_nav {
-            transform: translateX(-225px) !important;
-        }
-        #layoutSidenav_content {
-            margin-left: 0 !important;
-        }
-        .sb-topnav {
-            padding-left: 0 !important;
-        }
-        .sb-topnav .logo-collapsed {
-            display: inline-block !important;
-        }
-        /* Mobile toggled: sidebar slides in as overlay */
-        body.sb-sidenav-toggled #layoutSidenav_nav {
-            transform: translateX(0) !important;
-        }
+    
+    .datatable-table {
+        width: 100% !important;
+        min-width: 650px !important; /* Force scrollbar on small viewports instead of squishing columns */
     }
 `;
 document.head.appendChild(modernStyles);
@@ -396,6 +381,10 @@ class AdminNavbar extends HTMLElement {
                 <a href="dashboard.html" class="navbar-brand ps-3 d-flex align-items-center">
                     <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                 </a>
+                <!-- Sidebar Toggle -->
+                <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars" style="color: #0B1739; font-size: 1.25rem;"></i>
+                </button>
                 <!-- Navbar Search -->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
@@ -464,19 +453,16 @@ class AdminSidebar extends HTMLElement {
         }).join('');
 
         this.innerHTML = `
-            <!-- Sidebar Toggle Pill Button (Fixed floating at sidebar edge) -->
-            <button id="sidebarToggle" type="button" aria-label="Toggle sidebar">
-                <span class="icon-collapse"><i class="fas fa-chevron-left" style="color: #0B1739; font-size: 10px;"></i></span>
-                <span class="icon-expand"><i class="fas fa-bars" style="color: #0B1739; font-size: 10px;"></i></span>
-            </button>
-
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <!-- Sidebar Header with Logo -->
-                    <div class="d-flex align-items-center px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
+                    <!-- Sidebar Header with Logo and Mobile Close Button -->
+                    <div class="d-flex align-items-center justify-content-between px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
                         <a href="dashboard.html" class="d-flex align-items-center">
                             <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                         </a>
+                        <button class="btn btn-link btn-sm p-0 d-lg-none" id="sidebarCloseMobile" type="button" aria-label="Close sidebar">
+                            <i class="fas fa-times" style="color: #0B1739; font-size: 1.2rem;"></i>
+                        </button>
                     </div>
 
                     <div class="sb-sidenav-menu">
