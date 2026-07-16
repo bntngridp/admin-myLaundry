@@ -247,6 +247,59 @@ modernStyles.innerHTML = `
         color: #0b5ed7 !important;
         text-decoration: underline !important;
     }
+
+    /* Sidebar goes all the way to the top */
+    .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+        z-index: 1040 !important;
+        height: 100vh !important;
+        top: 0 !important;
+        position: fixed !important;
+    }
+    .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+        padding-top: 0 !important;
+        background-color: #ffffff !important;
+        border-right: 1px solid #f1f5f9 !important;
+        height: 100vh !important;
+    }
+    .sb-sidenav-dark {
+        background-color: #ffffff !important;
+    }
+    .sb-sidenav-menu {
+        background-color: #ffffff !important;
+    }
+    
+    /* Navbar styling and smooth transitions */
+    .sb-nav-fixed .sb-topnav {
+        z-index: 1039 !important;
+        left: 0 !important;
+        width: 100% !important;
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.02) !important;
+        transition: padding-left 0.15s ease-in-out !important;
+    }
+
+    /* Logo in navbar visibility toggles */
+    .sb-topnav .logo-collapsed {
+        display: none !important;
+    }
+    .sb-sidenav-toggled .sb-topnav .logo-collapsed {
+        display: inline-block !important;
+    }
+
+    @media (min-width: 992px) {
+        .sb-nav-fixed .sb-topnav {
+            padding-left: 225px !important;
+        }
+        .sb-sidenav-toggled.sb-nav-fixed .sb-topnav {
+            padding-left: 0 !important;
+        }
+    }
+    @media (max-width: 991.98px) {
+        .sb-topnav .logo-collapsed {
+            display: inline-block !important;
+        }
+    }
 `;
 document.head.appendChild(modernStyles);
 
@@ -255,11 +308,11 @@ class AdminNavbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-white">
-                <!-- Navbar Brand-->
-                <a id="foto" href="dashboard.html" class="ps-3">
+                <!-- Navbar Brand (Hanya terlihat saat sidebar ditutup / pada layar mobile) -->
+                <a href="dashboard.html" class="ps-3 logo-collapsed">
                     <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                 </a>
-                <!-- Sidebar Toggle (diposisikan tepat setelah brand) -->
+                <!-- Sidebar Toggle -->
                 <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
                     <i class="fas fa-bars" style="color: #0B1739;"></i>
                 </button>
@@ -333,12 +386,22 @@ class AdminSidebar extends HTMLElement {
         this.innerHTML = `
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <!-- Sidebar Header with Logo and Close Button (Mobile) -->
+                    <div class="d-flex align-items-center justify-content-between px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
+                        <a href="dashboard.html" class="d-flex align-items-center">
+                            <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
+                        </a>
+                        <button class="btn btn-link btn-sm p-0 d-lg-none" id="sidebarCloseMobile" type="button" aria-label="Close sidebar">
+                            <i class="fas fa-times" style="color: #0B1739; font-size: 1.2rem;"></i>
+                        </button>
+                    </div>
+
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading"> 
                                 <span style="color: #0B1739;">Main Menu</span>
                             </div>
-                            <hr class="dropdown-divider mx-3" />
+                            <hr class="dropdown-divider mx-3" style="margin-top: 0; margin-bottom: 10px;" />
                             
                             <!-- Menu List Dinamis -->
                             ${menuListHTML}
@@ -426,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // kapan elemen tersebut ada di DOM.
     // =========================================================
     document.addEventListener('click', (event) => {
-        const toggleBtn = event.target.closest('#sidebarToggle');
+        const toggleBtn = event.target.closest('#sidebarToggle, #sidebarCloseMobile');
         if (toggleBtn) {
             event.preventDefault();
             document.body.classList.toggle('sb-sidenav-toggled');
