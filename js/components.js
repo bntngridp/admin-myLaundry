@@ -401,3 +401,41 @@ class AdminFooter extends HTMLElement {
     }
 }
 customElements.define('admin-footer', AdminFooter);
+
+// 4. CLIENT-SIDE MIDDLEWARE (ROUTE GUARD)
+(function() {
+    const publicPages = ['login.html', 'register.html', 'password.html'];
+    const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
+    const isPublicPage = publicPages.includes(currentPath);
+    
+    // Periksa token otentikasi
+    const token = localStorage.getItem('admin_token');
+    
+    if (!isPublicPage && !token) {
+        // Jika masuk halaman privat tanpa login, arahkan ke login.html
+        window.location.href = 'login.html';
+    }
+})();
+
+// Penanganan interaktif untuk simulasi Login dan Logout
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Tangani Klik Tombol "Masuk" di login.html
+    const loginButton = document.querySelector('a[href="dashboard.html"]');
+    if (loginButton) {
+        loginButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Set token simulasi di localStorage
+            localStorage.setItem('admin_token', 'mylaundry-admin-mock-token-12345');
+            window.location.href = 'dashboard.html';
+        });
+    }
+
+    // 2. Tangani Klik Tombol "Keluar" di Sidebar & Navbar Dropdown
+    const logoutButtons = document.querySelectorAll('a[href="login.html"]');
+    logoutButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Hapus token session saat logout
+            localStorage.removeItem('admin_token');
+        });
+    });
+});
