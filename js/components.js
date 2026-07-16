@@ -553,9 +553,29 @@ customElements.define('admin-footer', AdminFooter);
     // Periksa token otentikasi
     const token = localStorage.getItem('admin_token');
     
+    // Sembunyikan body segera untuk mencegah kedipan konten (content flash) sebelum dialihkan
+    const hideStyle = document.createElement('style');
+    hideStyle.id = 'auth-hide-body';
+    hideStyle.innerHTML = 'body { display: none !important; }';
+    document.head.appendChild(hideStyle);
+
     if (!isPublicPage && !token) {
         // Jika masuk halaman privat tanpa login, arahkan ke login.html
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
+    } else if (isPublicPage && token) {
+        // Jika sudah login tetapi mencoba masuk ke halaman auth, arahkan ke dashboard.html
+        window.location.replace('dashboard.html');
+    } else {
+        // Otentikasi valid, hapus filter penyembunyian body setelah DOM siap
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const style = document.getElementById('auth-hide-body');
+                if (style) style.remove();
+            });
+        } else {
+            const style = document.getElementById('auth-hide-body');
+            if (style) style.remove();
+        }
     }
 })();
 
