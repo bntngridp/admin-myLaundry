@@ -369,6 +369,11 @@ modernStyles.innerHTML = `
         width: 100% !important;
         min-width: 650px !important; /* Force scrollbar on small viewports instead of squishing columns */
     }
+
+    /* Reset Web Component wrapper elements to display: contents so they don't break flex layouts */
+    admin-sidebar, admin-navbar {
+        display: contents !important;
+    }
 `;
 document.head.appendChild(modernStyles);
 
@@ -388,7 +393,7 @@ class AdminNavbar extends HTMLElement {
                 <!-- Navbar Search -->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Search..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                        <input class="form-control" id="searchInput" type="text" placeholder="Search..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
                         <button class="btn btn-primary" id="btnNavbarSearch" type="button">
                             <i class="fas fa-search"></i>
                         </button>
