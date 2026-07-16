@@ -366,3 +366,116 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
     width: 100% !important;
     min-width: 650px !important;
 }
+
+/* ==========================================================================
+   DASHBOARD STATS & BADGE OVERRIDES (MIGRATED FROM STYLES.CSS)
+   ========================================================================== */
+.btn-keuntungan {
+    font-size: 13px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+
+.ukuran {
+    padding: 2px !important;
+    font-size: 1.1em !important;
+    font-weight: bold !important;
+}
+
+.sb-sidenav-footer {
+    box-shadow: 6px 0px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+.sb-sidenav-menu {
+    box-shadow: 6px 0px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================================================
+   STATUS BADGES & BUTTONS (MIGRATED & STANDARDIZED)
+   ========================================================================== */
+.status-pesanan-dashbord {
+    font-size: 13px !important;
+    color: white !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+}
+
+.status-pesanan-dashbord.menunggu-pembayaran {
+    padding: 2px 12px !important;
+}
+
+.status-pesanan-dashbord.menunggu-pembayarann {
+    padding: 2px 14px !important;
+}
+
+.status-pesanan-dashbord.kurir-dalam-perjalanan {
+    padding: 2px 15px !important;
+}
+
+.status-pesanan-dashbord.dibatalkan {
+    padding: 2px 30px !important;
+}
+
+.status-pesanan-dashbord.selesai {
+    padding: 2px 40px !important;
+}
+
+.status-selesai.btn.btn-success {
+    padding: 2px 20px !important;
+    font-size: 13px !important;
+}
+
+.status-lanjut.btn.btn-success {
+    padding: 2px 24px !important;
+    font-size: 13px !important;
+}
+
+.status-pengiriman-kurir {
+    padding: 3px 25px !important;
+    text-align: center !important;
+    color: white !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+}
+
+.status-riwayat-pesanan {
+    font-size: 13px !important;
+    color: white !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+}
+
+.status-riwayat-pesanan.riwayat-dibatalkan {
+    padding: 3px 10px !important;
+}
+
+.status-riwayat-pesanan.riwayat-selesai {
+    padding: 3px 20px !important;
+}
+
+.status-selesai-dasbord.btn.btn-success {
+    font-size: 13px !important;
+    color: white !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+    padding: 2px 60px !important;
+}
+
+.status-batal-dasbord.btn.btn-danger {
+    font-size: 13px !important;
+    color: white !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+    padding: 2px 50px !important;
+}
+
+.details-btn {
+    font-size: 12px !important;
+    padding: 7px 14px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    text-align: center !important;
+}
+
