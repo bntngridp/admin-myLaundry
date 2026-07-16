@@ -259,9 +259,9 @@ class AdminNavbar extends HTMLElement {
                 <a id="foto" href="dashboard.html" class="ps-3">
                     <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                 </a>
-                <!-- Sidebar Toggle-->
-                <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
-                    <i class="fas fa-bars"></i>
+                <!-- Sidebar Toggle (diposisikan tepat setelah brand) -->
+                <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars" style="color: #0B1739;"></i>
                 </button>
                 <!-- Navbar Search-->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -273,10 +273,10 @@ class AdminNavbar extends HTMLElement {
                     </div>
                 </form>
                 <!-- Navbar Profile Dropdown-->
-                <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <ul class="navbar-nav ms-md-0 me-3 me-lg-4">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user fa-fw"></i>
+                            <i class="fas fa-user fa-fw" style="color: #0B1739;"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="404.html">Settings</a></li>
@@ -288,16 +288,6 @@ class AdminNavbar extends HTMLElement {
                 </ul>
             </nav>
         `;
-
-        // Inisialisasi Event Listener Toggle Sidebar secara internal
-        const sidebarToggle = this.querySelector('#sidebarToggle');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', event => {
-                event.preventDefault();
-                document.body.classList.toggle('sb-sidenav-toggled');
-                localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-            });
-        }
     }
 }
 customElements.define('admin-navbar', AdminNavbar);
@@ -419,8 +409,28 @@ customElements.define('admin-footer', AdminFooter);
 
 // Penanganan interaktif untuk simulasi Login dan Logout
 document.addEventListener('DOMContentLoaded', () => {
+    // =========================================================
+    // FIX: Hamburger Toggle — dipasang di sini (setelah Web
+    // Component sudah selesai di-render ke dalam DOM) agar
+    // #sidebarToggle sudah ada saat event listener dipasang.
+    // =========================================================
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', event => {
+            event.preventDefault();
+            document.body.classList.toggle('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+        });
+    }
+
+    // Restore state sidebar dari localStorage saat halaman dimuat
+    const sidebarToggleState = localStorage.getItem('sb|sidebar-toggle');
+    if (sidebarToggleState === 'true') {
+        document.body.classList.add('sb-sidenav-toggled');
+    }
+
     // 1. Tangani Klik Tombol "Masuk" di login.html
-    const loginButton = document.querySelector('a[href="dashboard.html"]');
+    const loginButton = document.getElementById('btn-masuk');
     if (loginButton) {
         loginButton.addEventListener('click', (e) => {
             e.preventDefault();
