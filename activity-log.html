@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Activity Log — myLaundry Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Custom Web Components -->
+    <script src="js/components.js" defer></script>
+</head>
+<body class="sb-nav-fixed">
+<admin-navbar></admin-navbar>
+<div id="layoutSidenav">
+    <admin-sidebar></admin-sidebar>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                    <h1>Activity Log</h1>
+                    <button class="btn btn-outline-danger" id="clear-logs-btn">
+                        <i class="fas fa-trash me-1"></i>Clear Logs
+                    </button>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-history me-1" style="color: #0007B0;"></i>
+                        System Operations History
+                    </div>
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Admin User</th>
+                                <th>Module</th>
+                                <th>Action Description</th>
+                                <th>IP Address</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Admin User</th>
+                                <th>Module</th>
+                                <th>Action Description</th>
+                                <th>IP Address</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr>
+                                <td>Jul 17, 2024 15:45:12</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-primary">Auth</span></td>
+                                <td>Successful administrator login</td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 17, 2024 15:20:44</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-success">Products</span></td>
+                                <td>Created new product: <strong>Wash & Fold Express</strong></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 17, 2024 14:10:02</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-info text-dark">Orders</span></td>
+                                <td>Updated order <strong>#1531</strong> status to <em>Completed</em></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 17, 2024 13:05:15</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-warning text-dark">Settings</span></td>
+                                <td>Updated operational tax rate to <strong>10%</strong></td>
+                                <td>192.168.1.12</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 16, 2024 18:30:22</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-info text-dark">Orders</span></td>
+                                <td>Assigned Courier <strong>Maya Putri</strong> to order <strong>#1530</strong></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 16, 2024 17:15:39</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-success">Products</span></td>
+                                <td>Modified price of product <strong>Suit Jacket</strong> to <em>Rp12,000.00</em></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 16, 2024 12:45:00</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-danger">Auth</span></td>
+                                <td>Logout operation requested and processed</td>
+                                <td>192.168.1.15</td>
+                            </tr>
+                            <tr>
+                                <td>Jul 15, 2024 09:30:11</td>
+                                <td>Bintang Ridwan</td>
+                                <td><span class="badge bg-warning text-dark">Settings</span></td>
+                                <td>Modified minimum laundry order limit to <em>Rp10,000.00</em></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <admin-footer></admin-footer>
+    </div>
+</div>
+
+<script>
+    document.getElementById('clear-logs-btn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all system logs? This action cannot be undone.')) {
+            alert('Logs cleared successfully!');
+            // Reload page to simulate empty state
+            location.reload();
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="js/datatables-simple-demo.js"></script>
+</body>
+</html>

@@ -413,8 +413,8 @@ class AdminNavbar extends HTMLElement {
                             <i class="fas fa-user fa-fw" style="color: #0B1739;"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="404.html">Settings</a></li>
-                            <li><a class="dropdown-item" href="404.html">Activity Log</a></li>
+                            <li><a class="dropdown-item" href="settings.html">Settings</a></li>
+                            <li><a class="dropdown-item" href="activity-log.html">Activity Log</a></li>
                             <li><hr class="dropdown-divider" /></li>
                             <li><a class="dropdown-item text-danger" href="login.html">Sign Out</a></li>
                         </ul>
