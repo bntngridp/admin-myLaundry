@@ -7,96 +7,137 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Add New Product — myLaundry Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Custom Web Components -->
     <script src="js/components.js" defer></script>
+    <style>
+        .form-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-card h5 {
+            color: #0B1739;
+            font-weight: 700;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .preview-container {
+            text-align: center;
+            padding: 16px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+    </style>
 </head>
 <body class="sb-nav-fixed">
 <admin-navbar></admin-navbar>
 <div id="layoutSidenav">
-        <admin-sidebar></admin-sidebar>
+    <admin-sidebar></admin-sidebar>
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4">
-                <div class="wadah">
-                    <h4 id="tambahkan-produk-baru">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-                        </svg>
-                        Tambahkan Produk Baru</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="bagian-gambar">
-                                <img src="assets/img/gambar-satu.jpg" alt="Gambar Produk" class="img-fluid" id="preview-img">
-                                <button class="informasi-nama-gambar btn btn-secondary w-100 text-truncate d-flex align-items-center justify-content-center mx-auto" id="file-name-btn" style="max-width:70%; overflow:hidden;">
-                                    11100920201.jpg
-                                </button>                              <br>
-                                <label class="button-unggah-gambar btn btn-primary" for="file-upload" style="cursor:pointer;">
-                                    Upload Photo
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-upload" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
-                                        <path fill-rule="evenodd" d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/>
-                                    </svg>
-                                    <input type="file" id="file-upload" accept="image/jpeg" style="display:none;">
-                                </label>
+            <div class="container-fluid px-4 py-4">
+                <!-- Page Title and Back Button (Clean, Reachable Header UI) -->
+                <div class="d-flex align-items-center mb-4">
+                    <a href="produk.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Products">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="h3 m-0" style="color: #0B1739; font-weight: 700;">Add New Product</h1>
+                </div>
+
+                <div class="row">
+                    <!-- Left Column: Product Photo Upload -->
+                    <div class="col-md-5 col-12 mb-4">
+                        <div class="form-card text-center">
+                            <h5>Product Image</h5>
+                            <div class="preview-container mb-3">
+                                <img src="assets/img/gambar-satu.jpg" alt="Product Photo Preview" class="img-fluid rounded mb-3" id="preview-img" style="max-height: 220px; object-fit: cover;">
+                                <div class="text-muted text-truncate mx-auto mb-2" id="file-name-btn" style="max-width: 80%; font-size: 0.85rem;">
+                                    No file chosen
+                                </div>
                             </div>
+                            <label class="btn btn-outline-primary" for="file-upload" style="cursor: pointer;">
+                                <i class="fas fa-cloud-upload-alt me-1"></i>Upload Photo
+                                <input type="file" id="file-upload" accept="image/jpeg,image/png" style="display: none;">
+                            </label>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-sec">
-                                <form>
-                                    <div class="bagian-satu">
-                                        <h4>General Information</h4>
-                                        <div class="mb-3">
-                                            <label for="kategori" class="form-label">Category</label>
-                                            <input type="text" class="form-control" id="kategori" value="Cuci Lipat">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id" class="form-label">Product ID</label>
-                                            <input type="text" class="form-control" id="id" value="10001">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="nama-produk" class="form-label">Product Name</label>
-                                            <input type="text" class="form-control" id="nama-produk" value="Cuci Lipat Reguler">
-                                        </div>
+                    </div>
+
+                    <!-- Right Column: Product Details Form -->
+                    <div class="col-md-7 col-12 mb-4">
+                        <div class="form-card">
+                            <h5>Product Information</h5>
+                            <form id="add-product-form">
+                                <!-- Category & ID -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kategori" class="form-label">Category</label>
+                                        <select class="form-select" id="kategori">
+                                            <option value="Wash & Fold" selected>Wash & Fold</option>
+                                            <option value="Wash & Iron">Wash & Iron</option>
+                                            <option value="Individual Items">Individual Items</option>
+                                        </select>
                                     </div>
-                                    <div class="bagian-dua">
-                                        <h4>Estimated Duration</h4>
-                                        <div class="mb-3">
-                                            <label for="satuan-hari" class="form-label">Unit</label>
-                                            <input type="text" class="form-control" id="satuan-hari" value="Hari">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="jumlah-hari" class="form-label">Amount</label>
-                                            <input type="number" class="form-control" id="jumlah-hari" value="3">
-                                        </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id" class="form-label">Product ID</label>
+                                        <input type="text" class="form-control" id="id" value="10005" readonly style="background-color: #f8fafc;">
                                     </div>
-                                    <div class="bagian-tiga">
-                                        <h4>Price</h4>
-                                        <div class="mb-3">
-                                            <label for="satuan-kg" class="form-label">Unit</label>
-                                            <input type="text" class="form-control" id="satuan-kg" value="Kg">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="jumlah-kg" class="form-label">Price per Unit</label>
-                                            <input type="number" class="form-control" id="jumlah-kg" value="6">
-                                        </div>
+                                </div>
+
+                                <!-- Product Name -->
+                                <div class="mb-3">
+                                    <label for="nama-produk" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="nama-produk" placeholder="e.g. Wash & Fold Regular">
+                                </div>
+
+                                <!-- Estimated Duration -->
+                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;">Estimated Duration</h6>
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <label for="satuan-hari" class="form-label">Duration Unit</label>
+                                        <select class="form-select" id="satuan-hari">
+                                            <option value="days" selected>Days</option>
+                                            <option value="hours">Hours</option>
+                                        </select>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="action-buttons">
-                                <a href="produk.html" type="button" class="button-batal btn btn-danger">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                    </svg>
-                                    Batal</a>
-                                <a href="produk.html" type="button" class="button-kirim btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
-                                    </svg>
-                                    Submit</a>
-                            </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label for="jumlah-hari" class="form-label">Amount</label>
+                                        <input type="number" class="form-control" id="jumlah-hari" value="1" min="1">
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;">Pricing</h6>
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <label for="satuan-kg" class="form-label">Pricing Unit</label>
+                                        <select class="form-select" id="satuan-kg">
+                                            <option value="kg" selected>Per Kilogram (kg)</option>
+                                            <option value="pcs">Per Piece (pcs)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label for="jumlah-kg" class="form-label">Price (Rp)</label>
+                                        <input type="number" class="form-control" id="jumlah-kg" placeholder="0" min="0">
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mt-4 pt-3" style="border-top: 1px solid #f1f5f9;">
+                                    <a href="produk.html" class="btn btn-outline-danger">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus me-1"></i>Add Product
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -105,13 +146,13 @@
         <admin-footer></admin-footer>
     </div>
 </div>
-<script src="js/scripts.js"></script>
+
 <script>
+    // Handle image upload and preview
     document.getElementById('file-upload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             document.getElementById('file-name-btn').textContent = file.name;
-            // Optional: Preview the image
             const reader = new FileReader();
             reader.onload = function(event) {
                 document.getElementById('preview-img').src = event.target.result;
@@ -119,10 +160,15 @@
             reader.readAsDataURL(file);
         }
     });
+
+    // Mock form submit
+    document.getElementById('add-product-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('New product added successfully!');
+        window.location.href = 'produk.html';
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/scripts.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="js/datatables-simple-demo.js"></script>
 </body>
 </html>
