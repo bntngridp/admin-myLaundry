@@ -296,16 +296,56 @@ modernStyles.innerHTML = `
         padding-top: 56px !important;
     }
 
-    /* Hamburger button */
+    /* =============================================
+     * SIDEBAR FIXED TOGGLE PILL BUTTON
+     * Always accessible — floats on the right edge
+     * of the sidebar and follows it when it moves.
+     * ============================================= */
     #sidebarToggle {
-        z-index: 1050 !important;
-        pointer-events: auto !important;
+        position: fixed !important;
+        top: 72px !important;
+        left: 211px !important; /* 225px sidebar - 14px (half of 28px button) */
+        width: 28px !important;
+        height: 28px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         cursor: pointer !important;
+        z-index: 1060 !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.10) !important;
+        transition: left 0.2s ease-in-out !important;
+        padding: 0 !important;
+        pointer-events: auto !important;
     }
+    #sidebarToggle:hover {
+        background: #f8fafc !important;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.14) !important;
+    }
+    /* Hide the expand icon by default (sidebar is open) */
+    #sidebarToggle .icon-expand { display: none !important; }
+    #sidebarToggle .icon-collapse { display: block !important; }
 
-    /* Logo in navbar: hidden by default (sidebar shows logo) */
-    .sb-topnav .logo-collapsed {
-        display: none !important;
+    /* When toggled: button moves to left edge, icon flips */
+    body.sb-sidenav-toggled #sidebarToggle {
+        left: 10px !important;
+    }
+    body.sb-sidenav-toggled #sidebarToggle .icon-expand { display: block !important; }
+    body.sb-sidenav-toggled #sidebarToggle .icon-collapse { display: none !important; }
+
+    /* Mobile adjustments */
+    @media (max-width: 991.98px) {
+        /* On mobile: sidebar hidden by default, toggle sits at left edge below topnav */
+        #sidebarToggle {
+            top: 15px !important;
+            left: 10px !important;
+        }
+        /* Mobile: when sidebar open, toggle slides to right edge of sidebar */
+        body.sb-sidenav-toggled #sidebarToggle {
+            left: 211px !important;
+        }
     }
 
     /* =============================================
@@ -317,17 +357,11 @@ modernStyles.innerHTML = `
     body.sb-sidenav-toggled #layoutSidenav_content {
         margin-left: 0 !important;
     }
-    body.sb-sidenav-toggled .sb-topnav {
-        padding-left: 0 !important;
-    }
-    body.sb-sidenav-toggled .sb-topnav .logo-collapsed {
-        display: inline-block !important;
-    }
 
-    /* Desktop default: sidebar visible, topnav pushed right */
+    /* Desktop default: content area shifted right by sidebar width */
     @media (min-width: 992px) {
         .sb-topnav {
-            padding-left: 225px !important;
+            padding-left: 0 !important;
         }
     }
 
@@ -358,15 +392,11 @@ class AdminNavbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-white">
-                <!-- Navbar Brand (Hanya terlihat saat sidebar ditutup / pada layar mobile) -->
-                <a href="dashboard.html" class="ps-3 logo-collapsed">
+                <!-- Navbar Brand: logo always visible in navbar -->
+                <a href="dashboard.html" class="navbar-brand ps-3 d-flex align-items-center">
                     <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                 </a>
-                <!-- Sidebar Toggle -->
-                <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
-                    <i class="fas fa-bars" style="color: #0B1739;"></i>
-                </button>
-                <!-- Navbar Search-->
+                <!-- Navbar Search -->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="Search..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
@@ -375,7 +405,7 @@ class AdminNavbar extends HTMLElement {
                         </button>
                     </div>
                 </form>
-                <!-- Navbar Profile Dropdown-->
+                <!-- Navbar Profile Dropdown -->
                 <ul class="navbar-nav ms-md-0 me-3 me-lg-4">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -434,16 +464,19 @@ class AdminSidebar extends HTMLElement {
         }).join('');
 
         this.innerHTML = `
+            <!-- Sidebar Toggle Pill Button (Fixed floating at sidebar edge) -->
+            <button id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                <span class="icon-collapse"><i class="fas fa-chevron-left" style="color: #0B1739; font-size: 10px;"></i></span>
+                <span class="icon-expand"><i class="fas fa-bars" style="color: #0B1739; font-size: 10px;"></i></span>
+            </button>
+
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <!-- Sidebar Header with Logo and Close Button (Mobile) -->
-                    <div class="d-flex align-items-center justify-content-between px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
+                    <!-- Sidebar Header with Logo -->
+                    <div class="d-flex align-items-center px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
                         <a href="dashboard.html" class="d-flex align-items-center">
                             <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
                         </a>
-                        <button class="btn btn-link btn-sm p-0 d-lg-none" id="sidebarCloseMobile" type="button" aria-label="Close sidebar">
-                            <i class="fas fa-times" style="color: #0B1739; font-size: 1.2rem;"></i>
-                        </button>
                     </div>
 
                     <div class="sb-sidenav-menu">
