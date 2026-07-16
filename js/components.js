@@ -185,12 +185,6 @@ customElements.define('admin-footer', AdminFooter);
     
     // Periksa token otentikasi
     const token = localStorage.getItem('admin_token');
-    
-    // Sembunyikan body segera untuk mencegah kedipan konten (content flash) sebelum dialihkan
-    const hideStyle = document.createElement('style');
-    hideStyle.id = 'auth-hide-body';
-    hideStyle.innerHTML = 'body { display: none !important; }';
-    document.head.appendChild(hideStyle);
 
     if (!isPublicPage && !token) {
         // Jika masuk halaman privat tanpa login, arahkan ke login.html
