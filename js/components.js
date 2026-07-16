@@ -4,6 +4,148 @@
  * teratur, dan mudah dikelola (anti-spaghetti).
  */
 
+// Injeksi CSS Modern Overrides untuk meremajakan UI yang tampak jadul
+const modernStyles = document.createElement('style');
+modernStyles.innerHTML = `
+    /* Overrides Card */
+    .card {
+        border: none !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+        border-radius: 14px !important;
+        background-color: #ffffff !important;
+        overflow: hidden !important;
+        margin-bottom: 25px !important;
+    }
+    .card-header {
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding: 16px 24px !important;
+        font-weight: 600 !important;
+        color: #0B1739 !important;
+    }
+    .card-body {
+        background-color: #ffffff !important;
+        padding: 24px !important;
+    }
+
+    /* Overrides Table */
+    table.table, #datatablesSimple, .datatable-table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        width: 100% !important;
+        border: none !important;
+    }
+    table.table th, #datatablesSimple th, .datatable-table th {
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        font-size: 0.725rem !important;
+        letter-spacing: 0.05em !important;
+        padding: 14px 16px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+    table.table td, #datatablesSimple td, .datatable-table td {
+        padding: 16px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        color: #334155 !important;
+        font-size: 0.85rem !important;
+        vertical-align: middle !important;
+    }
+    table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table tbody tr:hover {
+        background-color: #f8fafc !important;
+    }
+
+    /* Badges Status & Tombol Aksi */
+    .btn-success, .bg-success, .badge-success {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+        color: #198754 !important;
+        border: 1px solid rgba(25, 135, 84, 0.15) !important;
+        font-weight: 600 !important;
+        padding: 5px 12px !important;
+        border-radius: 30px !important;
+        font-size: 0.8rem !important;
+        display: inline-block !important;
+        text-align: center !important;
+    }
+    .btn-danger, .bg-danger, .badge-danger {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        color: #dc3545 !important;
+        border: 1px solid rgba(220, 53, 69, 0.15) !important;
+        font-weight: 600 !important;
+        padding: 5px 12px !important;
+        border-radius: 30px !important;
+        font-size: 0.8rem !important;
+        display: inline-block !important;
+        text-align: center !important;
+    }
+    .btn-warning, .bg-warning, .badge-warning {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+        color: #b28900 !important;
+        border: 1px solid rgba(255, 193, 7, 0.15) !important;
+        font-weight: 600 !important;
+        padding: 5px 12px !important;
+        border-radius: 30px !important;
+        font-size: 0.8rem !important;
+        display: inline-block !important;
+        text-align: center !important;
+    }
+    .btn-primary, .bg-primary {
+        background-color: #0d6efd !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-weight: 500 !important;
+        padding: 6px 16px !important;
+        border-radius: 8px !important;
+        font-size: 0.85rem !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    .btn-primary:hover {
+        background-color: #0b5ed7 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15) !important;
+    }
+
+    /* Override Tombol di Tabel (Edit / Hapus Ramping) */
+    .produk-button-edit, a.btn-success, table .btn-success {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+        color: #198754 !important;
+        border: 1px solid rgba(25, 135, 84, 0.15) !important;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        padding: 5px 12px !important;
+        font-size: 0.8rem !important;
+        transition: all 0.2s ease !important;
+    }
+    .produk-button-edit:hover, a.btn-success:hover, table .btn-success:hover {
+        background-color: #198754 !important;
+        color: #ffffff !important;
+        border-color: #198754 !important;
+    }
+    .produk-button-hapus, button.btn-danger, table .btn-danger {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        color: #dc3545 !important;
+        border: 1px solid rgba(220, 53, 69, 0.15) !important;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        padding: 5px 12px !important;
+        font-size: 0.8rem !important;
+        transition: all 0.2s ease !important;
+    }
+    .produk-button-hapus:hover, button.btn-danger:hover, table .btn-danger:hover {
+        background-color: #dc3545 !important;
+        color: #ffffff !important;
+        border-color: #dc3545 !important;
+    }
+`;
+document.head.appendChild(modernStyles);
+
 // 1. TOPBAR NAVBAR COMPONENT
 class AdminNavbar extends HTMLElement {
     connectedCallback() {
