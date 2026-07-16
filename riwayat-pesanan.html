@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Riwayat Pesanan  </title>
+        <title>Order History — myLaundry Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -20,21 +20,21 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Riwayat Pesanan</h1>
+                        <h1 class="mt-4">Order History</h1>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Riwayat Pesanan
+                                Order History
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                     <tr>
                                         <th>Order</th>
-                                        <th>Pengguna</th>
-                                        <th>Tanggal</th>
-                                        <th>Alamat</th>
-                                        <th>Jenis</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Address</th>
+                                        <th>Service Type</th>
                                         <th>Status</th>
                                         <th>Total</th>
                                         <th></th>
@@ -43,10 +43,10 @@
                                     <tfoot>
                                     <tr>
                                         <th>Order</th>
-                                        <th>Pengguna</th>
-                                        <th>Tanggal</th>
-                                        <th>Alamat</th>
-                                        <th>Jenis</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Address</th>
+                                        <th>Service Type</th>
                                         <th>Status</th>
                                         <th>Total</th>
                                         <th></th>
@@ -60,10 +60,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Komplek Palem</td>
-                                        <td>Cuci Lipat reguler</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-dibatalkan btn btn-danger">Dibatalkan</p></td>
+                                        <td>Wash & Fold Regular</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-dibatalkan btn btn-danger">Cancelled</p></td>
                                         <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1531</td>
@@ -72,10 +72,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Perumahan PBB</td>
-                                        <td>Cuci Lipat ngebut</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Wash & Fold Express</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 23.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1530</td>
@@ -84,10 +84,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Asrama Telkom putri</td>
-                                        <td>Cuci Lipat kilat</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Wash & Fold Same-Day</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 50.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1529</td>
@@ -96,10 +96,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Asrama Telkom putra</td>
-                                        <td>Boneka</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Stuffed Toy</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 25.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1528</td>
@@ -108,10 +108,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Kost barokah</td>
-                                        <td>Jas</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Suit Jacket</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 24.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1527</td>
@@ -121,9 +121,9 @@
                                         <td>Jan 27, 2024</td>
                                         <td>Asrama Telkom putri</td>
                                         <td>Dress</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 50.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1526</td>
@@ -132,10 +132,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Kost bapak Agus</td>
-                                        <td>Cuci Setrika reguler</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-dibatalkan btn btn-danger">Dibatalkan</p></td>
+                                        <td>Wash & Iron Regular</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-dibatalkan btn btn-danger">Cancelled</p></td>
                                         <td>Rp 75.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1525</td>
@@ -144,10 +144,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Asrama Telkom putra</td>
-                                        <td>Cuci Setrika ngebut</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Wash & Iron Express</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 30.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1524</td>
@@ -156,10 +156,10 @@
                                         </td>
                                         <td>Jan 27, 2024</td>
                                         <td>Asrama Telkom putri</td>
-                                        <td>Cuci Setrika kilat</td>
-                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Selesai</p></td>
+                                        <td>Wash & Iron Same-Day</td>
+                                        <td> <p class="status-riwayat-pesanan riwayat-selesai btn btn-success">Completed</p></td>
                                         <td>Rp 65.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     </tbody>
                                 </table>

@@ -266,7 +266,7 @@ class AdminNavbar extends HTMLElement {
                 <!-- Navbar Search-->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Cari..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                        <input class="form-control" type="text" placeholder="Search..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
                         <button class="btn btn-primary" id="btnNavbarSearch" type="button">
                             <i class="fas fa-search"></i>
                         </button>
@@ -282,7 +282,7 @@ class AdminNavbar extends HTMLElement {
                             <li><a class="dropdown-item" href="404.html">Settings</a></li>
                             <li><a class="dropdown-item" href="404.html">Activity Log</a></li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item text-danger" href="login.html">Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="login.html">Sign Out</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -302,10 +302,10 @@ class AdminSidebar extends HTMLElement {
         // Daftar menu sidebar
         const menuItems = [
             { name: "Dashboard", href: "dashboard.html", icon: "fas fa-tachometer-alt" },
-            { name: "Pesanan", href: "pesanan.html", icon: "fas fa-shopping-basket" },
-            { name: "Kurir", href: "kurir.html", icon: "fas fa-truck-moving" },
-            { name: "Riwayat Pesanan", href: "riwayat-pesanan.html", icon: "fas fa-history" },
-            { name: "Produk", href: "produk.html", icon: "fas fa-tshirt" }
+            { name: "Orders", href: "pesanan.html", icon: "fas fa-shopping-basket" },
+            { name: "Couriers", href: "kurir.html", icon: "fas fa-truck-moving" },
+            { name: "Order History", href: "riwayat-pesanan.html", icon: "fas fa-history" },
+            { name: "Products", href: "produk.html", icon: "fas fa-tshirt" }
         ];
 
         // Buat list HTML menu dengan deteksi menu yang sedang aktif
@@ -336,7 +336,7 @@ class AdminSidebar extends HTMLElement {
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading"> 
-                                <span style="color: #0B1739;">Menu Utama</span>
+                                <span style="color: #0B1739;">Main Menu</span>
                             </div>
                             <hr class="dropdown-divider mx-3" />
                             
@@ -354,13 +354,13 @@ class AdminSidebar extends HTMLElement {
                                             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
                                         </svg>
                                     </div>
-                                    <span style="color: #ffffff;">Keluar</span>
+                                    <span style="color: #ffffff;">Sign Out</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
+                    <div class="small">Logged in as:</div>
                         myLaundry Admin
                     </div>
                 </nav>

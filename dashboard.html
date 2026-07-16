@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard</title>
+        <title>Dashboard — myLaundry Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -22,14 +22,14 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Laporan</li>
+                            <li class="breadcrumb-item active">Reports</li>
                         </ol>
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        Penjualan <br>
+                                        Sales <br>
                                         <div>
                                             <span class="ukuran"> 2.000.000.00 </span>
                                             <button  class="btn-keuntungan btn btn-success">14.8%
@@ -46,7 +46,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        Pengunjung Aplikasi
+                                        App Visitors
                                     </div>
                                     <div class="card-body"><canvas id="myBarChart" width="100%" height="46.1"></canvas></div>
                                 </div>
@@ -55,17 +55,17 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Pesanan Hari ini
+                                Today's Orders
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                     <tr>
                                         <th>Order</th>
-                                        <th>Pengguna</th>
-                                        <th>Tanggal</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
                                         <th>Status</th>
-                                        <th>Alamat</th>
+                                        <th>Address</th>
                                         <th>Total</th>
                                         <th></th>
                                     </tr>
@@ -73,10 +73,10 @@
                                     <tfoot>
                                     <tr>
                                         <th>Order</th>
-                                        <th>Pengguna</th>
-                                        <th>Tanggal</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
                                         <th>Status</th>
-                                        <th>Alamat</th>
+                                        <th>Address</th>
                                         <th>Total</th>
                                         <th></th>
                                     </tr>
@@ -87,19 +87,19 @@
                                         <td>
                                             Siti Rahmawati <br> siti.rahmawati21@gmail.com
                                         </td>
-                                        <td>17 Juli 2024 17:05</td>
-                                        <td> <p class="status-pesanan-dashbord menunggu-pembayaran btn btn-info"> Menunggu Pembayaran </p></td>
+                                        <td>Jul 17, 2024 17:05</td>
+                                        <td> <p class="status-pesanan-dashbord menunggu-pembayaran btn btn-info"> Awaiting Payment </p></td>
                                         <td>Kost Rahmat</td>
                                         <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>
+                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
                                     </tr>
                                     <tr>
                                         <td>#1530</td>
                                         <td>
                                             Budi Santoso <br> budi.santoso67@gmail.com
                                         </td>
-                                        <td>17 Juli 2024 15:00</td>
-                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Kurir dalam Perjalanan </p></td>
+                                        <td>Jul 17, 2024 15:00</td>
+                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Courier En Route </p></td>
                                         <td>Asrama Telkom University</td>
                                         <td>Rp 40.000.00</td>
                                         <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>                                    </tr>
@@ -108,8 +108,8 @@
                                         <td>
                                             Dewi Anggraini <br> dewi.anggraini22@gmail.com
                                         </td>
-                                        <td>17 Juli 2023 14:45</td>
-                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Kurir dalam Perjalanan </p></td>
+                                        <td>Jul 17, 2023 14:45</td>
+                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Courier En Route </p></td>
                                         <td>Asrama Telkom University</td>
                                         <td>Rp 40.000.00</td>
                                         <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>                                    </tr>
@@ -118,8 +118,8 @@
                                         <td>
                                             Agus Wijaya <br> agus.wijaya22@gmail.com
                                         </td>
-                                        <td>17 Juli 2023 08:00</td>
-                                        <td> <p class="status-batal-dasbord btn btn-danger"> Dibatalkan </p></td>
+                                        <td>Jul 17, 2023 08:00</td>
+                                        <td> <p class="status-batal-dasbord btn btn-danger"> Cancelled </p></td>
                                         <td>Asrama Telkom University</td>
                                         <td>Rp 40.000.00</td>
                                         <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>                                    </tr>
@@ -128,8 +128,8 @@
                                         <td>
                                             Maya Putri <br> maya.putri11@gmail.com
                                         </td>
-                                        <td>17 Juli 2023 07:45</td>
-                                        <td><button class="status-selesai-dasbord btn btn-success">Selesai</button></td>
+                                        <td>Jul 17, 2023 07:45</td>
+                                        <td><button class="status-selesai-dasbord btn btn-success">Completed</button></td>
                                         <td>Asrama Telkom University</td>
                                         <td>Rp 40.000.00</td>
                                         <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">Selengkapnya</a></td>                                    </tr>
