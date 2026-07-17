@@ -161,11 +161,48 @@
         }
     });
 
-    // Mock form submit
-    document.getElementById('add-product-form').addEventListener('submit', function(e) {
+    // Form submit integration
+    document.getElementById('add-product-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        alert('New product added successfully!');
-        window.location.href = 'produk.html';
+        
+        const titleInput = document.getElementById('nama-produk');
+        const priceInput = document.getElementById('jumlah-kg');
+        const durationInput = document.getElementById('jumlah-hari');
+        const durationUnit = document.getElementById('satuan-hari').value;
+        const pricingUnit = document.getElementById('satuan-kg').value;
+        
+        if (!titleInput || !priceInput || !durationInput) return;
+
+        const title = titleInput.value.trim();
+        const price = parseFloat(priceInput.value);
+        const amount = parseInt(durationInput.value);
+
+        if (!title || isNaN(price) || isNaN(amount)) {
+            alert('Please fill out all required fields correctly!');
+            return;
+        }
+
+        // Convert duration to hours
+        const timeInHours = durationUnit === 'days' ? amount * 24 : amount;
+
+        // Map pricing unit to category name: kg -> Kiloan, pcs -> Satuan
+        const category = pricingUnit === 'kg' ? 'Kiloan' : 'Satuan';
+
+        try {
+            await apiFetch('/services/', {
+                method: 'POST',
+                body: {
+                    title: title,
+                    time: timeInHours,
+                    price: price,
+                    category: category
+                }
+            });
+            alert('New product added successfully!');
+            window.location.href = 'produk.html';
+        } catch (err) {
+            alert('Failed to add product: ' + err.message);
+        }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

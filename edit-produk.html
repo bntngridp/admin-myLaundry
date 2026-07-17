@@ -161,11 +161,97 @@
         }
     });
 
-    // Mock form submit
-    document.getElementById('edit-product-form').addEventListener('submit', function(e) {
+    // Fetch and populate product details
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    
+    if (productId) {
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await apiFetch(`/services/${productId}`);
+                if (response && response.data) {
+                    const service = response.data;
+                    document.getElementById('id').value = service.id;
+                    document.getElementById('nama-produk').value = service.title;
+                    document.getElementById('jumlah-kg').value = service.price;
+
+                    // Populate duration
+                    if (service.time % 24 === 0) {
+                        document.getElementById('satuan-hari').value = 'days';
+                        document.getElementById('jumlah-hari').value = service.time / 24;
+                    } else {
+                        document.getElementById('satuan-hari').value = 'hours';
+                        document.getElementById('jumlah-hari').value = service.time;
+                    }
+
+                    // Populate pricing unit
+                    if (service.category.toLowerCase() === 'kiloan') {
+                        document.getElementById('satuan-kg').value = 'kg';
+                    } else {
+                        document.getElementById('satuan-kg').value = 'pcs';
+                    }
+
+                    // Map category dropdown
+                    const categorySelect = document.getElementById('kategori');
+                    if (service.title.toLowerCase().includes('wash & fold') || service.title.toLowerCase().includes('fold')) {
+                        categorySelect.value = 'Wash & Fold';
+                    } else if (service.title.toLowerCase().includes('iron')) {
+                        categorySelect.value = 'Wash & Iron';
+                    } else {
+                        categorySelect.value = 'Individual Items';
+                    }
+                }
+            } catch (err) {
+                alert('Failed to load product details: ' + err.message);
+                window.location.href = 'produk.html';
+            }
+        });
+    }
+
+    // Handle form submit
+    document.getElementById('edit-product-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        alert('Product changes saved successfully!');
-        window.location.href = 'produk.html';
+        
+        if (!productId) return;
+
+        const titleInput = document.getElementById('nama-produk');
+        const priceInput = document.getElementById('jumlah-kg');
+        const durationInput = document.getElementById('jumlah-hari');
+        const durationUnit = document.getElementById('satuan-hari').value;
+        const pricingUnit = document.getElementById('satuan-kg').value;
+        
+        if (!titleInput || !priceInput || !durationInput) return;
+
+        const title = titleInput.value.trim();
+        const price = parseFloat(priceInput.value);
+        const amount = parseInt(durationInput.value);
+
+        if (!title || isNaN(price) || isNaN(amount)) {
+            alert('Please fill out all required fields correctly!');
+            return;
+        }
+
+        // Convert duration to hours
+        const timeInHours = durationUnit === 'days' ? amount * 24 : amount;
+
+        // Map pricing unit to category name: kg -> Kiloan, pcs -> Satuan
+        const category = pricingUnit === 'kg' ? 'Kiloan' : 'Satuan';
+
+        try {
+            await apiFetch(`/services/${productId}`, {
+                method: 'PUT',
+                body: {
+                    title: title,
+                    time: timeInHours,
+                    price: price,
+                    category: category
+                }
+            });
+            alert('Product updated successfully!');
+            window.location.href = 'produk.html';
+        } catch (err) {
+            alert('Failed to update product: ' + err.message);
+        }
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

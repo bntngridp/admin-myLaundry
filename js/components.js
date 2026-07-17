@@ -16,6 +16,11 @@ cssLink.rel = 'stylesheet';
 cssLink.href = 'css/custom-components.css';
 document.head.appendChild(cssLink);
 
+// Muat API client secara dinamis
+const apiScript = document.createElement('script');
+apiScript.src = 'js/api.js';
+document.head.appendChild(apiScript);
+
 
 // 1. TOPBAR NAVBAR COMPONENT
 class AdminNavbar extends HTMLElement {
@@ -263,10 +268,64 @@ function initializeAuthInteractions() {
     // Login button
     const loginButton = document.getElementById('btn-masuk');
     if (loginButton) {
-        loginButton.addEventListener('click', (e) => {
+        const form = loginButton.closest('form');
+        const alertContainer = document.createElement('div');
+        alertContainer.id = 'login-alert';
+        alertContainer.style.display = 'none';
+        alertContainer.className = 'alert alert-danger p-2 mb-3 text-center';
+        alertContainer.style.fontSize = '14px';
+        alertContainer.style.borderRadius = '6px';
+        if (form) {
+            form.insertBefore(alertContainer, form.firstChild);
+        }
+
+        loginButton.addEventListener('click', async (e) => {
             e.preventDefault();
-            localStorage.setItem('admin_token', 'mylaundry-admin-mock-token-12345');
-            window.location.href = 'dashboard.html';
+            
+            const emailInput = document.getElementById('inputEmail');
+            const passwordInput = document.getElementById('inputPassword');
+            if (!emailInput || !passwordInput) return;
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                alertContainer.innerText = 'Please enter both email and password!';
+                alertContainer.style.display = 'block';
+                return;
+            }
+
+            // Disable button and show loading state
+            loginButton.classList.add('disabled');
+            const originalText = loginButton.innerHTML;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing In...';
+            alertContainer.style.display = 'none';
+
+            try {
+                const response = await apiFetch('/auth/login', {
+                    method: 'POST',
+                    body: { email, password }
+                });
+
+                if (response && response.success && response.data) {
+                    if (response.data.role !== 'admin') {
+                        alertContainer.innerText = 'Access Denied: Only administrators can access this panel.';
+                        alertContainer.style.display = 'block';
+                        loginButton.classList.remove('disabled');
+                        loginButton.innerHTML = originalText;
+                        return;
+                    }
+                    
+                    localStorage.setItem('admin_token', response.data.token);
+                    localStorage.setItem('admin_role', response.data.role);
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (err) {
+                alertContainer.innerText = err.message || 'Login failed. Please check your credentials.';
+                alertContainer.style.display = 'block';
+                loginButton.classList.remove('disabled');
+                loginButton.innerHTML = originalText;
+            }
         });
     }
 
@@ -274,6 +333,7 @@ function initializeAuthInteractions() {
     document.querySelectorAll('a[href="login.html"]').forEach(btn => {
         btn.addEventListener('click', () => {
             localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_role');
         });
     });
 }

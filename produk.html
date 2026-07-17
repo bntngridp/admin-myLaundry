@@ -307,31 +307,88 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="js/scripts.js"></script>        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 
         <script>
-            window.addEventListener('DOMContentLoaded', event => {
+            window.addEventListener('DOMContentLoaded', async () => {
                 let productRowToDelete = null;
-
-                // Event delegation on table body to handle click on delete buttons (works across pagination/sort)
                 const tableBody = document.querySelector('#datatablesSimple tbody');
+
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2" style="color: #0007B0;"></i>Loading products...</td></tr>';
+                    
+                    try {
+                        const response = await apiFetch('/services/');
+                        if (response && response.data) {
+                            tableBody.innerHTML = '';
+                            response.data.forEach(service => {
+                                const timeText = service.time >= 24 
+                                    ? `${Math.round(service.time / 24)} days` 
+                                    : `${service.time} hours`;
+                                
+                                const unit = service.category.toLowerCase() === 'kiloan' ? 'kg' : 'pcs';
+                                const priceText = `Rp${service.price.toLocaleString('id-ID')} (${unit})`;
+
+                                const row = document.createElement('tr');
+                                row.dataset.id = service.id;
+                                row.innerHTML = `
+                                    <td>${service.id}</td>
+                                    <td>${service.category}</td>
+                                    <td>${service.title}</td>
+                                    <td>${timeText}</td>
+                                    <td>${priceText}</td>
+                                    <td>
+                                        <a href="edit-produk.html?id=${service.id}" class="produk-button-edit btn btn-success">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                                            </svg>
+                                            Edit
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button class="produk-button-hapus btn btn-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </td>
+                                `;
+                                tableBody.appendChild(row);
+                            });
+                        }
+                    } catch (err) {
+                        tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle me-2"></i>Failed to load products: ${err.message}</td></tr>`;
+                    }
+
+                    // Initialize DataTable after rows are populated
+                    const datatablesSimple = document.getElementById('datatablesSimple');
+                    if (datatablesSimple) {
+                        const dataTable = new simpleDatatables.DataTable(datatablesSimple);
+                        
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) {
+                            searchInput.addEventListener('keyup', function() {
+                                dataTable.search(this.value);
+                            });
+                        }
+                    }
+                }
+
+                // Event delegation on table body to handle click on delete buttons
                 if (tableBody) {
                     tableBody.addEventListener('click', function(e) {
                         const deleteButton = e.target.closest('.produk-button-hapus');
                         if (deleteButton) {
                             e.preventDefault();
                             
-                            // Find the row containing the clicked button
                             const row = deleteButton.closest('tr');
                             productRowToDelete = row;
                             
-                            // Get the product name (column 3, index 2)
                             const productName = row.cells[2].textContent.trim();
                             document.getElementById('delete-product-name').textContent = productName;
                             
-                            // Show the bootstrap modal
                             const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
                             deleteModal.show();
                         }
@@ -339,20 +396,28 @@
                 }
 
                 // Handle confirm delete button click
-                document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+                document.getElementById('confirm-delete-btn').addEventListener('click', async function() {
                     if (productRowToDelete) {
-                        // Mock remove row from UI
-                        productRowToDelete.remove();
-                        productRowToDelete = null;
+                        const serviceId = productRowToDelete.dataset.id;
                         
-                        // Hide modal
-                        const modalEl = document.getElementById('deleteConfirmModal');
-                        const modal = bootstrap.Modal.getInstance(modalEl);
-                        if (modal) {
-                            modal.hide();
+                        try {
+                            await apiFetch(`/services/${serviceId}`, {
+                                method: 'DELETE'
+                            });
+                            
+                            productRowToDelete.remove();
+                            productRowToDelete = null;
+                            
+                            const modalEl = document.getElementById('deleteConfirmModal');
+                            const modal = bootstrap.Modal.getInstance(modalEl);
+                            if (modal) {
+                                modal.hide();
+                            }
+                            
+                            alert('Product deleted successfully!');
+                        } catch (err) {
+                            alert('Failed to delete product: ' + err.message);
                         }
-                        
-                        alert('Product deleted successfully!');
                     }
                 });
             });
