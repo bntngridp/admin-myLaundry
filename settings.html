@@ -147,6 +147,27 @@
 
     // Mock settings saving notification
     document.getElementById('save-settings-btn').addEventListener('click', function() {
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (newPassword) {
+            const isStrong = newPassword.length >= 8 && 
+                             /[A-Z]/.test(newPassword) && 
+                             /[a-z]/.test(newPassword) && 
+                             /[0-9]/.test(newPassword) && 
+                             /[^A-Za-z0-9]/.test(newPassword);
+
+            if (!isStrong) {
+                alert('New Password must be at least 8 characters long and contain uppercase, lowercase, number, and symbol!');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+        }
+
         alert('Settings saved successfully!');
         window.location.href = 'dashboard.html';
     });

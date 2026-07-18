@@ -25,7 +25,8 @@
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-login-password-register">Create Account</h3></div>
                             <div class="card-body">
-                                <form>
+                                <div id="alert-container"></div>
+                                <form id="register-form">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
@@ -50,6 +51,13 @@
                                                 <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" />
                                                 <label for="inputPassword">Password</label>
                                             </div>
+                                            <div class="password-requirements mt-2 text-muted px-2" style="font-size: 0.8rem; display: none;">
+                                                <div class="req-item mb-1" id="req-len"><i class="fas fa-times-circle text-danger me-1"></i>Min. 8 characters</div>
+                                                <div class="req-item mb-1" id="req-upper"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 uppercase (A-Z)</div>
+                                                <div class="req-item mb-1" id="req-lower"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 lowercase (a-z)</div>
+                                                <div class="req-item mb-1" id="req-num"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 number (0-9)</div>
+                                                <div class="req-item mb-1" id="req-special"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 symbol (e.g. !, @, #)</div>
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
@@ -59,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div>
+                                        <div class="d-grid"><button type="submit" class="btn btn-primary btn-block" id="btn-register">Create Account</button></div>
                                     </div>
                                 </form>
                             </div>
@@ -89,5 +97,122 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/scripts.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const passwordInput = document.getElementById('inputPassword');
+        const confirmInput = document.getElementById('inputPasswordConfirm');
+        const requirementsContainer = document.querySelector('.password-requirements');
+        
+        const reqs = {
+            len: document.getElementById('req-len'),
+            upper: document.getElementById('req-upper'),
+            lower: document.getElementById('req-lower'),
+            num: document.getElementById('req-num'),
+            special: document.getElementById('req-special')
+        };
+
+        function updateReq(element, isValid) {
+            const icon = element.querySelector('i');
+            if (isValid) {
+                icon.className = 'fas fa-check-circle text-success me-1';
+                element.classList.remove('text-muted');
+                element.classList.add('text-success');
+            } else {
+                icon.className = 'fas fa-times-circle text-danger me-1';
+                element.classList.remove('text-success');
+                element.classList.add('text-muted');
+            }
+        }
+
+        passwordInput.addEventListener('focus', () => {
+            requirementsContainer.style.display = 'block';
+        });
+
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+            
+            const isLenValid = val.length >= 8;
+            const isUpperValid = /[A-Z]/.test(val);
+            const isLowerValid = /[a-z]/.test(val);
+            const isNumValid = /[0-9]/.test(val);
+            const isSpecialValid = /[^A-Za-z0-9]/.test(val);
+
+            updateReq(reqs.len, isLenValid);
+            updateReq(reqs.upper, isUpperValid);
+            updateReq(reqs.lower, isLowerValid);
+            updateReq(reqs.num, isNumValid);
+            updateReq(reqs.special, isSpecialValid);
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('inputFirstName').value.trim();
+            const lastName = document.getElementById('inputLastName').value.trim();
+            const email = document.getElementById('inputEmail').value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmInput.value;
+            const alertContainer = document.getElementById('alert-container');
+            const submitBtn = document.getElementById('btn-register');
+
+            alertContainer.innerHTML = '';
+
+            if (!firstName || !lastName || !email || !password || !confirmPassword) {
+                showAlert('All fields are required!', 'danger');
+                return;
+            }
+
+            const isStrong = password.length >= 8 && 
+                             /[A-Z]/.test(password) && 
+                             /[a-z]/.test(password) && 
+                             /[0-9]/.test(password) && 
+                             /[^A-Za-z0-9]/.test(password);
+
+            if (!isStrong) {
+                showAlert('Password must meet all complexity requirements!', 'danger');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'danger');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Creating account...';
+
+            try {
+                const username = `${firstName} ${lastName}`;
+                await apiFetch('/auth/register', {
+                    method: 'POST',
+                    body: {
+                        username: username,
+                        email: email,
+                        password: password,
+                        confirm_password: confirmPassword
+                    }
+                });
+
+                showAlert('Account created successfully! Redirecting to login...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            } catch (err) {
+                showAlert(err.message, 'danger');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Create Account';
+            }
+        });
+
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert" style="border-radius: 12px; font-size: 0.9rem;">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+        }
+    });
+</script>
 </body>
 </html>
