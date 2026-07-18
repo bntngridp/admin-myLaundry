@@ -52,11 +52,11 @@
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="password-requirements mt-2 text-muted px-2" style="font-size: 0.8rem; display: none;">
-                                                <div class="req-item mb-1" id="req-len"><i class="fas fa-times-circle text-danger me-1"></i>Min. 8 characters</div>
-                                                <div class="req-item mb-1" id="req-upper"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 uppercase (A-Z)</div>
-                                                <div class="req-item mb-1" id="req-lower"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 lowercase (a-z)</div>
-                                                <div class="req-item mb-1" id="req-num"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 number (0-9)</div>
-                                                <div class="req-item mb-1" id="req-special"><i class="fas fa-times-circle text-danger me-1"></i>Min. 1 symbol (e.g. !, @, #)</div>
+                                                <div class="req-item mb-1" id="req-len"><span class="icon-container me-1"></span>Min. 8 characters</div>
+                                                <div class="req-item mb-1" id="req-upper"><span class="icon-container me-1"></span>Min. 1 uppercase (A-Z)</div>
+                                                <div class="req-item mb-1" id="req-lower"><span class="icon-container me-1"></span>Min. 1 lowercase (a-z)</div>
+                                                <div class="req-item mb-1" id="req-num"><span class="icon-container me-1"></span>Min. 1 number (0-9)</div>
+                                                <div class="req-item mb-1" id="req-special"><span class="icon-container me-1"></span>Min. 1 symbol (e.g. !, @, #)</div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -111,16 +111,27 @@
             special: document.getElementById('req-special')
         };
 
+        const CROSS_SVG = `<svg class="text-danger" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: -0.125em;"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`;
+        const CHECK_SVG = `<svg class="text-success" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: -0.125em;"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`;
+
+        // Initialize icons
+        Object.values(reqs).forEach(el => {
+            const iconContainer = el.querySelector('.icon-container');
+            if (iconContainer) iconContainer.innerHTML = CROSS_SVG;
+        });
+
         function updateReq(element, isValid) {
-            const icon = element.querySelector('i');
-            if (isValid) {
-                icon.className = 'fas fa-check-circle text-success me-1';
-                element.classList.remove('text-muted');
-                element.classList.add('text-success');
-            } else {
-                icon.className = 'fas fa-times-circle text-danger me-1';
-                element.classList.remove('text-success');
-                element.classList.add('text-muted');
+            const iconContainer = element.querySelector('.icon-container');
+            if (iconContainer) {
+                if (isValid) {
+                    iconContainer.innerHTML = CHECK_SVG;
+                    element.classList.remove('text-muted');
+                    element.classList.add('text-success');
+                } else {
+                    iconContainer.innerHTML = CROSS_SVG;
+                    element.classList.remove('text-success');
+                    element.classList.add('text-muted');
+                }
             }
         }
 
