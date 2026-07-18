@@ -223,6 +223,14 @@ body.bg-login-password-register {
     padding-left: 16px !important;
     color: #94a3b8 !important;
 }
+.bg-login-password-register .form-floating > .form-control {
+    padding-top: 1.625rem !important;
+    padding-bottom: 0.625rem !important;
+    height: 3.5rem !important;
+}
+.bg-login-password-register .form-floating > .form-control.password-field {
+    padding-right: 48px !important;
+}
 .bg-login-password-register .btn-primary {
     width: 100% !important;
     padding: 12px 24px !important;
