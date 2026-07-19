@@ -378,10 +378,32 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
 /* ==========================================================================
    DASHBOARD STATS & BADGE OVERRIDES (MIGRATED FROM STYLES.CSS)
    ========================================================================== */
-.btn-keuntungan {
-    font-size: 13px !important;
-    padding: 2px 8px !important;
-    border-radius: 4px !important;
+.badge-keuntungan {
+    font-size: 12px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-weight: 600 !important;
+}
+
+.badge-keuntungan.positive {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+    color: #198754 !important;
+    border: 1px solid rgba(25, 135, 84, 0.15) !important;
+}
+
+.badge-keuntungan.negative {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    color: #dc3545 !important;
+    border: 1px solid rgba(220, 53, 69, 0.15) !important;
+}
+
+.badge-keuntungan.neutral {
+    background-color: rgba(108, 117, 125, 0.1) !important;
+    color: #6c757d !important;
+    border: 1px solid rgba(108, 117, 125, 0.15) !important;
 }
 
 .ukuran {

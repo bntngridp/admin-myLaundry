@@ -32,13 +32,11 @@
                                             <i class="fas fa-chart-area me-1"></i>
                                             Sales <br>
                                             <div class="d-flex align-items-center gap-2 mt-1">
-                                                <span class="ukuran"> 2.000.000.00 </span>
-                                                <button class="btn-keuntungan btn btn-success d-inline-flex align-items-center gap-1">
-                                                    14.8%
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
-                                                    </svg>
-                                                </button>
+                                                <span class="ukuran">Rp 0</span>
+                                                <span id="salesChangeBadge" class="badge-keuntungan neutral">
+                                                    <span class="change-value">0%</span>
+                                                    <i class="fas fa-minus change-icon"></i>
+                                                </span>
                                             </div>
                                         </div>
                                         <div>
@@ -103,57 +101,16 @@
                                     </tr>
                                     </tfoot>
                                     <tbody id="ordersTableBody">
-                                    <tr>
-                                        <td>#1531</td>
-                                        <td>
-                                            Siti Rahmawati <br> siti.rahmawati21@gmail.com
-                                        </td>
-                                        <td>Jul 17, 2024 17:05</td>
-                                        <td> <p class="status-pesanan-dashbord menunggu-pembayaran btn btn-info"> Awaiting Payment </p></td>
-                                        <td>Kost Rahmat</td>
-                                        <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#1530</td>
-                                        <td>
-                                            Budi Santoso <br> budi.santoso67@gmail.com
-                                        </td>
-                                        <td>Jul 17, 2024 15:00</td>
-                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Courier En Route </p></td>
-                                        <td>Asrama Telkom University</td>
-                                        <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>                                    </tr>
-                                    <tr>
-                                        <td>#1529</td>
-                                        <td>
-                                            Dewi Anggraini <br> dewi.anggraini22@gmail.com
-                                        </td>
-                                        <td>Jul 17, 2023 14:45</td>
-                                        <td> <p class="status-pesanan-dashbord kurir-dalam-perjalanan btn btn-warning"> Courier En Route </p></td>
-                                        <td>Asrama Telkom University</td>
-                                        <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>                                    </tr>
-                                    <tr>
-                                        <td>#1527</td>
-                                        <td>
-                                            Agus Wijaya <br> agus.wijaya22@gmail.com
-                                        </td>
-                                        <td>Jul 17, 2023 08:00</td>
-                                        <td> <p class="status-batal-dasbord btn btn-danger"> Cancelled </p></td>
-                                        <td>Asrama Telkom University</td>
-                                        <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>                                    </tr>
-                                    <tr>
-                                        <td>#1526</td>
-                                        <td>
-                                            Maya Putri <br> maya.putri11@gmail.com
-                                        </td>
-                                        <td>Jul 17, 2023 07:45</td>
-                                        <td><button class="status-selesai-dasbord btn btn-success">Completed</button></td>
-                                        <td>Asrama Telkom University</td>
-                                        <td>Rp 40.000.00</td>
-                                        <td><a href="detail-pesanan.html" class="details-btn btn btn-primary">View Details</a></td>                                    </tr>
+                                        <tr>
+                                            <td colspan="7" class="text-center py-5 text-muted">
+                                                <div class="d-flex flex-column align-items-center justify-content-center gap-2 my-3">
+                                                    <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <span>Memuat data pesanan...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -310,14 +267,19 @@
             // Fetch and load database data
             async function loadDashboardData() {
                 try {
-                    const response = await apiFetch('/orders');
-                    if (!response || !response.success) {
+                    // Fetch orders list and stats in parallel
+                    const [ordersRes, statsRes] = await Promise.all([
+                        apiFetch('/orders'),
+                        apiFetch('/admins/stats')
+                    ]);
+
+                    if (!ordersRes || !ordersRes.success) {
                         console.error('Failed to load orders');
                         initDataTable();
                         return;
                     }
 
-                    const orders = response.data || [];
+                    const orders = ordersRes.data || [];
                     
                     // 1. Populate table
                     const tbody = document.getElementById('ordersTableBody');
@@ -378,7 +340,7 @@
                     // Always initialize DataTable after we finish updating the DOM
                     initDataTable();
 
-                    // 2. Compute dynamic stats from DB
+                    // 2. Compute dynamic stats from DB for Chart
                     let totalSalesVal = 0;
                     const salesToday = new Array(7).fill(0); // 4-hour intervals
                     const salesWeekly = new Array(7).fill(0); // Mon-Sun
@@ -393,7 +355,7 @@
                         const hour = date.getHours();
                         const price = order.total_price || 0;
 
-                        if (order.status && order.status.toLowerCase() === 'completed') {
+                        if (order.status && (order.status.toLowerCase() === 'completed' || order.status.toLowerCase() === 'done')) {
                             totalSalesVal += price;
 
                             // Group Monthly
@@ -424,10 +386,44 @@
                         }
                     });
 
-                    // Update Top Card Display
-                    const totalSalesElem = document.querySelector('.ukuran');
-                    if (totalSalesElem) {
-                        totalSalesElem.textContent = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(totalSalesVal);
+                    // Update Top Card Display using stats endpoint data
+                    if (statsRes && statsRes.success && statsRes.data) {
+                        const stats = statsRes.data;
+                        
+                        const totalSalesElem = document.querySelector('.ukuran');
+                        if (totalSalesElem) {
+                            totalSalesElem.textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(stats.total_sales || 0);
+                        }
+
+                        // Update Percentage Badge
+                        const changeBadge = document.getElementById('salesChangeBadge');
+                        if (changeBadge) {
+                            const valElem = changeBadge.querySelector('.change-value');
+                            const iconElem = changeBadge.querySelector('.change-icon');
+                            
+                            // Reset class to base
+                            changeBadge.className = 'badge-keuntungan';
+                            
+                            const percentVal = stats.sales_percentage ? stats.sales_percentage.toFixed(1) : '0';
+                            valElem.textContent = `${percentVal}%`;
+                            
+                            if (stats.sales_trend === 'up') {
+                                changeBadge.classList.add('positive');
+                                iconElem.className = 'fas fa-arrow-up';
+                            } else if (stats.sales_trend === 'down') {
+                                changeBadge.classList.add('negative');
+                                iconElem.className = 'fas fa-arrow-down';
+                            } else {
+                                changeBadge.classList.add('neutral');
+                                iconElem.className = 'fas fa-minus';
+                            }
+                        }
+                    } else {
+                        // Fallback display
+                        const totalSalesElem = document.querySelector('.ukuran');
+                        if (totalSalesElem) {
+                            totalSalesElem.textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalSalesVal);
+                        }
                     }
 
                     // Map dynamic values to Sales chart datasets
