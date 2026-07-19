@@ -169,47 +169,54 @@
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     
-    if (productId) {
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await apiFetch(`/services/${productId}`);
-                if (response && response.data) {
-                    const service = response.data;
-                    document.getElementById('id').value = service.id;
-                    document.getElementById('nama-produk').value = service.title;
-                    document.getElementById('jumlah-kg').value = service.price;
+    const loadProductDetails = async () => {
+        try {
+            const response = await apiFetch(`/services/${productId}`);
+            const service = (response && response.data) ? response.data : response;
+            
+            if (service && service.id) {
+                document.getElementById('id').value = service.id;
+                document.getElementById('nama-produk').value = service.title;
+                document.getElementById('jumlah-kg').value = service.price;
 
-                    // Populate duration
-                    if (service.time % 24 === 0) {
-                        document.getElementById('satuan-hari').value = 'days';
-                        document.getElementById('jumlah-hari').value = service.time / 24;
-                    } else {
-                        document.getElementById('satuan-hari').value = 'hours';
-                        document.getElementById('jumlah-hari').value = service.time;
-                    }
-
-                    // Populate pricing unit
-                    if (service.category.toLowerCase() === 'kiloan') {
-                        document.getElementById('satuan-kg').value = 'kg';
-                    } else {
-                        document.getElementById('satuan-kg').value = 'pcs';
-                    }
-
-                    // Map category dropdown
-                    const categorySelect = document.getElementById('kategori');
-                    if (service.title.toLowerCase().includes('wash & fold') || service.title.toLowerCase().includes('fold')) {
-                        categorySelect.value = 'Wash & Fold';
-                    } else if (service.title.toLowerCase().includes('iron')) {
-                        categorySelect.value = 'Wash & Iron';
-                    } else {
-                        categorySelect.value = 'Individual Items';
-                    }
+                // Populate duration
+                if (service.time % 24 === 0) {
+                    document.getElementById('satuan-hari').value = 'days';
+                    document.getElementById('jumlah-hari').value = service.time / 24;
+                } else {
+                    document.getElementById('satuan-hari').value = 'hours';
+                    document.getElementById('jumlah-hari').value = service.time;
                 }
-            } catch (err) {
-                alert('Failed to load product details: ' + err.message);
-                window.location.href = 'produk.html';
+
+                // Populate pricing unit
+                if (service.category && service.category.toLowerCase() === 'kiloan') {
+                    document.getElementById('satuan-kg').value = 'kg';
+                } else {
+                    document.getElementById('satuan-kg').value = 'pcs';
+                }
+
+                // Map category dropdown
+                const categorySelect = document.getElementById('kategori');
+                if (service.title && (service.title.toLowerCase().includes('wash & fold') || service.title.toLowerCase().includes('fold'))) {
+                    categorySelect.value = 'Wash & Fold';
+                } else if (service.title && service.title.toLowerCase().includes('iron')) {
+                    categorySelect.value = 'Wash & Iron';
+                } else {
+                    categorySelect.value = 'Individual Items';
+                }
             }
-        });
+        } catch (err) {
+            alert('Failed to load product details: ' + err.message);
+            window.location.href = 'produk.html';
+        }
+    };
+
+    if (productId) {
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', loadProductDetails);
+        } else {
+            loadProductDetails();
+        }
     }
 
     // Handle form submit
