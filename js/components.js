@@ -21,6 +21,13 @@ const apiScript = document.createElement('script');
 apiScript.src = 'js/api.js';
 document.head.appendChild(apiScript);
 
+// Muat Favicon secara dinamis agar muncul di tab browser di semua halaman
+const favicon = document.createElement('link');
+favicon.rel = 'icon';
+favicon.type = 'image/png';
+favicon.href = 'assets/img/logo-nobg.png';
+document.head.appendChild(favicon);
+
 
 // 1. TOPBAR NAVBAR COMPONENT
 class AdminNavbar extends HTMLElement {
