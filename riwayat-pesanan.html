@@ -168,10 +168,12 @@
                         `;
                     }
 
-                    // Initialize Simple DataTable
-                    const datatablesSimple = document.getElementById('datatablesSimple');
-                    if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                        new simpleDatatables.DataTable(datatablesSimple);
+                    // Initialize Simple DataTable only if there is data
+                    if (historyOrders.length > 0) {
+                        const datatablesSimple = document.getElementById('datatablesSimple');
+                        if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
+                            new simpleDatatables.DataTable(datatablesSimple);
+                        }
                     }
 
                 } catch (error) {

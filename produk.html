@@ -113,9 +113,11 @@
                     
                     try {
                         const response = await apiFetch('/services/');
-                        if (response && response.data) {
+                        const services = (response && response.data) ? response.data : [];
+                        
+                        if (services.length > 0) {
                             tableBody.innerHTML = '';
-                            response.data.forEach(service => {
+                            services.forEach(service => {
                                 const timeText = service.time >= 24 
                                     ? `${Math.round(service.time / 24)} days` 
                                     : `${service.time} hours`;
@@ -151,22 +153,23 @@
                                 `;
                                 tableBody.appendChild(row);
                             });
+
+                            // Initialize DataTable after rows are populated
+                            const datatablesSimple = document.getElementById('datatablesSimple');
+                            if (datatablesSimple) {
+                                const dataTable = new simpleDatatables.DataTable(datatablesSimple);
+                                const searchInput = document.getElementById('searchInput');
+                                if (searchInput) {
+                                    searchInput.addEventListener('keyup', function() {
+                                        dataTable.search(this.value);
+                                    });
+                                }
+                            }
+                        } else {
+                            tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted"><i class="fas fa-box-open fa-2x mb-2 d-block" style="color: #dee2e6;"></i>Belum ada produk terdaftar.</td></tr>';
                         }
                     } catch (err) {
                         tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4"><i class="fas fa-exclamation-triangle me-2"></i>Failed to load products: ${err.message}</td></tr>`;
-                    }
-
-                    // Initialize DataTable after rows are populated
-                    const datatablesSimple = document.getElementById('datatablesSimple');
-                    if (datatablesSimple) {
-                        const dataTable = new simpleDatatables.DataTable(datatablesSimple);
-                        
-                        const searchInput = document.getElementById('searchInput');
-                        if (searchInput) {
-                            searchInput.addEventListener('keyup', function() {
-                                dataTable.search(this.value);
-                            });
-                        }
                     }
                 }
 
