@@ -43,6 +43,120 @@
             font-weight: 750;
             color: #0007B0;
         }
+
+        @media print {
+            /* Hide web layout UI elements */
+            nav, 
+            .sb-sidenav, 
+            #layoutSidenav_nav, 
+            .btn, 
+            .btn-light, 
+            admin-navbar, 
+            admin-sidebar, 
+            admin-footer,
+            .fa-arrow-left,
+            .btn-close,
+            hr {
+                display: none !important;
+            }
+            
+            /* Reset body and content wrappers */
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+            }
+            #layoutSidenav {
+                display: block !important;
+            }
+            #layoutSidenav_content {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                position: static !important;
+            }
+            .container-fluid {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* Structure adjustments: stack columns vertically */
+            .row {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            .col-lg-8, .col-lg-4 {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: none !important;
+                padding: 0 !important;
+                margin-bottom: 20px !important;
+            }
+            
+            /* Clean card styles for print */
+            .detail-card {
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                padding: 20px !important;
+                margin-bottom: 20px !important;
+                border-radius: 8px !important;
+                page-break-inside: avoid;
+            }
+            
+            .detail-card h5 {
+                border-bottom: 1.5px solid #0f172a !important;
+                padding-bottom: 8px !important;
+                color: #0f172a !important;
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+            }
+            
+            /* Font size adjustments for labels and values */
+            .info-label {
+                font-size: 0.8rem !important;
+                color: #64748b !important;
+            }
+            .info-value {
+                font-size: 0.95rem !important;
+                color: #0f172a !important;
+                margin-bottom: 12px !important;
+            }
+            .info-value-highlight {
+                color: #0007B0 !important;
+                font-weight: 700 !important;
+            }
+            
+            /* Table styling */
+            .table-responsive {
+                overflow: visible !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th {
+                background-color: #f8fafc !important;
+                color: #0f172a !important;
+                border-bottom: 2px solid #cbd5e1 !important;
+                padding: 10px 8px !important;
+                font-size: 0.9rem !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            td {
+                padding: 10px 8px !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+                font-size: 0.9rem !important;
+            }
+            
+            /* Page margins */
+            @page {
+                size: A4;
+                margin: 20mm 15mm 20mm 15mm;
+            }
+        }
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -52,6 +166,13 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4 py-4">
+                <!-- Print Header -->
+                <div class="d-none d-print-block text-center mb-4" id="print-header">
+                    <h2 class="mb-1" style="font-weight: 800; color: #0007B0;">myLaundry</h2>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Professional Laundry Service Partner</p>
+                    <div style="border-bottom: 2px dashed #dee2e6; margin-top: 15px;"></div>
+                </div>
+
                 <!-- Page Title and Back Button (Clean, Reachable Header UI) -->
                 <div class="d-flex align-items-center mb-4">
                     <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders">
@@ -201,8 +322,12 @@
                             </div>
                         </div>
                     </div>
+                <!-- Print Footer -->
+                <div class="d-none d-print-block text-center mt-5" id="print-footer">
+                    <div style="border-top: 2px dashed #dee2e6; margin-bottom: 15px;"></div>
+                    <p class="fw-bold mb-1" style="font-size: 0.95rem; color: #0B1739;">Thank You For Your Business!</p>
+                    <p class="text-muted mb-0" style="font-size: 0.8rem;">If you have any questions about this receipt, contact support@mylaundry.com</p>
                 </div>
-
             </div>
         </main>
         <admin-footer></admin-footer>
