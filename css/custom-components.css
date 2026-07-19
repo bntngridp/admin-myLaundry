@@ -401,32 +401,46 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
 /* ==========================================================================
    STATUS BADGES & BUTTONS (MIGRATED & STANDARDIZED)
    ========================================================================== */
+/* Standardized Premium Status Badges */
 .status-pesanan-dashbord {
-    font-size: 13px !important;
-    color: white !important;
+    font-size: 12px !important;
     text-align: center !important;
-    border-radius: 5px !important;
+    border-radius: 6px !important;
     display: inline-block !important;
+    font-weight: 600 !important;
 }
 
-.status-pesanan-dashbord.menunggu-pembayaran {
-    padding: 2px 12px !important;
-}
-
+/* 1. Awaiting Payment (Info/Cyan) */
+.status-pesanan-dashbord.menunggu-pembayaran,
 .status-pesanan-dashbord.menunggu-pembayarann {
-    padding: 2px 14px !important;
+    background-color: #e0f2fe !important; /* Soft Blue */
+    color: #0369a1 !important; /* Dark Blue Text */
+    border: 1px solid #bae6fd !important;
+    padding: 3px 12px !important;
 }
 
+/* 2. Courier En Route (Warning/Yellow) */
 .status-pesanan-dashbord.kurir-dalam-perjalanan {
-    padding: 2px 15px !important;
+    background-color: #fef3c7 !important; /* Soft Yellow */
+    color: #b45309 !important; /* Dark Amber Text */
+    border: 1px solid #fde68a !important;
+    padding: 3px 15px !important;
 }
 
+/* 3. Cancelled (Danger/Red) */
 .status-pesanan-dashbord.dibatalkan {
-    padding: 2px 30px !important;
+    background-color: #fee2e2 !important; /* Soft Red */
+    color: #b91c1c !important; /* Dark Red Text */
+    border: 1px solid #fecaca !important;
+    padding: 3px 30px !important;
 }
 
+/* 4. Completed (Success/Green) */
 .status-pesanan-dashbord.selesai {
-    padding: 2px 40px !important;
+    background-color: #dcfce7 !important; /* Soft Green */
+    color: #15803d !important; /* Dark Green Text */
+    border: 1px solid #bbf7d0 !important;
+    padding: 3px 40px !important;
 }
 
 .status-selesai.btn.btn-success {
@@ -464,19 +478,25 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
 }
 
 .status-selesai-dasbord.btn.btn-success {
-    font-size: 13px !important;
-    color: white !important;
+    font-size: 12px !important;
+    background-color: #dcfce7 !important; /* Soft Green */
+    color: #15803d !important; /* Dark Green Text */
+    border: 1px solid #bbf7d0 !important;
     text-align: center !important;
-    border-radius: 5px !important;
-    padding: 2px 60px !important;
+    border-radius: 6px !important;
+    padding: 3px 60px !important;
+    font-weight: 600 !important;
 }
 
 .status-batal-dasbord.btn.btn-danger {
-    font-size: 13px !important;
-    color: white !important;
+    font-size: 12px !important;
+    background-color: #fee2e2 !important; /* Soft Red */
+    color: #b91c1c !important; /* Dark Red Text */
+    border: 1px solid #fecaca !important;
     text-align: center !important;
-    border-radius: 5px !important;
-    padding: 2px 50px !important;
+    border-radius: 6px !important;
+    padding: 3px 50px !important;
+    font-weight: 600 !important;
 }
 
 .details-btn {

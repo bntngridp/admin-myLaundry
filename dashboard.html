@@ -27,16 +27,27 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Sales <br>
+                                    <div class="card-header d-flex align-items-center justify-content-between">
                                         <div>
-                                            <span class="ukuran"> 2.000.000.00 </span>
-                                            <button  class="btn-keuntungan btn btn-success">14.8%
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
-                                                </svg>
-                                            </button>
+                                            <i class="fas fa-chart-area me-1"></i>
+                                            Sales <br>
+                                            <div class="d-flex align-items-center gap-2 mt-1">
+                                                <span class="ukuran"> 2.000.000.00 </span>
+                                                <button class="btn-keuntungan btn btn-success d-inline-flex align-items-center gap-1">
+                                                    14.8%
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <select class="form-select form-select-sm border-0 bg-light" id="salesPeriodSelect" style="width: auto; font-size: 0.8rem; font-weight: 500;">
+                                                <option value="today">Hari Ini</option>
+                                                <option value="weekly">Minggu Ini</option>
+                                                <option value="monthly" selected>Bulan Ini</option>
+                                                <option value="yearly">Tahun Ini</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
@@ -44,9 +55,19 @@
                             </div>
                             <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        App Visitors
+                                    <div class="card-header d-flex align-items-center justify-content-between" style="padding-top: 15.5px; padding-bottom: 15.5px;">
+                                        <div>
+                                            <i class="fas fa-chart-bar me-1"></i>
+                                            App Visitors
+                                        </div>
+                                        <div>
+                                            <select class="form-select form-select-sm border-0 bg-light" id="visitorsPeriodSelect" style="width: auto; font-size: 0.8rem; font-weight: 500;">
+                                                <option value="today">Hari Ini</option>
+                                                <option value="weekly">Minggu Ini</option>
+                                                <option value="monthly" selected>Bulan Ini</option>
+                                                <option value="yearly">Tahun Ini</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="card-body"><canvas id="myBarChart" width="100%" height="46.1"></canvas></div>
                                 </div>
@@ -145,8 +166,145 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script>
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
+
+            // Area Chart (Sales) Data sets
+            const salesDataSets = {
+                today: {
+                    labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
+                    data: [120, 250, 420, 310, 290, 450, 210],
+                    max: 500
+                },
+                weekly: {
+                    labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+                    data: [1200, 2300, 1800, 2900, 4000, 3800, 2900],
+                    max: 5000
+                },
+                monthly: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+                    data: [210, 320, 300, 280, 230, 390, 490, 370, 450, 390, 350, 400],
+                    max: 500
+                },
+                yearly: {
+                    labels: ["2022", "2023", "2024", "2025", "2026"],
+                    data: [2400, 3200, 4500, 5100, 6200],
+                    max: 8000
+                }
+            };
+
+            // Bar Chart (Visitors) Data sets
+            const visitorsDataSets = {
+                today: {
+                    labels: ["Pagi", "Siang", "Sore", "Malam"],
+                    data: [1200, 2500, 4500, 800],
+                    max: 5000
+                },
+                weekly: {
+                    labels: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"],
+                    data: [8200, 7800, 9200, 10100, 12400, 14500, 11000],
+                    max: 16000
+                },
+                monthly: {
+                    labels: ["January", "February", "March", "April", "May", "June"],
+                    data: [10023, 8223, 14251, 9841, 8821, 13984],
+                    max: 15000
+                },
+                yearly: {
+                    labels: ["2022", "2023", "2024", "2025", "2026"],
+                    data: [85000, 92000, 120000, 134000, 150000],
+                    max: 180000
+                }
+            };
+
+            // Initialize Sales Area Chart
+            const salesCtx = document.getElementById("myAreaChart");
+            const salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: salesDataSets.monthly.labels,
+                    datasets: [{
+                        label: "Sales",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(13, 110, 253, 0.05)",
+                        borderColor: "#0d6efd",
+                        pointRadius: 5,
+                        pointBackgroundColor: "#0d6efd",
+                        pointBorderColor: "rgba(255,255,255,0.8)",
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "#0d6efd",
+                        pointHitRadius: 50,
+                        pointBorderWidth: 2,
+                        data: salesDataSets.monthly.data,
+                    }],
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            gridLines: { display: false },
+                            ticks: { maxTicksLimit: 7 }
+                        }],
+                        yAxes: [{
+                            ticks: { min: 0, max: salesDataSets.monthly.max, maxTicksLimit: 5 },
+                            gridLines: { color: "rgba(0, 0, 0, .05)" }
+                        }],
+                    },
+                    legend: { display: false }
+                }
+            });
+
+            // Initialize Visitors Bar Chart
+            const visitorsCtx = document.getElementById("myBarChart");
+            const visitorsChart = new Chart(visitorsCtx, {
+                type: 'bar',
+                data: {
+                    labels: visitorsDataSets.monthly.labels,
+                    datasets: [{
+                        label: "Visitors",
+                        backgroundColor: "#0d6efd",
+                        borderColor: "#0d6efd",
+                        data: visitorsDataSets.monthly.data,
+                    }],
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            gridLines: { display: false },
+                            ticks: { maxTicksLimit: 6 }
+                        }],
+                        yAxes: [{
+                            ticks: { min: 0, max: visitorsDataSets.monthly.max, maxTicksLimit: 5 },
+                            gridLines: { display: true, color: "rgba(0, 0, 0, .05)" }
+                        }],
+                    },
+                    legend: { display: false }
+                }
+            });
+
+            // Handle Sales Date Filter
+            document.getElementById('salesPeriodSelect').addEventListener('change', function() {
+                const period = this.value;
+                const dataset = salesDataSets[period];
+                
+                salesChart.data.labels = dataset.labels;
+                salesChart.data.datasets[0].data = dataset.data;
+                salesChart.options.scales.yAxes[0].ticks.max = dataset.max;
+                salesChart.update();
+            });
+
+            // Handle Visitors Date Filter
+            document.getElementById('visitorsPeriodSelect').addEventListener('change', function() {
+                const period = this.value;
+                const dataset = visitorsDataSets[period];
+                
+                visitorsChart.data.labels = dataset.labels;
+                visitorsChart.data.datasets[0].data = dataset.data;
+                visitorsChart.options.scales.yAxes[0].ticks.max = dataset.max;
+                visitorsChart.update();
+            });
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
