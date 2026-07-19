@@ -541,4 +541,65 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
     display: inline-block !important;
 }
 
+/* Override simple-datatables sorter header links */
+.dataTable-sorter {
+    color: #0b1739 !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+}
+.dataTable-sorter:hover {
+    color: #0007B0 !important;
+    text-decoration: none !important;
+}
+
+/* Courier Status Badges */
+.status-kurir-available {
+    font-size: 11px !important;
+    background-color: #dcfce7 !important; /* Soft Green */
+    color: #15803d !important; /* Dark Green Text */
+    border: 1px solid #bbf7d0 !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    padding: 3px 12px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+.status-kurir-delivering {
+    font-size: 11px !important;
+    background-color: #dbeafe !important; /* Soft Blue */
+    color: #1e40af !important; /* Dark Blue Text */
+    border: 1px solid #bfdbfe !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    padding: 3px 12px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+.status-kurir-picking {
+    font-size: 11px !important;
+    background-color: #fef08a !important; /* Soft Yellow */
+    color: #854d0e !important; /* Dark Yellow Text */
+    border: 1px solid #fef08a !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    padding: 3px 12px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+.status-kurir-inactive {
+    font-size: 11px !important;
+    background-color: #fee2e2 !important; /* Soft Red */
+    color: #b91c1c !important; /* Dark Red Text */
+    border: 1px solid #fecaca !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    padding: 3px 12px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+
 
