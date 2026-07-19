@@ -191,7 +191,7 @@ customElements.define('admin-footer', AdminFooter);
 
 // 4. CLIENT-SIDE MIDDLEWARE (ROUTE GUARD)
 (function() {
-    const publicPages = ['login.html', 'register.html', 'password.html'];
+    const publicPages = ['login.html', 'register.html', 'password.html', 'reset-password.html'];
     const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
     const isPublicPage = publicPages.includes(currentPath);
     
