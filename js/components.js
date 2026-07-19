@@ -73,6 +73,7 @@ customElements.define('admin-navbar', AdminNavbar);
 
 
 // 2. SIDEBAR COMPONENT
+// 2. SIDEBAR COMPONENT
 class AdminSidebar extends HTMLElement {
     connectedCallback() {
         // Ambil nama file html saat ini (misal: "produk.html")
@@ -149,16 +150,44 @@ class AdminSidebar extends HTMLElement {
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                        myLaundry Admin
+                        <div class="small">Logged in as:</div>
+                        <span class="sb-sidenav-footer-user">Loading...</span>
                     </div>
                 </nav>
             </div>
         `;
 
-        // Restore sidebar toggle state setelah komponen selesai di-render.
-        // Ini penting karena connectedCallback bisa dipanggil sebelum
-        // DOMContentLoaded, jadi kita set state di sini agar langsung berlaku.
+        // Load profile info dynamically from backend
+        if (typeof apiFetch === 'function') {
+            apiFetch('/auth/me')
+                .then(response => {
+                    if (response && response.success && response.data) {
+                        const user = response.data;
+                        const displayName = `${user.username} (${user.role.toUpperCase()})`;
+                        const footerText = this.querySelector('.sb-sidenav-footer-user');
+                        if (footerText) {
+                            footerText.textContent = displayName;
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to fetch user in sidebar:', err);
+                    const footerText = this.querySelector('.sb-sidenav-footer-user');
+                    if (footerText) {
+                        const savedRole = localStorage.getItem('admin_role') || 'Admin';
+                        footerText.textContent = `myLaundry ${savedRole.charAt(0).toUpperCase() + savedRole.slice(1)}`;
+                    }
+                });
+        } else {
+            // Immediate fallback to localStorage role if apiFetch is not yet initialized
+            const savedRole = localStorage.getItem('admin_role') || 'Admin';
+            const footerText = this.querySelector('.sb-sidenav-footer-user');
+            if (footerText) {
+                footerText.textContent = `myLaundry ${savedRole.charAt(0).toUpperCase() + savedRole.slice(1)}`;
+            }
+        }
+
+        // Restore sidebar toggle state
         const sidebarToggleState = localStorage.getItem('sb|sidebar-toggle');
         if (sidebarToggleState === 'true') {
             document.body.classList.add('sb-sidenav-toggled');

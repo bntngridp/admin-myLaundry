@@ -176,23 +176,23 @@
             const salesDataSets = {
                 today: {
                     labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
-                    data: [120, 250, 420, 310, 290, 450, 210],
-                    max: 500
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    max: 100
                 },
                 weekly: {
                     labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
-                    data: [1200, 2300, 1800, 2900, 4000, 3800, 2900],
-                    max: 5000
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    max: 100
                 },
                 monthly: {
                     labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
-                    data: [210, 320, 300, 280, 230, 390, 490, 370, 450, 390, 350, 400],
-                    max: 500
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    max: 100
                 },
                 yearly: {
                     labels: ["2022", "2023", "2024", "2025", "2026"],
-                    data: [2400, 3200, 4500, 5100, 6200],
-                    max: 8000
+                    data: [0, 0, 0, 0, 0],
+                    max: 100
                 }
             };
 
@@ -200,23 +200,23 @@
             const visitorsDataSets = {
                 today: {
                     labels: ["Pagi", "Siang", "Sore", "Malam"],
-                    data: [1200, 2500, 4500, 800],
-                    max: 5000
+                    data: [0, 0, 0, 0],
+                    max: 100
                 },
                 weekly: {
                     labels: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"],
-                    data: [8200, 7800, 9200, 10100, 12400, 14500, 11000],
-                    max: 16000
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    max: 100
                 },
                 monthly: {
                     labels: ["January", "February", "March", "April", "May", "June"],
-                    data: [10023, 8223, 14251, 9841, 8821, 13984],
-                    max: 15000
+                    data: [0, 0, 0, 0, 0, 0],
+                    max: 100
                 },
                 yearly: {
                     labels: ["2022", "2023", "2024", "2025", "2026"],
-                    data: [85000, 92000, 120000, 134000, 150000],
-                    max: 180000
+                    data: [0, 0, 0, 0, 0],
+                    max: 100
                 }
             };
 
@@ -319,45 +319,60 @@
 
                     const orders = response.data || [];
                     
-                    // 1. Populate table if we have orders in database
+                    // 1. Populate table
                     const tbody = document.getElementById('ordersTableBody');
-                    if (tbody && orders.length > 0) {
+                    if (tbody) {
                         tbody.innerHTML = '';
                         
-                        // Sort orders by ID descending (newest first)
-                        const sortedOrders = [...orders].sort((a, b) => b.id - a.id);
-                        
-                        sortedOrders.forEach(order => {
+                        if (orders.length > 0) {
+                            // Sort orders by ID descending (newest first)
+                            const sortedOrders = [...orders].sort((a, b) => b.id - a.id);
+                            
+                            sortedOrders.forEach(order => {
+                                const row = document.createElement('tr');
+                                
+                                const dateObj = new Date(order.created_at);
+                                const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
+                                const formattedDate = dateObj.toLocaleDateString('en-US', options).replace(',', '');
+                                
+                                const customerName = order.customer ? (order.customer.username || 'Guest') : 'Guest';
+                                const customerEmail = order.customer ? (order.customer.email || '') : '';
+                                const addressText = order.address && order.address.street_name ? 
+                                    `${order.address.receiver_name}, ${order.address.street_name}` : 'No Address';
+                                
+                                const priceVal = order.total_price || 0;
+                                const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(priceVal);
+                                
+                                const statusLabel = getStatusLabel(order.status);
+                                const statusClass = getStatusClass(order.status);
+                                
+                                row.innerHTML = `
+                                    <td>#${order.id}</td>
+                                    <td>
+                                        ${customerName} <br> <small class="text-muted">${customerEmail}</small>
+                                    </td>
+                                    <td>${formattedDate}</td>
+                                    <td><span class="status-pesanan-dashbord ${statusClass}">${statusLabel}</span></td>
+                                    <td>${addressText}</td>
+                                    <td>${formattedTotal}</td>
+                                    <td><a href="detail-pesanan.html?id=${order.id}" class="details-btn btn btn-primary">View Details</a></td>
+                                `;
+                                tbody.appendChild(row);
+                            });
+                        } else {
+                            // Empty state! Render a clean informative message row.
                             const row = document.createElement('tr');
-                            
-                            const dateObj = new Date(order.created_at);
-                            const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-                            const formattedDate = dateObj.toLocaleDateString('en-US', options).replace(',', '');
-                            
-                            const customerName = order.customer ? (order.customer.username || 'Guest') : 'Guest';
-                            const customerEmail = order.customer ? (order.customer.email || '') : '';
-                            const addressText = order.address && order.address.street_name ? 
-                                `${order.address.receiver_name}, ${order.address.street_name}` : 'No Address';
-                            
-                            const priceVal = order.total_price || 0;
-                            const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(priceVal);
-                            
-                            const statusLabel = getStatusLabel(order.status);
-                            const statusClass = getStatusClass(order.status);
-                            
                             row.innerHTML = `
-                                <td>#${order.id}</td>
-                                <td>
-                                    ${customerName} <br> <small class="text-muted">${customerEmail}</small>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <div class="d-flex flex-column align-items-center justify-content-center gap-2 my-3">
+                                        <i class="fas fa-shopping-basket fa-3x mb-2" style="color: #dee2e6;"></i>
+                                        <h5 class="fw-bold" style="color: #6c757d;">Belum Ada Pesanan</h5>
+                                        <p class="text-muted small mb-0">Semua pesanan baru yang masuk akan muncul di sini secara otomatis.</p>
+                                    </div>
                                 </td>
-                                <td>${formattedDate}</td>
-                                <td><span class="status-pesanan-dashbord ${statusClass}">${statusLabel}</span></td>
-                                <td>${addressText}</td>
-                                <td>${formattedTotal}</td>
-                                <td><a href="detail-pesanan.html?id=${order.id}" class="details-btn btn btn-primary">View Details</a></td>
                             `;
                             tbody.appendChild(row);
-                        });
+                        }
                     }
 
                     // Always initialize DataTable after we finish updating the DOM
@@ -368,7 +383,7 @@
                     const salesToday = new Array(7).fill(0); // 4-hour intervals
                     const salesWeekly = new Array(7).fill(0); // Mon-Sun
                     const salesMonthly = new Array(12).fill(0); // Jan-Dec
-                    const salesYearly = { 2022: 2400000, 2023: 3200000, 2024: 4500000, 2025: 5100000, 2026: 0 };
+                    const salesYearly = { 2022: 0, 2023: 0, 2024: 0, 2025: 0, 2026: 0 };
 
                     orders.forEach(order => {
                         const date = new Date(order.created_at);
@@ -410,10 +425,9 @@
                     });
 
                     // Update Top Card Display
-                    const finalTotalSales = totalSalesVal || 2000000;
                     const totalSalesElem = document.querySelector('.ukuran');
                     if (totalSalesElem) {
-                        totalSalesElem.textContent = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(finalTotalSales);
+                        totalSalesElem.textContent = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(totalSalesVal);
                     }
 
                     // Map dynamic values to Sales chart datasets
@@ -432,6 +446,17 @@
                         salesDataSets.weekly.max = Math.max(...salesWeekly, 1000) * 1.2;
                         salesDataSets.monthly.max = Math.max(...salesMonthly, 500) * 1.2;
                         salesDataSets.yearly.max = Math.max(...yearlyValues, 8000) * 1.2;
+                    } else {
+                        // Reset datasets back to 0
+                        salesDataSets.today.data = new Array(7).fill(0);
+                        salesDataSets.weekly.data = new Array(7).fill(0);
+                        salesDataSets.monthly.data = new Array(12).fill(0);
+                        salesDataSets.yearly.data = new Array(5).fill(0);
+                        
+                        salesDataSets.today.max = 100;
+                        salesDataSets.weekly.max = 100;
+                        salesDataSets.monthly.max = 100;
+                        salesDataSets.yearly.max = 100;
                     }
 
                     // Trigger initial chart draw
