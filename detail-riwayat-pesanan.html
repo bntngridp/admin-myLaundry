@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Order History Details — myLaundry Admin</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Custom Web Components -->
+    <script src="js/components.js" defer></script>
+    <style>
+        .detail-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .detail-card h5 {
+            color: #0B1739;
+            font-weight: 700;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .info-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .info-value {
+            font-size: 1rem;
+            color: #0B1739;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .info-value-highlight {
+            font-weight: 750;
+            color: #0007B0;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<admin-navbar></admin-navbar>
+<div id="layoutSidenav">
+    <admin-sidebar></admin-sidebar>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4 py-4">
+                <!-- Page Title and Back Button -->
+                <div class="d-flex align-items-center mb-4">
+                    <a href="riwayat-pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Order History">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="h3 m-0" style="color: #0B1739; font-weight: 700;">Order Details <span class="text-muted" style="font-weight: 400;" id="order-title-id">#...</span></h1>
+                </div>
+
+                <div class="row">
+                    <!-- Left Column: Details & Items -->
+                    <div class="col-lg-8">
+                        <!-- Customer & Delivery Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-user-circle me-2" style="color: #0007B0;"></i>Customer & Delivery Info</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-label">Customer Name</div>
+                                    <div class="info-value" id="customer-name">Loading...</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Order Date</div>
+                                    <div class="info-value" id="order-date">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="info-label">Delivery Address</div>
+                                    <div class="info-value" id="delivery-address">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                        Loading...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="info-label">Special Notes</div>
+                                    <div class="info-value mb-0" style="background-color: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107;" id="special-notes">
+                                        <i class="fas fa-sticky-note text-warning me-1"></i>
+                                        None
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-box-open me-2" style="color: #0007B0;"></i>Order Items</h5>
+                            <div class="table-responsive">
+                                <table class="table align-middle" style="min-width: 500px;">
+                                    <thead style="background-color: #C2E9F9;">
+                                        <tr>
+                                            <th style="color: #0B1739; font-weight: 600;">Item / Service</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-center">Qty / Weight</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Unit Price</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Total Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="items-tbody">
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4">Loading order items...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Status & Operations -->
+                    <div class="col-lg-4">
+                        <!-- Status & Action Card -->
+                        <div class="detail-card">
+                            <h5><i class="fas fa-info-circle me-2" style="color: #0007B0;"></i>Order Status</h5>
+                            
+                            <div class="info-label">Current Status</div>
+                            <div class="mb-4" id="order-status-badge-container">
+                                <span class="badge bg-secondary py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
+                                    Loading...
+                                </span>
+                            </div>
+                            
+                            <div class="info-label">Payment Method</div>
+                            <div class="info-value" id="payment-method">Loading...</div>
+                            
+                            <div class="info-label">Payment Status</div>
+                            <div class="info-value mb-4" id="payment-status-badge-container">
+                                <span class="badge bg-secondary py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
+                                    Loading...
+                                </span>
+                            </div>
+                            
+                            <hr class="mb-4" style="border-color: #f1f5f9;">
+                            
+                            <!-- Operations Buttons -->
+                            <div class="d-flex flex-column gap-2">
+                                <button class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-print">
+                                    <i class="fas fa-print me-2"></i>Print Receipt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <admin-footer></admin-footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
+<script src="js/api.js"></script>
+<script>
+    // Extract Order ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = parseInt(urlParams.get('id'));
+
+    if (isNaN(orderId)) {
+        alert('ID Pesanan tidak valid!');
+        window.location.replace('riwayat-pesanan.html');
+    }
+
+    // Status classes for display badges
+    const statusClasses = {
+        'pending': { bg: '#fee2e2', text: '#b91c1c', label: 'Pending' },
+        'awaiting payment': { bg: '#fef3c7', text: '#d97706', label: 'Awaiting Payment' },
+        'courier en route': { bg: '#dbeafe', text: '#1d4ed8', label: 'Courier En Route' },
+        'arrived': { bg: '#e0e7ff', text: '#4338ca', label: 'Courier Arrived' },
+        'in progress': { bg: '#e0f2fe', text: '#0369a1', label: 'In Progress' },
+        'completed': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
+        'done': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
+        'cancelled': { bg: '#fee2e2', text: '#b91c1c', label: 'Cancelled' }
+    };
+
+    async function loadOrderDetail() {
+        try {
+            const response = await apiFetch('/orders/');
+            if (!response || !response.success) {
+                throw new Error('Gagal mengambil detail pesanan dari API.');
+            }
+
+            const orders = response.data || [];
+            const order = orders.find(o => o.id === orderId);
+
+            if (!order) {
+                alert('Pesanan tidak ditemukan!');
+                window.location.replace('riwayat-pesanan.html');
+                return;
+            }
+
+            // Populate Text Info
+            document.getElementById('order-title-id').textContent = `#${order.id}`;
+            document.getElementById('customer-name').textContent = order.customer ? (order.customer.username || 'Guest') : 'Guest';
+
+            const dateObj = new Date(order.created_at);
+            const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
+            document.getElementById('order-date').textContent = dateObj.toLocaleDateString('en-US', options).replace(',', '');
+
+            // Delivery Address
+            const address = order.address;
+            const addressContainer = document.getElementById('delivery-address');
+            if (address && address.street_name) {
+                addressContainer.innerHTML = `
+                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                    <strong>${address.receiver_name}</strong> (${address.phone_number || ''})<br>
+                    ${address.residence_name ? address.residence_name + ', ' : ''}
+                    ${address.street_name}, No. ${address.house_number || ''},
+                    ${address.sub_district ? address.sub_district + ', ' : ''}
+                    ${address.district ? address.district + ', ' : ''}
+                    ${address.city || ''}
+                `;
+            } else {
+                addressContainer.innerHTML = `<i class="fas fa-map-marker-alt text-danger me-1"></i>No Address`;
+            }
+
+            // Special Notes
+            const notesContainer = document.getElementById('special-notes');
+            if (address && address.address_notes) {
+                notesContainer.innerHTML = `<i class="fas fa-sticky-note text-warning me-1"></i>${address.address_notes}`;
+            } else {
+                notesContainer.innerHTML = `<i class="fas fa-sticky-note text-muted me-1"></i>Tidak ada catatan khusus.`;
+            }
+
+            // Render Service / Items inside table body
+            const tbody = document.getElementById('items-tbody');
+            tbody.innerHTML = '';
+
+            const serviceName = order.service ? (order.service.title || 'Dry Clean') : 'Dry Clean';
+            const serviceCategory = order.service ? (order.service.category || 'Satuan') : 'Satuan';
+            const unit = serviceCategory.toLowerCase() === 'kiloan' ? 'kg' : 'pcs';
+            const price = order.service ? (order.service.price || 0) : 0;
+            const qtyWeight = serviceCategory.toLowerCase() === 'kiloan' ? (order.weight || 0) : (order.quantity || 0);
+
+            const subtotal = order.total_price;
+            const formattedUnitPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
+            const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(subtotal);
+
+            tbody.innerHTML = `
+                <tr>
+                    <td>
+                        <div class="fw-semibold" style="color: #0B1739;">${serviceName}</div>
+                        <small class="text-muted">${serviceCategory} service</small>
+                    </td>
+                    <td class="text-center">${qtyWeight} ${unit}</td>
+                    <td class="text-end">${formattedUnitPrice} / ${unit}</td>
+                    <td class="text-end fw-semibold">${formattedTotal}</td>
+                </tr>
+                <tr style="font-size: 1.15rem; border-top: 1px solid #dee2e6;">
+                    <td colspan="2" class="border-0"></td>
+                    <td class="text-end border-0" style="color: #0B1739; font-weight: 700;">Grand Total:</td>
+                    <td class="text-end border-0 info-value-highlight">${formattedTotal}</td>
+                </tr>
+            `;
+
+            // Payment and Status
+            const cleanStatus = (order.status || '').toLowerCase();
+            const statusConfig = statusClasses[cleanStatus] || { bg: '#e2e8f0', text: '#475569', label: order.status || 'Unknown' };
+
+            // Status Badge
+            const statusContainer = document.getElementById('order-status-badge-container');
+            statusContainer.innerHTML = `
+                <span class="badge d-inline-block py-2 px-3 fs-6" style="background-color: ${statusConfig.bg}; color: ${statusConfig.text}; border-radius: 8px;">
+                    ${statusConfig.label}
+                </span>
+            `;
+
+            // Payment Method
+            document.getElementById('payment-method').textContent = cleanStatus === 'awaiting payment' ? '-' : 'Cash / Courier Collection';
+
+            // Payment Status
+            const paymentContainer = document.getElementById('payment-status-badge-container');
+            if (cleanStatus === 'awaiting payment' || cleanStatus === 'pending') {
+                paymentContainer.innerHTML = `
+                    <span class="badge bg-warning py-2 px-3 fs-6 text-dark" style="border-radius: 8px;">
+                        <i class="fas fa-exclamation-circle me-1"></i>Unpaid
+                    </span>
+                `;
+            } else {
+                paymentContainer.innerHTML = `
+                    <span class="badge bg-success py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
+                        <i class="fas fa-check-circle me-1"></i>Paid
+                    </span>
+                `;
+            }
+
+        } catch (error) {
+            console.error('Error loading order detail:', error);
+            alert('Gagal memuat detail pesanan: ' + error.message);
+        }
+    }
+
+    // Print Receipt Action
+    document.getElementById('btn-print').addEventListener('click', function() {
+        window.print();
+    });
+
+    window.addEventListener('DOMContentLoaded', loadOrderDetail);
+</script>
+</body>
+</html>
