@@ -39,7 +39,6 @@
                                             <th>Address</th>
                                             <th>Total</th>
                                             <th></th>
-                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tfoot>
@@ -51,12 +50,11 @@
                                             <th>Address</th>
                                             <th>Total</th>
                                             <th></th>
-                                            <th></th>
                                         </tr>
                                         </tfoot>
                                         <tbody id="ordersTableBody">
                                         <tr>
-                                            <td colspan="8" class="text-center py-5 text-muted">
+                                            <td colspan="7" class="text-center py-5 text-muted">
                                                 <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                                     <div class="spinner-border text-primary spinner-border-sm" role="status">
                                                         <span class="visually-hidden">Loading...</span>
@@ -145,15 +143,6 @@
                             const statusLabel = getStatusLabel(order.status);
                             const statusClass = getStatusClass(order.status);
 
-                            // Action button logic
-                            let actionButtonHTML = '';
-                            const cleanStatus = (order.status || '').toLowerCase();
-                            if (cleanStatus === 'in progress') {
-                                actionButtonHTML = `<button onclick="completeOrder(${order.id})" class="btn btn-success btn-sm status-selesai-dasbord">Complete</button>`;
-                            } else {
-                                actionButtonHTML = `<span class="status-menunggu-kurir-badge">Menunggu Kurir</span>`;
-                            }
-                            
                             row.innerHTML = `
                                 <td>#${order.id}</td>
                                 <td>
@@ -164,14 +153,13 @@
                                 <td>${addressText}</td>
                                 <td>${formattedTotal}</td>
                                 <td><a href="detail-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">View Details</a></td>
-                                <td>${actionButtonHTML}</td>
                             `;
                             tbody.appendChild(row);
                         });
                     } else {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="8" class="text-center py-5 text-muted">
+                                <td colspan="7" class="text-center py-5 text-muted">
                                     <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                         <i class="fas fa-shopping-basket fa-3x mb-2" style="color: #dee2e6;"></i>
                                         <h5 class="fw-bold" style="color: #6c757d;">Tidak Ada Pesanan Aktif</h5>
@@ -194,7 +182,7 @@
                     console.error('Error loading orders:', error);
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-danger">
+                            <td colspan="7" class="text-center py-5 text-danger">
                                 <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                     <i class="fas fa-exclamation-circle fa-3x mb-2" style="color: #dc3545;"></i>
                                     <h5 class="fw-bold">Gagal Memuat Data</h5>
@@ -204,24 +192,6 @@
                             </td>
                         </tr>
                     `;
-                }
-            }
-
-            async function completeOrder(orderId) {
-                if (!confirm(`Selesaikan pesanan #${orderId}?`)) return;
-                try {
-                    const response = await apiFetch('/orders/order-complete', {
-                        method: 'POST',
-                        body: { order_id: orderId }
-                    });
-                    if (response && response.success) {
-                        alert(`Pesanan #${orderId} berhasil diselesaikan!`);
-                        loadOrders();
-                    } else {
-                        throw new Error(response.message || 'Gagal menyelesaikan pesanan.');
-                    }
-                } catch (error) {
-                    alert('Error: ' + error.message);
                 }
             }
 
