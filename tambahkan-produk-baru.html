@@ -202,7 +202,7 @@
                     category: category
                 }
             });
-            alert('New product added successfully!');
+            sessionStorage.setItem('success_message', 'New product added successfully!');
             window.location.href = 'produk.html';
         } catch (err) {
             alert('Failed to add product: ' + err.message);

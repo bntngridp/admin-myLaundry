@@ -251,7 +251,7 @@
                     category: category
                 }
             });
-            alert('Product updated successfully!');
+            sessionStorage.setItem('success_message', 'Product updated successfully!');
             window.location.href = 'produk.html';
         } catch (err) {
             alert('Failed to update product: ' + err.message);

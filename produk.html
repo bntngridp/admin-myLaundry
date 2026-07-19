@@ -29,6 +29,7 @@
                                 </svg>
                             New Product</a>
                         </div>
+                        <div id="alert-container" class="mt-3"></div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -106,8 +107,27 @@
         <script src="js/api.js"></script>
 
         <script>
+            function showAlert(message, type = 'success') {
+                const alertContainer = document.getElementById('alert-container');
+                if (alertContainer) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-${type} alert-dismissible fade show" role="alert" style="border-radius: 12px; font-weight: 500; font-size: 0.95rem;">
+                            <i class="fas ${type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-triangle text-danger'} me-2"></i>
+                            ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                }
+            }
+
             window.addEventListener('DOMContentLoaded', async () => {
-                let productRowToDelete = null;
+                // Check for success message from edit/add pages
+                const successMsg = sessionStorage.getItem('success_message');
+                if (successMsg) {
+                    showAlert(successMsg, 'success');
+                    sessionStorage.removeItem('success_message');
+                }
+
                 const tableBody = document.querySelector('#datatablesSimple tbody');
 
                 if (tableBody) {
@@ -144,7 +164,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <button class="produk-button-hapus btn btn-danger">
+                                        <button class="produk-button-hapus btn btn-danger" data-id="${service.id}" data-title="${service.title}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
@@ -175,37 +195,33 @@
                     }
                 }
 
-                // Event delegation on table body to handle click on delete buttons
-                if (tableBody) {
-                    tableBody.addEventListener('click', function(e) {
-                        const deleteButton = e.target.closest('.produk-button-hapus');
-                        if (deleteButton) {
-                            e.preventDefault();
-                            
-                            const row = deleteButton.closest('tr');
-                            productRowToDelete = row;
-                            
-                            const productName = row.cells[2].textContent.trim();
-                            document.getElementById('delete-product-name').textContent = productName;
-                            
-                            const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-                            deleteModal.show();
-                        }
-                    });
-                }
+                // Robust event delegation on document body to handle click on delete buttons
+                document.addEventListener('click', function(e) {
+                    const deleteButton = e.target.closest('.produk-button-hapus');
+                    if (deleteButton) {
+                        e.preventDefault();
+                        
+                        const serviceId = deleteButton.dataset.id;
+                        const productName = deleteButton.dataset.title;
+                        
+                        const confirmBtn = document.getElementById('confirm-delete-btn');
+                        confirmBtn.dataset.id = serviceId;
+                        
+                        document.getElementById('delete-product-name').textContent = productName;
+                        
+                        const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                        deleteModal.show();
+                    }
+                });
 
                 // Handle confirm delete button click
                 document.getElementById('confirm-delete-btn').addEventListener('click', async function() {
-                    if (productRowToDelete) {
-                        const serviceId = productRowToDelete.dataset.id;
-                        
+                    const serviceId = this.dataset.id;
+                    if (serviceId) {
                         try {
                             await apiFetch(`/services/${serviceId}`, {
                                 method: 'DELETE'
                             });
-                            
-                            productRowToDelete.remove();
-                            productRowToDelete = null;
                             
                             const modalEl = document.getElementById('deleteConfirmModal');
                             const modal = bootstrap.Modal.getInstance(modalEl);
@@ -213,9 +229,11 @@
                                 modal.hide();
                             }
                             
-                            alert('Product deleted successfully!');
+                            // Set a success message in sessionStorage and refresh page
+                            sessionStorage.setItem('success_message', 'Product deleted successfully!');
+                            window.location.reload();
                         } catch (err) {
-                            alert('Failed to delete product: ' + err.message);
+                            showAlert('Failed to delete product: ' + err.message, 'danger');
                         }
                     }
                 });
