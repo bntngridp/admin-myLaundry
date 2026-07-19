@@ -267,22 +267,36 @@
             // Fetch and load database data
             async function loadDashboardData() {
                 try {
+                    // Set loading state in UI
+                    const tbody = document.getElementById('ordersTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <div class="d-flex flex-column align-items-center justify-content-center gap-2 my-3">
+                                        <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <span>Memuat data pesanan...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }
+
                     // Fetch orders list and stats in parallel
                     const [ordersRes, statsRes] = await Promise.all([
-                        apiFetch('/orders'),
+                        apiFetch('/orders/'),
                         apiFetch('/admins/stats')
                     ]);
 
                     if (!ordersRes || !ordersRes.success) {
-                        console.error('Failed to load orders');
-                        initDataTable();
-                        return;
+                        throw new Error('Gagal mengambil data pesanan dari API.');
                     }
 
                     const orders = ordersRes.data || [];
                     
                     // 1. Populate table
-                    const tbody = document.getElementById('ordersTableBody');
                     if (tbody) {
                         tbody.innerHTML = '';
                         
@@ -464,6 +478,21 @@
 
                 } catch (error) {
                     console.error('Error synchronizing database data:', error);
+                    const tbody = document.getElementById('ordersTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-danger">
+                                    <div class="d-flex flex-column align-items-center justify-content-center gap-2 my-3">
+                                        <i class="fas fa-exclamation-circle fa-3x mb-2" style="color: #dc3545;"></i>
+                                        <h5 class="fw-bold">Gagal Memuat Data</h5>
+                                        <p class="small mb-0">${error.message || 'Koneksi ke server terputus. Silakan coba lagi.'}</p>
+                                        <button onclick="loadDashboardData()" class="btn btn-outline-danger btn-sm mt-2">Coba Lagi</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }
                     initDataTable();
                 }
             }
