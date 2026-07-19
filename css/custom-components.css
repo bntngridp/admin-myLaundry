@@ -529,3 +529,16 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
     text-align: center !important;
 }
 
+.status-menunggu-kurir-badge {
+    font-size: 12px !important;
+    background-color: #fef08a !important; /* Soft Yellow */
+    color: #854d0e !important; /* Dark Yellow Text */
+    border: 1px solid #fef08a !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+    padding: 3px 40px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+

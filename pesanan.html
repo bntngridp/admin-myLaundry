@@ -150,7 +150,7 @@
                             if (cleanStatus === 'in progress') {
                                 actionButtonHTML = `<button onclick="completeOrder(${order.id})" class="btn btn-success btn-sm status-selesai-dasbord">Complete</button>`;
                             } else {
-                                actionButtonHTML = `<span class="text-muted small">Menunggu Kurir</span>`;
+                                actionButtonHTML = `<span class="status-menunggu-kurir-badge">Menunggu Kurir</span>`;
                             }
                             
                             row.innerHTML = `
