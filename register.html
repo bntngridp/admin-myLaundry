@@ -102,6 +102,7 @@
         const passwordInput = document.getElementById('inputPassword');
         const confirmInput = document.getElementById('inputPasswordConfirm');
         const requirementsContainer = document.querySelector('.password-requirements');
+        const alertContainer = document.getElementById('alert-container');
         
         const reqs = {
             len: document.getElementById('req-len'),
@@ -163,7 +164,6 @@
             const email = document.getElementById('inputEmail').value.trim();
             const password = passwordInput.value;
             const confirmPassword = confirmInput.value;
-            const alertContainer = document.getElementById('alert-container');
             const submitBtn = document.getElementById('btn-register');
 
             alertContainer.innerHTML = '';
