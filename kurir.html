@@ -23,7 +23,7 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-chart-pie me-1"></i>
-                                Total 14 deliveries dispatched and 11 orders picked up
+                                <span id="chartHeaderText">Total 14 deliveries dispatched and 11 orders picked up</span>
                             </div>
                             <div class="card-body"><canvas id="myPieChart" width="100%" height="30"></canvas></div>
                             <div class="card-footer small text-muted">Last updated yesterday at 11:59 PM.</div>
@@ -163,9 +163,9 @@
                         updatePieChart(availableTotal, busyTotal);
 
                         // Update description card header
-                        const chartHeader = document.querySelector('.card-header i.fa-chart-pie').parentElement;
-                        if (chartHeader) {
-                            chartHeader.innerHTML = `<i class="fas fa-chart-pie me-1"></i> Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                        const chartHeaderText = document.getElementById('chartHeaderText');
+                        if (chartHeaderText) {
+                            chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
                         }
                     } else {
                         tbody.innerHTML = `
