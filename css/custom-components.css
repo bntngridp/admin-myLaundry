@@ -542,11 +542,17 @@ body.sb-sidenav-toggled .sb-topnav .navbar-brand {
 }
 
 /* Override simple-datatables sorter header links */
+#datatablesSimple thead th a,
+.dataTable-table thead th a,
+a.dataTable-sorter,
 .dataTable-sorter {
     color: #0b1739 !important;
     text-decoration: none !important;
     font-weight: 700 !important;
 }
+#datatablesSimple thead th a:hover,
+.dataTable-table thead th a:hover,
+a.dataTable-sorter:hover,
 .dataTable-sorter:hover {
     color: #0007B0 !important;
     text-decoration: none !important;
