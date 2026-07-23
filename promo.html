@@ -242,11 +242,25 @@
                 </div>
             </form>
         </div>
+    <!-- Modal Konfirmasi Hapus Promo -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 400px; text-align: center; padding: 28px;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: #FEE2E2; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3 style="margin: 0 0 8px; color: #0F172A; font-size: 18px; font-weight: 700;">Hapus Promo Permanen?</h3>
+            <p style="color: #64748B; font-size: 14px; margin-bottom: 24px; line-height: 1.5;" id="deleteModalMessage">Apakah Anda yakin ingin menghapus promo ini?</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button type="button" class="btn-action btn-edit" onclick="closeDeleteModal()" style="padding: 12px 20px; flex: 1; font-weight: 600;">Batal</button>
+                <button type="button" class="btn-action btn-delete" id="btnConfirmDelete" style="padding: 12px 20px; flex: 1; font-weight: 600;">Ya, Hapus Promo</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
         const API_URL = 'http://localhost:8083/api/promos';
+        let pendingDeleteId = null;
         
         function getAuthToken() {
             return localStorage.getItem('admin_token') || localStorage.getItem('token') || '';
@@ -263,7 +277,7 @@
                 if (result.success && result.data) {
                     renderPromos(result.data);
                 } else {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Belum ada promo aktif.</div>';
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Belum ada promo tersedia.</div>';
                 }
             } catch (err) {
                 console.error(err);
@@ -292,7 +306,7 @@
             }
 
             grid.innerHTML = promos.map(p => `
-                <div class="promo-card">
+                <div class="promo-card" style="${p.is_active ? '' : 'opacity: 0.85; background: #F8FAFC; border-color: #E2E8F0;'}">
                     <div>
                         <div class="promo-code-badge"><i class="fas fa-tag me-1"></i> ${p.code}</div>
                         <div class="promo-title">${p.title}</div>
@@ -306,13 +320,13 @@
                             <span>Diskon: <strong>${p.discount_percentage}%</strong></span>
                             <span>Maks: <strong>Rp ${(p.max_discount_amount || 0).toLocaleString('id-ID')}</strong></span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="status-pill ${p.is_active ? 'status-active' : 'status-inactive'}" style="cursor: pointer;" onclick="togglePromoStatus(${p.id}, ${p.is_active})" title="Klik untuk ubah status">
-                                ${p.is_active ? '● Aktif (Klik Nonaktif)' : '○ Nonaktif (Klik Aktifkan)'}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                            <span class="status-pill ${p.is_active ? 'status-active' : 'status-inactive'}" style="cursor: pointer;" onclick="togglePromoStatus(${p.id}, ${p.is_active})" title="Klik untuk ubah status aktif/nonaktif">
+                                ${p.is_active ? '● Aktif (Klik Nonaktifkan)' : '○ Nonaktif (Klik Aktifkan)'}
                             </span>
                             <div class="promo-actions">
                                 <button class="btn-action btn-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle || ''}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-edit"></i> Edit</button>
-                                <button class="btn-action btn-delete" onclick="deletePromo(${p.id})"><i class="fas fa-trash"></i> Hapus</button>
+                                <button class="btn-action btn-delete" onclick="openDeleteModal(${p.id}, '${p.code}')"><i class="fas fa-trash"></i> Hapus</button>
                             </div>
                         </div>
                     </div>
@@ -335,7 +349,7 @@
                 if (res.ok && result.success) {
                     loadPromos();
                 } else {
-                    alert(result.message || 'Gagal menguji status promo.');
+                    alert(result.message || 'Gagal mengubah status promo.');
                 }
             } catch (err) {
                 alert('Terjadi kesalahan jaringan saat mengubah status promo.');
@@ -367,6 +381,38 @@
         function closeModal() {
             document.getElementById('promoModal').style.display = 'none';
         }
+
+        function openDeleteModal(id, code) {
+            pendingDeleteId = id;
+            document.getElementById('deleteModalMessage').innerText = `Apakah Anda yakin ingin menghapus promo "${code}" secara permanen? Promo yang dihapus tidak akan dapat digunakan oleh pelanggan.`;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            pendingDeleteId = null;
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        document.getElementById('btnConfirmDelete').onclick = async function() {
+            if (!pendingDeleteId) return;
+            const token = getAuthToken();
+            try {
+                const res = await fetch(`${API_URL}/${pendingDeleteId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                closeDeleteModal();
+                if (res.ok && result.success) {
+                    loadPromos();
+                } else {
+                    alert(result.message || 'Gagal menghapus promo.');
+                }
+            } catch (err) {
+                closeDeleteModal();
+                alert('Gagal terhubung ke API.');
+            }
+        };
 
         async function savePromo(e) {
             e.preventDefault();
@@ -404,25 +450,6 @@
                 }
             } catch (err) {
                 alert('Terjadi kesalahan jaringan.');
-            }
-        }
-
-        async function deletePromo(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus promo ini?')) return;
-            const token = getAuthToken();
-            try {
-                const res = await fetch(`${API_URL}/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const result = await res.json();
-                if (res.ok && result.success) {
-                    loadPromos();
-                } else {
-                    alert(result.message || 'Gagal menghapus promo.');
-                }
-            } catch (err) {
-                alert('Gagal terhubung ke API.');
             }
         }
 
