@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Promo & Voucher — myLaundry Admin</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="js/components.js" defer></script>
+    <style>
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #0007B0, #1D4ED8);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,7,176,0.2);
+            transition: all 0.2s;
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,7,176,0.3);
+            color: white;
+        }
+        .promo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .promo-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: #0007B0;
+        }
+        .promo-code-badge {
+            display: inline-block;
+            background: #EEF2FF;
+            color: #0007B0;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .promo-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 4px;
+        }
+        .promo-subtitle {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+        .promo-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #475569;
+            border-top: 1px solid #F1F5F9;
+            padding-top: 12px;
+            margin-bottom: 12px;
+        }
+        .expiry-info {
+            font-size: 12px;
+            color: #0284C7;
+            background: #F0F9FF;
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-active { background: #DCFCE7; color: #166534; }
+        .status-inactive { background: #FEE2E2; color: #991B1B; }
+        .promo-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .btn-action {
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-edit { background: #F1F5F9; color: #334155; }
+        .btn-edit:hover { background: #E2E8F0; }
+        .btn-delete { background: #FEF2F2; color: #DC2626; }
+        .btn-delete:hover { background: #FEE2E2; }
+        
+        /* Modal Style */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            padding: 28px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <admin-navbar></admin-navbar>
+    <div id="layoutSidenav">
+        <admin-sidebar></admin-sidebar>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                        <div>
+                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;">Kelola Promo & Voucher</h1>
+                            <p class="text-muted m-0" style="font-size: 14px;">Tambah promo diskon, atur tanggal kedaluwarsa, dan status promo</p>
+                        </div>
+                        <button class="btn-primary-custom" onclick="openAddModal()">
+                            <i class="fas fa-plus"></i> Tambah Promo Baru
+                        </button>
+                    </div>
+
+                    <!-- Promo Grid Cards -->
+                    <div id="promoGrid" class="promo-grid mb-5">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Memuat daftar promo...</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Form Tambah/Edit Promo -->
+    <div id="promoModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modalTitle" style="margin-top: 0; color: #0F172A; font-size: 18px;">Tambah Promo Baru</h3>
+            <form id="promoForm" onsubmit="savePromo(event)">
+                <input type="hidden" id="promoId">
+                <div class="form-group">
+                    <label>Kode Promo (Contoh: DISKON50)</label>
+                    <input type="text" id="promoCode" required placeholder="Masukkan kode promo (tanpa spasi)">
+                </div>
+                <div class="form-group">
+                    <label>Judul Promo</label>
+                    <input type="text" id="promoTitle" required placeholder="Contoh: Diskon 50% Super Hemat">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi Subtitle</label>
+                    <input type="text" id="promoSubtitle" placeholder="Contoh: Diskon hingga Rp 10.000 untuk cucian kiloan">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Persentase Diskon (%)</label>
+                        <input type="number" id="promoDiscount" required min="1" max="100" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Maksimal Diskon (Rp)</label>
+                        <input type="number" id="promoMaxDiscount" required placeholder="10000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Minimal Transaksi (Rp)</label>
+                        <input type="number" id="promoMinOrder" required placeholder="20000">
+                    </div>
+                    <div class="form-group">
+                        <label>Status Promo</label>
+                        <select id="promoIsActive">
+                            <option value="true">● Aktif</option>
+                            <option value="false">○ Nonaktif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Batas Waktu Kedaluwarsa (Expired At)</label>
+                    <input type="datetime-local" id="promoExpiredAt">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-action btn-edit" onclick="closeModal()" style="padding: 10px 18px;">Batal</button>
+                    <button type="submit" class="btn-primary-custom" style="padding: 10px 18px;">Simpan Promo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+        const API_URL = 'http://localhost:8083/api/promos';
+        const token = localStorage.getItem('token') || '';
+
+        async function loadPromos() {
+            const grid = document.getElementById('promoGrid');
+            try {
+                const res = await fetch(API_URL, {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                const result = await res.json();
+                if (result.success && result.data) {
+                    renderPromos(result.data);
+                } else {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Belum ada promo aktif.</div>';
+                }
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #EF4444;">Gagal terhubung ke API backend.</div>';
+            }
+        }
+
+        function formatDateTimeDisplay(isoStr) {
+            if (!isoStr) return 'Berlaku Selamanya';
+            const d = new Date(isoStr);
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatDateTimeInput(isoStr) {
+            if (!isoStr) return '';
+            const d = new Date(isoStr);
+            d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+            return d.toISOString().slice(0, 16);
+        }
+
+        function renderPromos(promos) {
+            const grid = document.getElementById('promoGrid');
+            if (!promos.length) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Belum ada promo tersedia.</div>';
+                return;
+            }
+
+            grid.innerHTML = promos.map(p => `
+                <div class="promo-card">
+                    <div>
+                        <div class="promo-code-badge"><i class="fas fa-tag me-1"></i> ${p.code}</div>
+                        <div class="promo-title">${p.title}</div>
+                        <div class="promo-subtitle">${p.subtitle || '-'}</div>
+                    </div>
+                    <div>
+                        <div class="expiry-info">
+                            <span><i class="far fa-clock me-1"></i> Batas Waktu: <strong>${formatDateTimeDisplay(p.expired_at)}</strong></span>
+                        </div>
+                        <div class="promo-details">
+                            <span>Diskon: <strong>${p.discount_percentage}%</strong></span>
+                            <span>Maks: <strong>Rp ${p.max_discount_amount.toLocaleString('id-ID')}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="status-pill ${p.is_active ? 'status-active' : 'status-inactive'}">
+                                ${p.is_active ? '● Aktif' : '○ Nonaktif'}
+                            </span>
+                            <div class="promo-actions">
+                                <button class="btn-action btn-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-action btn-delete" onclick="deletePromo(${p.id})"><i class="fas fa-trash"></i> Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = 'Tambah Promo Baru';
+            document.getElementById('promoId').value = '';
+            document.getElementById('promoForm').reset();
+            document.getElementById('promoIsActive').value = "true";
+            document.getElementById('promoModal').style.display = 'flex';
+        }
+
+        function editPromo(id, code, title, subtitle, discount, maxDiscount, minOrder, isActive, expiredAt) {
+            document.getElementById('modalTitle').innerText = 'Edit Promo';
+            document.getElementById('promoId').value = id;
+            document.getElementById('promoCode').value = code;
+            document.getElementById('promoTitle').value = title;
+            document.getElementById('promoSubtitle').value = subtitle;
+            document.getElementById('promoDiscount').value = discount;
+            document.getElementById('promoMaxDiscount').value = maxDiscount;
+            document.getElementById('promoMinOrder').value = minOrder;
+            document.getElementById('promoIsActive').value = isActive ? "true" : "false";
+            document.getElementById('promoExpiredAt').value = formatDateTimeInput(expiredAt);
+            document.getElementById('promoModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('promoModal').style.display = 'none';
+        }
+
+        async function savePromo(e) {
+            e.preventDefault();
+            const id = document.getElementById('promoId').value;
+            const payload = {
+                code: document.getElementById('promoCode').value,
+                title: document.getElementById('promoTitle').value,
+                subtitle: document.getElementById('promoSubtitle').value,
+                discount_percentage: parseInt(document.getElementById('promoDiscount').value),
+                max_discount_amount: parseFloat(document.getElementById('promoMaxDiscount').value),
+                min_order_amount: parseFloat(document.getElementById('promoMinOrder').value),
+                is_active: document.getElementById('promoIsActive').value === "true",
+                expired_at: document.getElementById('promoExpiredAt').value
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_URL}/${id}` : API_URL;
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    closeModal();
+                    loadPromos();
+                } else {
+                    alert(result.message || 'Gagal menyimpan promo.');
+                }
+            } catch (err) {
+                alert('Terjadi kesalahan jaringan.');
+            }
+        }
+
+        async function deletePromo(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus promo ini?')) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    loadPromos();
+                } else {
+                    alert(result.message || 'Gagal menghapus promo.');
+                }
+            } catch (err) {
+                alert('Gagal terhubung ke API.');
+            }
+        }
+
+        window.onload = loadPromos;
+    </script>
+</body>
+</html>
