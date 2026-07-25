@@ -220,14 +220,16 @@
                             let statusLabel = stats.status;
                             if (stats.status === 'Available' || stats.status === 'Active') {
                                 badgeClass = 'status-kurir-available';
-                                statusLabel = 'Available';
+                                statusLabel = window.i18n ? window.i18n.t('courier_status_available') : 'Tersedia';
                             } else if (stats.status === 'Picking Up') {
                                 badgeClass = 'status-kurir-picking';
+                                statusLabel = window.i18n ? window.i18n.t('courier_status_picking') : 'Sedang Menjemput';
                             } else if (stats.status === 'Delivering') {
                                 badgeClass = 'status-kurir-delivering';
+                                statusLabel = window.i18n ? window.i18n.t('courier_status_delivering') : 'Sedang Mengantar';
                             } else if (stats.status === 'Offline') {
                                 badgeClass = 'status-kurir-inactive';
-                                statusLabel = 'Offline • Istirahat';
+                                statusLabel = window.i18n ? window.i18n.t('courier_status_offline') : 'Offline • Istirahat';
                             }
 
                             const phoneDisplay = courier.phone_number || '-';
@@ -314,7 +316,7 @@
                 if (!ctx) return;
 
                 // Smart diffing: Skip update if data has not changed to prevent continuous chart reload/flicker
-                if (lastChartData.available === available && lastChartData.busy === busy && myPieChart) {
+                if (lastChartData && lastChartData.available === available && lastChartData.busy === busy && myPieChart) {
                     return;
                 }
                 lastChartData = { available, busy };
@@ -354,6 +356,16 @@
                     }
                 });
             }
+
+            // Listen for languageChanged event to update pie chart labels and table status badges
+            window.addEventListener('languageChanged', function() {
+                if (myPieChart) {
+                    myPieChart.destroy();
+                    myPieChart = null;
+                }
+                lastChartData = null;
+                loadCouriers();
+            });
 
             // ─── Helper: open Edit modal ────────────────────────────────────────────
             function openEditCourier(id, username, email, phone) {

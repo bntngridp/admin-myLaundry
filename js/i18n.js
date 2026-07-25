@@ -25,6 +25,12 @@
             "menu_branches": "Cabang Outlet",
             "menu_sign_out": "Keluar",
 
+            // Time Periods
+            "period_today": "Hari Ini",
+            "period_weekly": "Minggu Ini",
+            "period_monthly": "Bulan Ini",
+            "period_yearly": "Tahun Ini",
+
             // Dashboard Page
             "dash_title": "Dashboard",
             "dash_subtitle": "Ringkasan performa dan statistik bisnis myLaundry",
@@ -32,10 +38,15 @@
             "dash_active_couriers": "Kurir Aktif",
             "dash_revenue": "Total Pendapatan",
             "dash_services_count": "Layanan Aktif",
-            "dash_recent_orders": "Pesanan Terbaru",
-            "dash_chart_sales": "Statistik Penjualan Harian",
+            "dash_recent_orders": "Pesanan Hari Ini",
+            "dash_chart_sales": "Penjualan",
+            "dash_chart_visitors": "Pengunjung Aplikasi",
             "dash_chart_status": "Distribusi Status Pesanan",
             "dash_view_all": "Lihat Semua",
+            "dash_empty_title": "Belum Ada Pesanan",
+            "dash_empty_desc": "Semua pesanan baru yang masuk akan muncul di sini secara otomatis.",
+            "dash_loading_orders": "Memuat data pesanan...",
+            "dash_reports": "Laporan",
 
             // Couriers Page
             "courier_title": "Kurir",
@@ -63,12 +74,14 @@
             "orders_search": "Cari pesanan...",
             "orders_col_id": "ID Pesanan",
             "orders_col_customer": "Pelanggan",
+            "orders_col_date": "Tanggal",
+            "orders_col_address": "Alamat",
             "orders_col_service": "Layanan",
             "orders_col_weight": "Berat (kg)",
             "orders_col_price": "Total Harga",
             "orders_col_status": "Status Pesanan",
             "orders_col_action": "Aksi",
-            "orders_detail_btn": "Detail Pesanan",
+            "orders_detail_btn": "Lihat Detail",
 
             // Order History Page
             "history_title": "Riwayat Pesanan",
@@ -80,11 +93,12 @@
             // Products Page
             "products_title": "Produk & Layanan",
             "products_subtitle": "Kelola paket cuci, dry clean, dan daftar harga",
-            "products_list": "Daftar Paket Layanan",
+            "products_list": "Katalog Produk",
             "products_add_btn": "Tambah Produk Baru",
             "products_col_name": "Nama Produk",
             "products_col_category": "Kategori",
             "products_col_price": "Harga / Unit",
+            "products_col_duration": "Durasi",
             "products_col_desc": "Deskripsi",
             "products_col_action": "Aksi",
 
@@ -132,6 +146,13 @@
             "auth_enter_otp": "Masukkan Kode OTP",
             "auth_new_pass": "Kata Sandi Baru",
 
+            // Status Labels
+            "status_awaiting_payment": "Menunggu Pembayaran",
+            "status_courier_en_route": "Kurir Dalam Perjalanan",
+            "status_in_progress": "Sedang Diproses",
+            "status_completed": "Selesai",
+            "status_cancelled": "Dibatalkan",
+
             // Global Action Buttons & Indicators
             "btn_save": "Simpan Perubahan",
             "btn_cancel": "Batal",
@@ -141,6 +162,7 @@
             "btn_close": "Tutup",
             "btn_back": "Kembali",
             "btn_search": "Cari",
+            "btn_view_details": "Lihat Detail",
 
             // Status Badges & States
             "state_loading": "Memuat data...",
@@ -167,6 +189,12 @@
             "menu_branches": "Branches",
             "menu_sign_out": "Sign Out",
 
+            // Time Periods
+            "period_today": "Today",
+            "period_weekly": "This Week",
+            "period_monthly": "This Month",
+            "period_yearly": "This Year",
+
             // Dashboard Page
             "dash_title": "Dashboard",
             "dash_subtitle": "myLaundry business performance summary and analytics",
@@ -174,10 +202,15 @@
             "dash_active_couriers": "Active Couriers",
             "dash_revenue": "Total Revenue",
             "dash_services_count": "Active Services",
-            "dash_recent_orders": "Recent Orders",
-            "dash_chart_sales": "Daily Sales Analytics",
+            "dash_recent_orders": "Today's Orders",
+            "dash_chart_sales": "Sales",
+            "dash_chart_visitors": "App Visitors",
             "dash_chart_status": "Order Status Distribution",
             "dash_view_all": "View All",
+            "dash_empty_title": "No Orders Yet",
+            "dash_empty_desc": "All new incoming orders will automatically appear here.",
+            "dash_loading_orders": "Loading orders data...",
+            "dash_reports": "Reports",
 
             // Couriers Page
             "courier_title": "Couriers",
@@ -205,12 +238,14 @@
             "orders_search": "Search orders...",
             "orders_col_id": "Order ID",
             "orders_col_customer": "Customer",
+            "orders_col_date": "Date",
+            "orders_col_address": "Address",
             "orders_col_service": "Service",
             "orders_col_weight": "Weight (kg)",
             "orders_col_price": "Total Price",
             "orders_col_status": "Order Status",
             "orders_col_action": "Action",
-            "orders_detail_btn": "Order Details",
+            "orders_detail_btn": "View Details",
 
             // Order History Page
             "history_title": "Order History",
@@ -222,11 +257,12 @@
             // Products Page
             "products_title": "Products & Services",
             "products_subtitle": "Manage laundry packages, dry clean, and price list",
-            "products_list": "Service Packages List",
+            "products_list": "Product Catalog",
             "products_add_btn": "Add New Product",
             "products_col_name": "Product Name",
             "products_col_category": "Category",
             "products_col_price": "Price / Unit",
+            "products_col_duration": "Duration",
             "products_col_desc": "Description",
             "products_col_action": "Action",
 
@@ -274,6 +310,13 @@
             "auth_enter_otp": "Enter OTP Code",
             "auth_new_pass": "New Password",
 
+            // Status Labels
+            "status_awaiting_payment": "Awaiting Payment",
+            "status_courier_en_route": "Courier En Route",
+            "status_in_progress": "In Progress",
+            "status_completed": "Completed",
+            "status_cancelled": "Cancelled",
+
             // Global Action Buttons & Indicators
             "btn_save": "Save Changes",
             "btn_cancel": "Cancel",
@@ -283,6 +326,7 @@
             "btn_close": "Close",
             "btn_back": "Back",
             "btn_search": "Search",
+            "btn_view_details": "View Details",
 
             // Status Badges & States
             "state_loading": "Loading data...",

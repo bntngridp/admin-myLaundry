@@ -96,9 +96,12 @@
             }
 
             function getStatusLabel(status) {
-                if (!status) return 'Awaiting Payment';
-                if (status.toLowerCase() === 'completed' || status.toLowerCase() === 'done') return 'Completed';
-                if (status.toLowerCase() === 'cancelled') return 'Cancelled';
+                if (!status) return window.i18n ? window.i18n.t('status_awaiting_payment') : 'Menunggu Pembayaran';
+                const s = status.toLowerCase();
+                if (s === 'completed' || s === 'done') return window.i18n ? window.i18n.t('status_completed') : 'Selesai';
+                if (s === 'cancelled') return window.i18n ? window.i18n.t('status_cancelled') : 'Dibatalkan';
+                if (s === 'in progress') return window.i18n ? window.i18n.t('status_in_progress') : 'Sedang Diproses';
+                if (s.includes('courier') || s.includes('en route')) return window.i18n ? window.i18n.t('status_courier_en_route') : 'Kurir Dalam Perjalanan';
                 return status.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             }
 
@@ -131,18 +134,21 @@
                             
                             const dateObj = new Date(order.created_at);
                             const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-                            const formattedDate = dateObj.toLocaleDateString('en-US', options).replace(',', '');
+                            const currentLang = window.i18n ? window.i18n.getLanguage() : 'id';
+                            const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+                            const formattedDate = dateObj.toLocaleDateString(locale, options).replace(',', '');
                             
                             const customerName = order.customer ? (order.customer.username || 'Guest') : 'Guest';
                             const customerEmail = order.customer ? (order.customer.email || '') : '';
                             const addressText = order.address && order.address.street_name ? 
-                                `${order.address.receiver_name}, ${order.address.street_name}` : 'No Address';
+                                `${order.address.receiver_name}, ${order.address.street_name}` : (currentLang === 'en' ? 'No Address' : 'Tidak ada alamat');
                             
                             const priceVal = order.total_price || 0;
                             const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(priceVal);
                             
                             const statusLabel = getStatusLabel(order.status);
                             const statusClass = getStatusClass(order.status);
+                            const viewDetailsText = window.i18n ? window.i18n.t('btn_view_details') : 'Lihat Detail';
 
                             row.innerHTML = `
                                 <td>#${order.id}</td>
@@ -153,18 +159,20 @@
                                 <td><span class="status-pesanan-dashbord ${statusClass}">${statusLabel}</span></td>
                                 <td>${addressText}</td>
                                 <td>${formattedTotal}</td>
-                                <td><a href="detail-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">View Details</a></td>
+                                <td><a href="detail-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">${viewDetailsText}</a></td>
                             `;
                             tbody.appendChild(row);
                         });
                     } else {
+                        const emptyTitle = window.i18n ? window.i18n.t('dash_empty_title') : 'Tidak Ada Pesanan Aktif';
+                        const emptyDesc = window.i18n ? window.i18n.t('dash_empty_desc') : 'Semua pesanan baru yang sedang diproses akan muncul di sini.';
                         tbody.innerHTML = `
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">
                                     <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                         <i class="fas fa-shopping-basket fa-3x mb-2" style="color: #dee2e6;"></i>
-                                        <h5 class="fw-bold" style="color: #6c757d;">Tidak Ada Pesanan Aktif</h5>
-                                        <p class="text-muted small mb-0">Semua pesanan baru yang sedang diproses akan muncul di sini.</p>
+                                        <h5 class="fw-bold" style="color: #6c757d;">${emptyTitle}</h5>
+                                        <p class="text-muted small mb-0">${emptyDesc}</p>
                                     </div>
                                 </td>
                             </tr>
@@ -217,6 +225,9 @@
                 }
                 loadOrders();
             });
+
+            // Listen for languageChanged event to re-render table with active language
+            window.addEventListener('languageChanged', loadOrders);
         </script>
     </body>
 </html>
