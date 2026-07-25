@@ -303,12 +303,23 @@
                 }
             }
 
+            let lastChartData = { available: -1, busy: -1 };
+
             function updatePieChart(available, busy) {
                 const ctx = document.getElementById("myPieChart");
                 if (!ctx) return;
 
+                // Smart diffing: Skip update if data has not changed to prevent continuous chart reload/flicker
+                if (lastChartData.available === available && lastChartData.busy === busy && myPieChart) {
+                    return;
+                }
+                lastChartData = { available, busy };
+
+                // If chart already exists, update data smoothly without destroying/recreating canvas
                 if (myPieChart) {
-                    myPieChart.destroy();
+                    myPieChart.data.datasets[0].data = [available, busy];
+                    myPieChart.update();
+                    return;
                 }
 
                 myPieChart = new Chart(ctx, {
@@ -402,10 +413,10 @@
             window.addEventListener('DOMContentLoaded', () => {
                 loadCouriers();
 
-                // Auto-sync courier status with backend DB every 1 second for instant real-time updates
+                // Auto-sync courier status with backend DB every 3 seconds
                 setInterval(() => {
                     loadCouriers();
-                }, 1000);
+                }, 3000);
 
                 // ── Form: Tambah Kurir Baru ──────────────────────────────────────────
                 const formAdd = document.getElementById('formAddCourier');
