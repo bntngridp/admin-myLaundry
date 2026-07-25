@@ -157,8 +157,8 @@
                     });
 
                     // ── In-DOM Live Update if table is already rendered ──
-                    const firstBadge = couriers.length > 0 ? document.getElementById(`courier-status-badge-${couriers[0].id}`) : null;
-                    if (firstBadge && couriers.length > 0) {
+                    const hasRenderedRows = document.querySelector('[id^="courier-status-badge-"]');
+                    if (hasRenderedRows && couriers.length > 0) {
                         couriers.forEach(courier => {
                             const stats = courierStats[courier.id] || { activeCount: 0, status: courier.is_available === false ? 'Offline' : 'Available', latestSchedule: 'Tidak Ada Jadwal' };
                             
@@ -402,10 +402,10 @@
             window.addEventListener('DOMContentLoaded', () => {
                 loadCouriers();
 
-                // Auto-sync courier status with backend DB every 2 seconds for real-time updates
+                // Auto-sync courier status with backend DB every 1 second for instant real-time updates
                 setInterval(() => {
                     loadCouriers();
-                }, 2000);
+                }, 1000);
 
                 // ── Form: Tambah Kurir Baru ──────────────────────────────────────────
                 const formAdd = document.getElementById('formAddCourier');

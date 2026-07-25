@@ -5,6 +5,8 @@ async function apiFetch(endpoint, options = {}) {
     
     const headers = {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
         ...options.headers
     };
     
@@ -13,6 +15,7 @@ async function apiFetch(endpoint, options = {}) {
     }
     
     const config = {
+        cache: 'no-store',
         ...options,
         headers
     };
@@ -21,8 +24,15 @@ async function apiFetch(endpoint, options = {}) {
         config.body = JSON.stringify(options.body);
     }
     
+    // Add cache-busting timestamp to GET requests
+    let finalUrl = `${API_BASE_URL}${endpoint}`;
+    if (!options.method || options.method.toUpperCase() === 'GET') {
+        const sep = finalUrl.includes('?') ? '&' : '?';
+        finalUrl += `${sep}_t=${Date.now()}`;
+    }
+    
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+        const response = await fetch(finalUrl, config);
         
         // Handle expired/invalid token
         if (response.status === 401 && !window.location.pathname.endsWith('login.html')) {
