@@ -256,6 +256,33 @@
                             <div id="liveTrackingMap" style="height: 380px; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); z-index: 1;"></div>
                         </div>
 
+                        <!-- Chat & Proof of Delivery Card -->
+                        <div class="detail-card">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5><i class="fas fa-comments me-2" style="color: #0007B0;"></i>Chat & Bukti Pengiriman (Proof of Delivery)</h5>
+                                <span class="badge bg-primary px-3 py-2"><i class="fas fa-camera me-1"></i> Foto Digantung di Pagar/Kamar</span>
+                            </div>
+
+                            <!-- Chat Messages Timeline Container -->
+                            <div id="chatTimelineContainer" style="max-height: 380px; overflow-y: auto; background: #F8FAFC; border-radius: 12px; border: 1px solid #E2E8F0; padding: 16px;" class="mb-3">
+                                <div class="text-center py-4 text-muted">Memuat riwayat chat & foto bukti pengiriman...</div>
+                            </div>
+
+                            <!-- Send Message / Upload Delivery Proof Form -->
+                            <form id="chatForm" onsubmit="sendAdminChatMessage(event)">
+                                <div class="input-group">
+                                    <input type="text" id="chatInputMessage" class="form-control" placeholder="Tulis pesan atau catatan pengiriman..." style="border-radius: 10px 0 0 10px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="triggerProofUpload()" title="Unggah Bukti Foto Laundry Digantung">
+                                        <i class="fas fa-camera text-danger"></i> Bukti Foto
+                                    </button>
+                                    <input type="file" id="proofFileInput" accept="image/*" style="display: none;" onchange="handleProofFileSelected(event)">
+                                    <button class="btn btn-primary px-4" type="submit" style="border-radius: 0 10px 10px 0;">
+                                        <i class="fas fa-paper-plane me-1"></i> Kirim
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
                         <!-- Order Items Card -->
                         <div class="detail-card">
                             <h5><i class="fas fa-box-open me-2" style="color: #0007B0;"></i>Order Items</h5>
@@ -387,6 +414,25 @@
             <div class="modal-footer border-0 pt-0">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border: 1px solid #dee2e6; color: #6c757d; font-weight: 600; border-radius: 8px;">Batal</button>
                 <button type="button" id="btn-confirm-yes" class="btn btn-primary" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px; font-weight: 600; padding: 6px 20px;">Ya, Selesaikan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Photo Proof Lightbox Modal -->
+<div class="modal fade" id="proofLightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden; background: #0F172A;">
+            <div class="modal-header border-0 text-white">
+                <h5 class="modal-title fw-bold"><i class="fas fa-camera text-danger me-2"></i>Foto Bukti Pengiriman Laundry</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="lightboxProofImage" src="" alt="Bukti Pengiriman" style="max-width: 100%; max-height: 70vh; object-fit: contain;">
+            </div>
+            <div class="modal-footer border-0 justify-content-between text-white-50 px-4 py-3" style="background: rgba(255,255,255,0.05);">
+                <small id="lightboxProofCaption"><i class="fas fa-info-circle me-1"></i> Laundry digantung di lokasi</small>
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -680,9 +726,126 @@
         trackingInterval = setInterval(updateLiveTrackingMap, 3000);
     }
 
+    // Chat Timeline & Delivery Proof Logic
+    async function loadOrderChatTimeline() {
+        if (!orderId) return;
+        const container = document.getElementById('chatTimelineContainer');
+        try {
+            const res = await apiFetch(`/chats/order/${orderId}`);
+            if (res && res.success && res.data) {
+                const messages = res.data;
+                if (messages.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-comments fa-2x mb-2 text-secondary opacity-50"></i>
+                            <div>Belum ada histori pesan chat atau foto bukti pengiriman.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = messages.map(m => {
+                    const isProof = m.message_type === 'DELIVERY_PROOF';
+                    const senderName = m.sender ? m.sender.username : (m.sender_role === 'courier' ? 'Kurir' : (m.sender_role === 'customer' ? 'Customer' : 'Admin'));
+                    const roleBadge = m.sender_role === 'courier' ? 'bg-warning text-dark' : (m.sender_role === 'customer' ? 'bg-info text-dark' : 'bg-primary');
+                    const dateStr = new Date(m.sent_at || m.CreatedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                    return `
+                        <div class="mb-3 p-3" style="background: white; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="fw-bold text-dark">${senderName}</span>
+                                    <span class="badge ${roleBadge} text-uppercase" style="font-size: 0.7rem;">${m.sender_role}</span>
+                                    ${isProof ? '<span class="badge bg-danger ms-1"><i class="fas fa-camera me-1"></i> BUKTI PENGIRIMAN LAUNDRY</span>' : ''}
+                                </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">${dateStr}</small>
+                            </div>
+                            <div class="text-dark my-1">${m.message || ''}</div>
+                            ${isProof && m.image_url ? `
+                                <div class="mt-2">
+                                    <div class="text-muted small mb-1 fw-semibold"><i class="fas fa-info-circle text-danger me-1"></i>Foto Bukti Laundry Digantung (Klik untuk memperbesar):</div>
+                                    <img src="${m.image_url}" alt="Bukti Pengiriman" style="max-height: 180px; border-radius: 8px; border: 2px solid #F87171; cursor: pointer; transition: transform 0.2s;" onclick="openProofModal('${m.image_url}', '${senderName}')" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                container.scrollTop = container.scrollHeight;
+            }
+        } catch (err) {
+            console.error('Error loading chat timeline:', err);
+        }
+    }
+
+    async function sendAdminChatMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatInputMessage');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        try {
+            const res = await apiFetch(`/chats/order/${orderId}`, {
+                method: 'POST',
+                body: {
+                    message: msg,
+                    message_type: 'TEXT'
+                }
+            });
+
+            if (res && res.success) {
+                input.value = '';
+                loadOrderChatTimeline();
+            }
+        } catch (err) {
+            alert('Gagal mengirim pesan chat: ' + err.message);
+        }
+    }
+
+    function triggerProofUpload() {
+        document.getElementById('proofFileInput').click();
+    }
+
+    async function handleProofFileSelected(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async function(evt) {
+            const base64Image = evt.target.result;
+            try {
+                const res = await apiFetch(`/chats/order/${orderId}`, {
+                    method: 'POST',
+                    body: {
+                        message: '📷 Bukti Pengiriman: Laundry telah digantung di pagar/pintu kamar (Customer tidak di lokasi).',
+                        image_url: base64Image,
+                        message_type: 'DELIVERY_PROOF'
+                    }
+                });
+
+                if (res && res.success) {
+                    alert('Foto bukti pengiriman laundry berhasil diunggah!');
+                    loadOrderChatTimeline();
+                    loadOrderDetail();
+                }
+            } catch (err) {
+                alert('Gagal mengunggah foto bukti pengiriman: ' + err.message);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function openProofModal(imageUrl, senderName) {
+        document.getElementById('lightboxProofImage').src = imageUrl;
+        document.getElementById('lightboxProofCaption').innerHTML = `<i class="fas fa-camera text-danger me-1"></i> Unggahan Foto Bukti Pengiriman oleh ${senderName || 'Kurir'}`;
+        const proofModal = new bootstrap.Modal(document.getElementById('proofLightboxModal'));
+        proofModal.show();
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         loadOrderDetail();
         startLiveTrackingAutoRefresh();
+        loadOrderChatTimeline();
     });
 
     window.addEventListener('beforeunload', () => {
