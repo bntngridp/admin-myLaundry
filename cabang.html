@@ -262,7 +262,7 @@
         async function handleSaveBranch(e) {
             e.preventDefault();
 
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('admin_token') || localStorage.getItem('token');
             const id = document.getElementById('branchId').value;
             const payload = {
                 name: document.getElementById('branchName').value.trim(),
@@ -308,7 +308,7 @@
 
         async function handleConfirmDelete() {
             if (!selectedDeleteId) return;
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('admin_token') || localStorage.getItem('token');
 
             try {
                 const res = await fetch(`http://localhost:8083/api/branches/${selectedDeleteId}`, {
