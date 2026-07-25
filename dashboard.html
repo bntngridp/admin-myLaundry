@@ -21,9 +21,9 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
+                        <h1 class="mt-4" data-i18n="dash_title">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Reports</li>
+                            <li class="breadcrumb-item active" data-i18n="dash_subtitle">Reports</li>
                         </ol>
                         <div class="row">
                             <div class="col-xl-6">
@@ -31,7 +31,7 @@
                                     <div class="card-header d-flex align-items-center justify-content-between">
                                         <div>
                                             <i class="fas fa-chart-area me-1"></i>
-                                            Sales <br>
+                                            <span data-i18n="dash_chart_sales">Sales</span> <br>
                                             <div class="d-flex align-items-center gap-2 mt-1">
                                                 <span class="ukuran">Rp 0</span>
                                                 <span id="salesChangeBadge" class="badge-keuntungan neutral">
@@ -75,18 +75,18 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Today's Orders
+                                <span data-i18n="dash_recent_orders">Today's Orders</span>
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                     <tr>
-                                        <th>Order</th>
-                                        <th>Customer</th>
+                                        <th data-i18n="orders_col_id">Order</th>
+                                        <th data-i18n="orders_col_customer">Customer</th>
                                         <th>Date</th>
-                                        <th>Status</th>
+                                        <th data-i18n="orders_col_status">Status</th>
                                         <th>Address</th>
-                                        <th>Total</th>
+                                        <th data-i18n="orders_col_price">Total</th>
                                         <th></th>
                                     </tr>
                                     </thead>
