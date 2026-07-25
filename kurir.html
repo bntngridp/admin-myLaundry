@@ -90,6 +90,7 @@
         <script src="js/api.js"></script>
         <script>
             let myPieChart = null;
+            let dataTableInstance = null;
 
             async function loadCouriers() {
                 const tbody = document.getElementById('couriersTableBody');
@@ -117,7 +118,7 @@
                             isAvailable: !isOff,
                             activeCount: 0,
                             status: isOff ? 'Offline' : 'Available',
-                            latestSchedule: 'No Schedule'
+                            latestSchedule: 'Tidak Ada Jadwal'
                         };
                     });
 
@@ -155,10 +156,60 @@
                         }
                     });
 
+                    // ── In-DOM Live Update if table is already rendered ──
+                    const firstBadge = couriers.length > 0 ? document.getElementById(`courier-status-badge-${couriers[0].id}`) : null;
+                    if (firstBadge && couriers.length > 0) {
+                        couriers.forEach(courier => {
+                            const stats = courierStats[courier.id] || { activeCount: 0, status: courier.is_available === false ? 'Offline' : 'Available', latestSchedule: 'Tidak Ada Jadwal' };
+                            
+                            let badgeClass = 'status-kurir-inactive';
+                            let statusLabel = stats.status;
+                            if (stats.status === 'Available' || stats.status === 'Active') {
+                                badgeClass = 'status-kurir-available';
+                                statusLabel = 'Available';
+                            } else if (stats.status === 'Picking Up') {
+                                badgeClass = 'status-kurir-picking';
+                            } else if (stats.status === 'Delivering') {
+                                badgeClass = 'status-kurir-delivering';
+                            } else if (stats.status === 'Offline') {
+                                badgeClass = 'status-kurir-inactive';
+                                statusLabel = 'Offline • Istirahat';
+                            }
+
+                            const badgeEl = document.getElementById(`courier-status-badge-${courier.id}`);
+                            if (badgeEl) {
+                                badgeEl.className = badgeClass;
+                                badgeEl.textContent = statusLabel;
+                            }
+                            const scheduleEl = document.getElementById(`courier-schedule-${courier.id}`);
+                            if (scheduleEl) {
+                                scheduleEl.textContent = stats.latestSchedule;
+                            }
+                            const activeCountEl = document.getElementById(`courier-active-count-${courier.id}`);
+                            if (activeCountEl) {
+                                activeCountEl.textContent = stats.activeCount;
+                            }
+                        });
+
+                        // Draw Pie Chart
+                        const availableTotal = couriers.filter(c => courierStats[c.id].status === 'Available' || courierStats[c.id].status === 'Active').length;
+                        const busyTotal = couriers.length - availableTotal;
+
+                        updatePieChart(availableTotal, busyTotal);
+
+                        // Update description card header
+                        const chartHeaderText = document.getElementById('chartHeaderText');
+                        if (chartHeaderText) {
+                            chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                        }
+                        return;
+                    }
+
+                    // ── Initial Build of Table Rows ──
                     tbody.innerHTML = '';
                     if (couriers.length > 0) {
                         couriers.forEach(courier => {
-                            const stats = courierStats[courier.id] || { activeCount: 0, status: courier.is_available === false ? 'Offline' : 'Available', latestSchedule: 'No Schedule' };
+                            const stats = courierStats[courier.id] || { activeCount: 0, status: courier.is_available === false ? 'Offline' : 'Available', latestSchedule: 'Tidak Ada Jadwal' };
                             const row = document.createElement('tr');
                             
                             let badgeClass = 'status-kurir-inactive';
@@ -181,9 +232,9 @@
                                 <td>
                                     ${courier.username} <br> <small class="text-muted">${courier.email}</small>
                                 </td>
-                                <td><span class="${badgeClass}">${statusLabel}</span></td>
-                                <td>${stats.latestSchedule}</td>
-                                <td>${stats.activeCount}</td>
+                                <td><span id="courier-status-badge-${courier.id}" class="${badgeClass}">${statusLabel}</span></td>
+                                <td><span id="courier-schedule-${courier.id}">${stats.latestSchedule}</span></td>
+                                <td><span id="courier-active-count-${courier.id}">${stats.activeCount}</span></td>
                                 <td>
                                     <div class="d-flex gap-1 flex-nowrap">
                                         <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-1" title="Edit Kurir"
@@ -231,7 +282,7 @@
                     if (couriers.length > 0) {
                         const datatablesSimple = document.getElementById('datatablesSimple');
                         if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                            new simpleDatatables.DataTable(datatablesSimple);
+                            dataTableInstance = new simpleDatatables.DataTable(datatablesSimple);
                         }
                     }
 
@@ -351,10 +402,10 @@
             window.addEventListener('DOMContentLoaded', () => {
                 loadCouriers();
 
-                // Auto-sync courier status with backend DB every 5 seconds
+                // Auto-sync courier status with backend DB every 2 seconds for real-time updates
                 setInterval(() => {
                     loadCouriers();
-                }, 5000);
+                }, 2000);
 
                 // ── Form: Tambah Kurir Baru ──────────────────────────────────────────
                 const formAdd = document.getElementById('formAddCourier');
