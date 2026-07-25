@@ -50,6 +50,7 @@
                                         <th>Status</th>
                                         <th>Delivery Schedule</th>
                                         <th>Total</th>
+                                        <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tfoot>
@@ -59,6 +60,7 @@
                                         <th>Status</th>
                                         <th>Delivery Schedule</th>
                                         <th>Total</th>
+                                        <th>Aksi</th>
                                     </tr>
                                     </tfoot>
                                     <tbody id="couriersTableBody">
@@ -161,6 +163,7 @@
                                 statusLabel = 'Offline • Istirahat';
                             }
 
+                            const phoneDisplay = courier.phone_number || '-';
                             row.innerHTML = `
                                 <td>#${courier.id}</td>
                                 <td>
@@ -169,6 +172,19 @@
                                 <td><span class="${badgeClass}">${statusLabel}</span></td>
                                 <td>${stats.latestSchedule}</td>
                                 <td>${stats.activeCount}</td>
+                                <td>
+                                    <div class="d-flex gap-1 flex-nowrap">
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-1" title="Edit Kurir"
+                                            onclick="openEditCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${courier.email}', '${phoneDisplay}')"
+                                        ><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn btn-sm btn-outline-info rounded-pill px-2 py-1" title="Riwayat Login"
+                                            onclick="openLoginHistory(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+                                        ><i class="fas fa-history"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Hapus Kurir"
+                                            onclick="openDeleteCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+                                        ><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
                             `;
                             tbody.appendChild(row);
                         });
@@ -187,7 +203,7 @@
                     } else {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
+                                <td colspan="7" class="text-center py-5 text-muted">
                                     <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                         <i class="fas fa-truck-moving fa-3x mb-2" style="color: #dee2e6;"></i>
                                         <h5 class="fw-bold" style="color: #6c757d;">Belum Ada Kurir</h5>
@@ -211,7 +227,7 @@
                     console.error('Error loading couriers:', error);
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-danger">
+                            <td colspan="7" class="text-center py-5 text-danger">
                                 <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                     <i class="fas fa-exclamation-circle fa-3x mb-2" style="color: #dc3545;"></i>
                                     <h5 class="fw-bold">Gagal Memuat Data</h5>
@@ -258,12 +274,59 @@
                 });
             }
 
+            // ─── Helper: open Edit modal ────────────────────────────────────────────
+            function openEditCourier(id, username, email, phone) {
+                document.getElementById('editCourierId').value = id;
+                document.getElementById('editCourierUsername').value = username;
+                document.getElementById('editCourierEmail').value = email;
+                document.getElementById('editCourierPhone').value = phone;
+                document.getElementById('editCourierPassword').value = '';
+                document.getElementById('editCourierAlert').innerHTML = '';
+                new bootstrap.Modal(document.getElementById('editCourierModal')).show();
+            }
+
+            // ─── Helper: open Delete modal ───────────────────────────────────────────
+            function openDeleteCourier(id, username) {
+                document.getElementById('deleteCourierId').value = id;
+                document.getElementById('deleteCourierName').textContent = username;
+                document.getElementById('deleteCourierAlert').innerHTML = '';
+                new bootstrap.Modal(document.getElementById('deleteCourierModal')).show();
+            }
+
+            // ─── Helper: open Login History modal ───────────────────────────────────
+            async function openLoginHistory(id, username) {
+                document.getElementById('loginHistoryTitle').textContent = `Riwayat Login — ${username}`;
+                const container = document.getElementById('loginHistoryContainer');
+                container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Memuat riwayat...</div>';
+                new bootstrap.Modal(document.getElementById('loginHistoryModal')).show();
+
+                try {
+                    const res = await apiFetch(`/couriers/${id}/login-history`);
+                    const history = res.data || [];
+                    if (history.length === 0) {
+                        container.innerHTML = '<p class="text-muted text-center small py-3">Belum ada riwayat login.</p>';
+                        return;
+                    }
+                    container.innerHTML = history.map(h => {
+                        const d = new Date(h.created_at || h.login_at || h.logged_at);
+                        const dateStr = isNaN(d) ? '-' : d.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+                        return `<div class="d-flex justify-content-between align-items-center border-bottom py-2 px-1 small">
+                            <div><i class="fas fa-sign-in-alt text-success me-2"></i>${dateStr}</div>
+                            <span class="text-muted">${h.ip_address || h.ip || '-'}</span>
+                        </div>`;
+                    }).join('');
+                } catch (err) {
+                    container.innerHTML = `<p class="text-danger small text-center py-3">${err.message}</p>`;
+                }
+            }
+
             window.addEventListener('DOMContentLoaded', () => {
                 loadCouriers();
 
-                const form = document.getElementById('formAddCourier');
-                if (form) {
-                    form.addEventListener('submit', async (e) => {
+                // ── Form: Tambah Kurir Baru ──────────────────────────────────────────
+                const formAdd = document.getElementById('formAddCourier');
+                if (formAdd) {
+                    formAdd.addEventListener('submit', async (e) => {
                         e.preventDefault();
                         const btn = document.getElementById('btnSubmitAddCourier');
                         const alertDiv = document.getElementById('addCourierAlert');
@@ -280,23 +343,13 @@
                         try {
                             const res = await apiFetch('/auth/register', {
                                 method: 'POST',
-                                body: {
-                                    username,
-                                    email,
-                                    phone_number: phoneNumber,
-                                    password,
-                                    confirm_password: password,
-                                    role: 'courier'
-                                }
+                                body: { username, email, phone_number: phoneNumber, password, confirm_password: password, role: 'courier' }
                             });
-
                             if (res && (res.success || res.code === 201)) {
-                                alertDiv.innerHTML = `<div class="alert alert-success small py-2 rounded-3">Akun kurir ${username} berhasil dibuat!</div>`;
+                                alertDiv.innerHTML = `<div class="alert alert-success small py-2 rounded-3">Akun kurir <b>${username}</b> berhasil dibuat!</div>`;
                                 setTimeout(() => {
-                                    const modalEl = document.getElementById('addCourierModal');
-                                    const modal = bootstrap.Modal.getInstance(modalEl);
-                                    if (modal) modal.hide();
-                                    form.reset();
+                                    bootstrap.Modal.getInstance(document.getElementById('addCourierModal')).hide();
+                                    formAdd.reset();
                                     alertDiv.innerHTML = '';
                                     loadCouriers();
                                 }, 1200);
@@ -311,15 +364,90 @@
                         }
                     });
                 }
+
+                // ── Form: Edit Kurir ─────────────────────────────────────────────────
+                const formEdit = document.getElementById('formEditCourier');
+                if (formEdit) {
+                    formEdit.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const btn = document.getElementById('btnSubmitEditCourier');
+                        const alertDiv = document.getElementById('editCourierAlert');
+                        alertDiv.innerHTML = '';
+
+                        const id = document.getElementById('editCourierId').value;
+                        const username = document.getElementById('editCourierUsername').value.trim();
+                        const email = document.getElementById('editCourierEmail').value.trim();
+                        const phone_number = document.getElementById('editCourierPhone').value.trim();
+                        const password = document.getElementById('editCourierPassword').value;
+
+                        const body = { username, email, phone_number };
+                        if (password) body.password = password;
+
+                        btn.disabled = true;
+                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+
+                        try {
+                            const res = await apiFetch(`/couriers/${id}`, { method: 'PUT', body });
+                            if (res && (res.success || res.message)) {
+                                alertDiv.innerHTML = `<div class="alert alert-success small py-2 rounded-3">Data kurir <b>${username}</b> berhasil diperbarui!</div>`;
+                                setTimeout(() => {
+                                    bootstrap.Modal.getInstance(document.getElementById('editCourierModal')).hide();
+                                    alertDiv.innerHTML = '';
+                                    loadCouriers();
+                                }, 1200);
+                            } else {
+                                throw new Error(res.message || 'Gagal memperbarui data kurir');
+                            }
+                        } catch (err) {
+                            alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-save me-1"></i> Simpan Perubahan';
+                        }
+                    });
+                }
+
+                // ── Konfirmasi: Hapus Kurir ──────────────────────────────────────────
+                const btnConfirmDelete = document.getElementById('btnConfirmDeleteCourier');
+                if (btnConfirmDelete) {
+                    btnConfirmDelete.addEventListener('click', async () => {
+                        const alertDiv = document.getElementById('deleteCourierAlert');
+                        alertDiv.innerHTML = '';
+                        const id = document.getElementById('deleteCourierId').value;
+                        const name = document.getElementById('deleteCourierName').textContent;
+
+                        btnConfirmDelete.disabled = true;
+                        btnConfirmDelete.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menghapus...';
+
+                        try {
+                            const res = await apiFetch(`/couriers/${id}`, { method: 'DELETE' });
+                            if (res && (res.success || res.message)) {
+                                alertDiv.innerHTML = `<div class="alert alert-success small py-2 rounded-3">Akun kurir <b>${name}</b> berhasil dihapus.</div>`;
+                                setTimeout(() => {
+                                    bootstrap.Modal.getInstance(document.getElementById('deleteCourierModal')).hide();
+                                    alertDiv.innerHTML = '';
+                                    loadCouriers();
+                                }, 1200);
+                            } else {
+                                throw new Error(res.message || 'Gagal menghapus kurir');
+                            }
+                        } catch (err) {
+                            alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
+                        } finally {
+                            btnConfirmDelete.disabled = false;
+                            btnConfirmDelete.innerHTML = '<i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir';
+                        }
+                    });
+                }
             });
         </script>
 
-        <!-- Modal Tambah Kurir Baru -->
+        <!-- ═══ Modal: Tambah Kurir Baru ══════════════════════════════════════════ -->
         <div class="modal fade" id="addCourierModal" tabindex="-1" aria-labelledby="addCourierModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                     <div class="modal-header bg-primary text-white py-3 px-4">
-                        <h5 class="modal-title font-weight-bold fs-6" id="addCourierModalLabel">
+                        <h5 class="modal-title fs-6 fw-bold" id="addCourierModalLabel">
                             <i class="fas fa-user-plus me-2"></i>Tambah Akun Kurir Baru
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -328,20 +456,20 @@
                         <div class="modal-body p-4">
                             <div id="addCourierAlert"></div>
                             <div class="mb-3">
-                                <label for="courierUsername" class="form-label font-weight-semibold small text-muted">Nama Kurir</label>
+                                <label for="courierUsername" class="form-label small text-muted fw-semibold">Nama Kurir</label>
                                 <input type="text" class="form-control" id="courierUsername" placeholder="Contoh: Kurir Bintang" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierEmail" class="form-label font-weight-semibold small text-muted">Email Kurir</label>
-                                <input type="email" class="form-control" id="courierEmail" placeholder="Contoh: kurirbintang@mylaundry.com" required style="border-radius: 10px;">
+                                <label for="courierEmail" class="form-label small text-muted fw-semibold">Email</label>
+                                <input type="email" class="form-control" id="courierEmail" placeholder="Contoh: kurir@mylaundry.com" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierPhone" class="form-label font-weight-semibold small text-muted">Nomor Telepon</label>
+                                <label for="courierPhone" class="form-label small text-muted fw-semibold">Nomor Telepon</label>
                                 <input type="text" class="form-control" id="courierPhone" placeholder="Contoh: 08123456789" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierPassword" class="form-label font-weight-semibold small text-muted">Kata Sandi Akun</label>
-                                <input type="password" class="form-control" id="courierPassword" placeholder="Min. 8 karakter (1 Kapital, 1 Simbol, 1 Angka)" required style="border-radius: 10px;">
+                                <label for="courierPassword" class="form-label small text-muted fw-semibold">Kata Sandi</label>
+                                <input type="password" class="form-control" id="courierPassword" placeholder="Minimal 6 karakter" required style="border-radius: 10px;">
                             </div>
                         </div>
                         <div class="modal-footer bg-light py-2 px-4">
@@ -354,5 +482,96 @@
                 </div>
             </div>
         </div>
+
+        <!-- ═══ Modal: Edit Kurir ══════════════════════════════════════════════════ -->
+        <div class="modal fade" id="editCourierModal" tabindex="-1" aria-labelledby="editCourierModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0d6efd, #0043a8); color: white;">
+                        <h5 class="modal-title fs-6 fw-bold" id="editCourierModalLabel">
+                            <i class="fas fa-user-edit me-2"></i>Edit Data Kurir
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formEditCourier">
+                        <input type="hidden" id="editCourierId">
+                        <div class="modal-body p-4">
+                            <div id="editCourierAlert"></div>
+                            <div class="mb-3">
+                                <label for="editCourierUsername" class="form-label small text-muted fw-semibold">Nama Kurir</label>
+                                <input type="text" class="form-control" id="editCourierUsername" required style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCourierEmail" class="form-label small text-muted fw-semibold">Email</label>
+                                <input type="email" class="form-control" id="editCourierEmail" required style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCourierPhone" class="form-label small text-muted fw-semibold">Nomor Telepon</label>
+                                <input type="text" class="form-control" id="editCourierPhone" style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-1">
+                                <label for="editCourierPassword" class="form-label small text-muted fw-semibold">Kata Sandi Baru <span class="text-muted fw-normal">(kosongkan jika tidak diubah)</span></label>
+                                <input type="password" class="form-control" id="editCourierPassword" placeholder="Masukkan kata sandi baru..." style="border-radius: 10px;">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light py-2 px-4">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4" id="btnSubmitEditCourier">
+                                <i class="fas fa-save me-1"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Modal: Hapus Kurir ═════════════════════════════════════════════════ -->
+        <div class="modal fade" id="deleteCourierModal" tabindex="-1" aria-labelledby="deleteCourierModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div class="modal-header bg-danger text-white py-3 px-4">
+                        <h5 class="modal-title fs-6 fw-bold" id="deleteCourierModalLabel">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Hapus Akun Kurir
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 text-center">
+                        <div id="deleteCourierAlert"></div>
+                        <input type="hidden" id="deleteCourierId">
+                        <i class="fas fa-user-slash fa-3x text-danger mb-3"></i>
+                        <p class="mb-1">Anda yakin ingin menghapus akun kurir:</p>
+                        <p class="fw-bold fs-6 mb-0" id="deleteCourierName"></p>
+                        <p class="small text-muted mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+                    </div>
+                    <div class="modal-footer bg-light py-2 px-4 justify-content-center">
+                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger btn-sm rounded-pill px-4" id="btnConfirmDeleteCourier">
+                            <i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Modal: Riwayat Login Kurir ════════════════════════════════════════ -->
+        <div class="modal fade" id="loginHistoryModal" tabindex="-1" aria-labelledby="loginHistoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0891b2, #0e7490); color: white;">
+                        <h5 class="modal-title fs-6 fw-bold" id="loginHistoryTitle">
+                            <i class="fas fa-history me-2"></i>Riwayat Login Kurir
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4" style="max-height: 400px; overflow-y: auto;">
+                        <div id="loginHistoryContainer"></div>
+                    </div>
+                    <div class="modal-footer bg-light py-2 px-4">
+                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>
