@@ -16,10 +16,12 @@ cssLink.rel = 'stylesheet';
 cssLink.href = 'css/custom-components.css';
 document.head.appendChild(cssLink);
 
-// Muat API client secara dinamis
-const apiScript = document.createElement('script');
-apiScript.src = 'js/api.js';
-document.head.appendChild(apiScript);
+// Muat API client secara dinamis (jika belum ada di DOM)
+if (!document.querySelector('script[src*="js/api.js"]') && typeof window.apiFetch === 'undefined') {
+    const apiScript = document.createElement('script');
+    apiScript.src = 'js/api.js';
+    document.head.appendChild(apiScript);
+}
 
 // Muat Favicon secara dinamis agar muncul di tab browser di semua halaman
 const favicon = document.createElement('link');
