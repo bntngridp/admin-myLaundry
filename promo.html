@@ -174,17 +174,17 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
                         <div>
-                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;">Kelola Promo & Voucher</h1>
-                            <p class="text-muted m-0" style="font-size: 14px;">Tambah promo diskon, atur tanggal kedaluwarsa, dan status promo</p>
+                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;" data-i18n="promo_title">Kelola Promo & Voucher</h1>
+                            <p class="text-muted m-0" style="font-size: 14px;" data-i18n="promo_subtitle">Tambah promo diskon, atur tanggal kedaluwarsa, dan status promo</p>
                         </div>
                         <button class="btn-primary-custom" onclick="openAddModal()">
-                            <i class="fas fa-plus"></i> Tambah Promo Baru
+                            <i class="fas fa-plus"></i> <span data-i18n="promo_add_btn">Tambah Promo Baru</span>
                         </button>
                     </div>
 
                     <!-- Promo Grid Cards -->
                     <div id="promoGrid" class="promo-grid mb-5">
-                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Memuat daftar promo...</div>
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;" data-i18n="state_loading">Memuat daftar promo...</div>
                     </div>
                 </div>
             </main>
@@ -194,11 +194,11 @@
     <!-- Modal Form Tambah/Edit Promo -->
     <div id="promoModal" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="modalTitle" style="margin-top: 0; color: #0F172A; font-size: 18px;">Tambah Promo Baru</h3>
+            <h3 id="modalTitle" style="margin-top: 0; color: #0F172A; font-size: 18px;" data-i18n="promo_add_btn">Tambah Promo Baru</h3>
             <form id="promoForm" onsubmit="savePromo(event)">
                 <input type="hidden" id="promoId">
                 <div class="form-group">
-                    <label>Kode Promo (Contoh: DISKON50)</label>
+                    <label data-i18n="promo_code">Kode Promo (Contoh: DISKON50)</label>
                     <input type="text" id="promoCode" required placeholder="Masukkan kode promo (tanpa spasi)">
                 </div>
                 <div class="form-group">
@@ -211,7 +211,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Persentase Diskon (%)</label>
+                        <label data-i18n="promo_discount">Persentase Diskon (%)</label>
                         <input type="number" id="promoDiscount" required min="1" max="100" placeholder="50">
                     </div>
                     <div class="form-group">
@@ -227,18 +227,18 @@
                     <div class="form-group">
                         <label>Status Promo</label>
                         <select id="promoIsActive">
-                            <option value="true">● Aktif</option>
-                            <option value="false">○ Nonaktif</option>
+                            <option value="true" data-i18n="promo_active">● Aktif</option>
+                            <option value="false" data-i18n="promo_inactive">○ Nonaktif</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Batas Waktu Kedaluwarsa (Expired At)</label>
+                    <label data-i18n="promo_expiry">Batas Waktu Kedaluwarsa (Expired At)</label>
                     <input type="datetime-local" id="promoExpiredAt">
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-                    <button type="button" class="btn-action btn-edit" onclick="closeModal()" style="padding: 10px 18px;">Batal</button>
-                    <button type="submit" class="btn-primary-custom" style="padding: 10px 18px;">Simpan Promo</button>
+                    <button type="button" class="btn-action btn-edit" onclick="closeModal()" style="padding: 10px 18px;" data-i18n="btn_cancel">Batal</button>
+                    <button type="submit" class="btn-primary-custom" style="padding: 10px 18px;" data-i18n="btn_save">Simpan Promo</button>
                 </div>
             </form>
         </div>
@@ -250,11 +250,11 @@
             <div style="width: 64px; height: 64px; border-radius: 50%; background: #FEE2E2; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
                 <i class="fas fa-trash-alt"></i>
             </div>
-            <h3 style="margin: 0 0 8px; color: #0F172A; font-size: 18px; font-weight: 700;">Hapus Promo Permanen?</h3>
-            <p style="color: #64748B; font-size: 14px; margin-bottom: 24px; line-height: 1.5;" id="deleteModalMessage">Apakah Anda yakin ingin menghapus promo ini?</p>
+            <h3 style="margin: 0 0 8px; color: #0F172A; font-size: 18px; font-weight: 700;" data-i18n="promo_delete_confirm_title">Hapus Promo Permanen?</h3>
+            <p style="color: #64748B; font-size: 14px; margin-bottom: 24px; line-height: 1.5;" id="deleteModalMessage" data-i18n="promo_delete_confirm_desc">Apakah Anda yakin ingin menghapus promo ini?</p>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button type="button" class="btn-action btn-edit" onclick="closeDeleteModal()" style="padding: 12px 20px; flex: 1; font-weight: 600;">Batal</button>
-                <button type="button" class="btn-action btn-delete" id="btnConfirmDelete" style="padding: 12px 20px; flex: 1; font-weight: 600;">Ya, Hapus Promo</button>
+                <button type="button" class="btn-action btn-edit" onclick="closeDeleteModal()" style="padding: 12px 20px; flex: 1; font-weight: 600;" data-i18n="btn_cancel">Batal</button>
+                <button type="button" class="btn-action btn-delete" id="btnConfirmDelete" style="padding: 12px 20px; flex: 1; font-weight: 600;" data-i18n="promo_delete_confirm_btn">Ya, Hapus Promo</button>
             </div>
         </div>
     </div>
@@ -288,9 +288,12 @@
         }
 
         function formatDateTimeDisplay(isoStr) {
-            if (!isoStr) return 'Berlaku Selamanya';
+            const foreverText = window.i18n ? window.i18n.t('promo_forever') : 'Berlaku Selamanya';
+            if (!isoStr) return foreverText;
             const d = new Date(isoStr);
-            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const currentLang = window.i18n ? window.i18n.getLanguage() : 'id';
+            const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+            return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
         function formatDateTimeInput(isoStr) {
@@ -302,10 +305,19 @@
 
         function renderPromos(promos) {
             const grid = document.getElementById('promoGrid');
+            const emptyText = window.i18n ? window.i18n.t('promo_empty') : 'Belum ada promo tersedia.';
             if (!promos.length) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">Belum ada promo tersedia.</div>';
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">${emptyText}</div>`;
                 return;
             }
+
+            const expiryText = window.i18n ? window.i18n.t('promo_expiry') : 'Batas Waktu';
+            const discountText = window.i18n ? window.i18n.t('promo_discount') : 'Diskon';
+            const maxText = window.i18n ? window.i18n.t('promo_max') : 'Maks';
+            const activeText = window.i18n ? window.i18n.t('promo_active') : '● Aktif';
+            const inactiveText = window.i18n ? window.i18n.t('promo_inactive') : '○ Nonaktif';
+            const editBtnText = window.i18n ? window.i18n.t('btn_edit') : 'Edit';
+            const deleteBtnText = window.i18n ? window.i18n.t('btn_delete') : 'Hapus';
 
             grid.innerHTML = promos.map(p => `
                 <div class="promo-card" style="${p.is_active ? '' : 'opacity: 0.85; background: #F8FAFC; border-color: #E2E8F0;'}">
@@ -316,25 +328,28 @@
                     </div>
                     <div>
                         <div class="expiry-info">
-                            <span><i class="far fa-clock me-1"></i> Batas Waktu: <strong>${formatDateTimeDisplay(p.expired_at)}</strong></span>
+                            <span><i class="far fa-clock me-1"></i> ${expiryText}: <strong>${formatDateTimeDisplay(p.expired_at)}</strong></span>
                         </div>
                         <div class="promo-details">
-                            <span>Diskon: <strong>${p.discount_percentage}%</strong></span>
-                            <span>Maks: <strong>Rp ${(p.max_discount_amount || 0).toLocaleString('id-ID')}</strong></span>
+                            <span>${discountText}: <strong>${p.discount_percentage}%</strong></span>
+                            <span>${maxText}: <strong>Rp ${(p.max_discount_amount || 0).toLocaleString('id-ID')}</strong></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                            <span class="status-pill ${p.is_active ? 'status-active' : 'status-inactive'}" style="cursor: pointer;" onclick="togglePromoStatus(${p.id}, ${p.is_active})" title="Klik untuk ubah status aktif/nonaktif">
-                                ${p.is_active ? '● Aktif (Klik Nonaktifkan)' : '○ Nonaktif (Klik Aktifkan)'}
+                            <span class="status-pill ${p.is_active ? 'status-active' : 'status-inactive'}" style="cursor: pointer;" onclick="togglePromoStatus(${p.id}, ${p.is_active})" title="Klik untuk ubah status">
+                                ${p.is_active ? activeText : inactiveText}
                             </span>
                             <div class="promo-actions">
-                                <button class="btn-action btn-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle || ''}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-edit"></i> Edit</button>
-                                <button class="btn-action btn-delete" onclick="openDeleteModal(${p.id}, '${p.code}')"><i class="fas fa-trash"></i> Hapus</button>
+                                <button class="btn-action btn-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle || ''}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-edit"></i> ${editBtnText}</button>
+                                <button class="btn-action btn-delete" onclick="openDeleteModal(${p.id}, '${p.code}')"><i class="fas fa-trash"></i> ${deleteBtnText}</button>
                             </div>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
+
+        // Listen for languageChanged event to re-render promos dynamically
+        window.addEventListener('languageChanged', loadPromos);
 
         async function togglePromoStatus(id, currentStatus) {
             const token = getAuthToken();
