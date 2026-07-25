@@ -326,6 +326,8 @@
                 } catch (err) {
                     container.innerHTML = `<p class="text-danger small text-center py-3">${err.message}</p>`;
                 }
+            }
+
             // ─── Helper: toggle password visibility ─────────────────────────────────
             function togglePasswordVisibility(inputId, iconId) {
                 const input = document.getElementById(inputId);
