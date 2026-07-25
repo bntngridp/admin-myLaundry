@@ -107,7 +107,7 @@
                     couriers.forEach(c => {
                         courierStats[c.id] = {
                             activeCount: 0,
-                            status: 'Available',
+                            status: c.is_available === false ? 'Offline' : 'Available',
                             latestSchedule: 'No Schedule'
                         };
                     });
@@ -139,7 +139,7 @@
                     tbody.innerHTML = '';
                     if (couriers.length > 0) {
                         couriers.forEach(courier => {
-                            const stats = courierStats[courier.id] || { activeCount: 0, status: 'Available', latestSchedule: 'No Schedule' };
+                            const stats = courierStats[courier.id] || { activeCount: 0, status: courier.is_available === false ? 'Offline' : 'Available', latestSchedule: 'No Schedule' };
                             const row = document.createElement('tr');
                             
                             let badgeClass = 'status-kurir-inactive';
@@ -151,6 +151,9 @@
                                 badgeClass = 'status-kurir-picking';
                             } else if (stats.status === 'Delivering') {
                                 badgeClass = 'status-kurir-delivering';
+                            } else if (stats.status === 'Offline') {
+                                badgeClass = 'status-kurir-inactive';
+                                statusLabel = 'Offline • Istirahat';
                             }
 
                             row.innerHTML = `
