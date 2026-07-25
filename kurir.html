@@ -9,8 +9,8 @@
         <title>Couriers — myLaundry Admin</title>
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/custom-components.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Custom Web Components -->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script        <!-- Custom Web Components -->
+        <script src="js/i18n.js"></script>
         <script src="js/components.js" defer></script>
     </head>
     <body class="sb-nav-fixed">
@@ -20,14 +20,14 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                    <h1 class="mt-4">Couriers</h1>
+                    <h1 class="mt-4" data-i18n="courier_title">Couriers</h1>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-chart-pie me-1"></i>
                                 <span id="chartHeaderText">Total 14 deliveries dispatched and 11 orders picked up</span>
                             </div>
                              <div class="card-body d-flex justify-content-center align-items-center" style="height: 250px; position: relative;">
-                                 <canvas id="myPieChart" style="max-height: 220px; max-width: 220px;"></canvas>
+                                  <canvas id="myPieChart" style="max-height: 220px; max-width: 220px;"></canvas>
                              </div>
                             <div class="card-footer small text-muted">Last updated yesterday at 11:59 PM.</div>
                         </div>
@@ -35,12 +35,12 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <div>
                                     <i class="fas fa-table me-1"></i>
-                                    Courier Delivery List
+                                    <span data-i18n="courier_list">Courier Delivery List</span>
                                 </div>
                                 <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCourierModal">
-                                    <i class="fas fa-plus me-1"></i> Tambah Kurir Baru
+                                    <i class="fas fa-plus me-1"></i> <span data-i18n="courier_add_btn">Tambah Kurir Baru</span>
                                 </button>
-                            </div>
+                            </div>v>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
@@ -200,7 +200,11 @@
                         // Update description card header
                         const chartHeaderText = document.getElementById('chartHeaderText');
                         if (chartHeaderText) {
-                            chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                            if (window.i18n) {
+                                chartHeaderText.textContent = window.i18n.t('courier_dispatched', { busy: busyTotal, available: availableTotal });
+                            } else {
+                                chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                            }
                         }
                         return;
                     }
@@ -322,10 +326,13 @@
                     return;
                 }
 
+                const availableLabel = window.i18n ? window.i18n.t('courier_status_available') : "Tersedia (Available)";
+                const busyLabel = window.i18n ? window.i18n.t('courier_status_delivering') : "Bertugas (Busy)";
+
                 myPieChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ["Tersedia (Available)", "Bertugas (Busy)"],
+                        labels: [availableLabel, busyLabel],
                         datasets: [{
                             data: [available, busy],
                             backgroundColor: ['#10b981', '#f59e0b'], // Soft Green and Soft Amber

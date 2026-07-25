@@ -16,6 +16,13 @@ cssLink.rel = 'stylesheet';
 cssLink.href = 'css/custom-components.css';
 document.head.appendChild(cssLink);
 
+// Muat i18n module secara dinamis
+if (!document.querySelector('script[src*="js/i18n.js"]') && typeof window.i18n === 'undefined') {
+    const i18nScript = document.createElement('script');
+    i18nScript.src = 'js/i18n.js';
+    document.head.appendChild(i18nScript);
+}
+
 // Muat API client secara dinamis (jika belum ada di DOM)
 if (!document.querySelector('script[src*="js/api.js"]') && typeof window.apiFetch === 'undefined') {
     const apiScript = document.createElement('script');
@@ -34,6 +41,13 @@ document.head.appendChild(favicon);
 // 1. TOPBAR NAVBAR COMPONENT
 class AdminNavbar extends HTMLElement {
     connectedCallback() {
+        const currentLang = window.i18n ? window.i18n.getLanguage() : (localStorage.getItem('app_lang') || 'id');
+        const langLabel = currentLang === 'en' ? '🇬🇧 English' : '🇮🇩 Indonesia';
+        const searchPlaceholder = window.i18n ? window.i18n.t('nav_search_placeholder') : 'Cari sesuatu...';
+        const settingsText = window.i18n ? window.i18n.t('nav_settings') : 'Settings';
+        const activityLogText = window.i18n ? window.i18n.t('nav_activity_log') : 'Activity Log';
+        const signOutText = window.i18n ? window.i18n.t('nav_sign_out') : 'Sign Out';
+
         this.innerHTML = `
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-white">
                 <!-- Navbar Brand: logo always visible in navbar -->
@@ -47,26 +61,51 @@ class AdminNavbar extends HTMLElement {
                 <!-- Navbar Search -->
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
-                        <input class="form-control" id="searchInput" type="text" placeholder="Search..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                        <input class="form-control" id="searchInput" type="text" placeholder="${searchPlaceholder}" data-i18n-placeholder="nav_search_placeholder" aria-label="Search" />
                         <button class="btn btn-primary" id="btnNavbarSearch" type="button">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </form>
-                <!-- Navbar Profile Dropdown -->
-                <ul class="navbar-nav ms-md-0 me-3 me-lg-4">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user fa-fw" style="color: #0B1739;"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="settings.html">Settings</a></li>
-                            <li><a class="dropdown-item" href="activity-log.html">Activity Log</a></li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item text-danger" href="login.html">Sign Out</a></li>
+                
+                <div class="d-flex align-items-center me-3 me-lg-4">
+                    <!-- Language Switcher Dropdown -->
+                    <div class="dropdown me-2">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 py-1 px-2" id="dropdownLang" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px; font-size: 0.82rem; font-weight: 600; background-color: #f8fafc;">
+                            <i class="fas fa-globe text-primary"></i>
+                            <span>${langLabel}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownLang" style="border-radius: 12px; font-size: 0.85rem;">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'id' ? 'active fw-bold' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('id');">
+                                    <span>🇮🇩 Bahasa Indonesia</span>
+                                    ${currentLang === 'id' ? '<i class="fas fa-check text-primary ms-2"></i>' : ''}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'en' ? 'active fw-bold' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('en');">
+                                    <span>🇬🇧 English</span>
+                                    ${currentLang === 'en' ? '<i class="fas fa-check text-primary ms-2"></i>' : ''}
+                                </a>
+                            </li>
                         </ul>
-                    </li>
-                </ul>
+                    </div>
+
+                    <!-- Navbar Profile Dropdown -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user fa-fw" style="color: #0B1739;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="navbarDropdown" style="border-radius: 12px; font-size: 0.85rem;">
+                                <li><a class="dropdown-item py-2" href="settings.html" data-i18n="nav_settings">${settingsText}</a></li>
+                                <li><a class="dropdown-item py-2" href="activity-log.html" data-i18n="nav_activity_log">${activityLogText}</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item text-danger py-2" href="login.html" data-i18n="nav_sign_out">${signOutText}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </nav>
         `;
     }
@@ -75,49 +114,49 @@ customElements.define('admin-navbar', AdminNavbar);
 
 
 // 2. SIDEBAR COMPONENT
-// 2. SIDEBAR COMPONENT
 class AdminSidebar extends HTMLElement {
     connectedCallback() {
-        // Ambil nama file html saat ini (misal: "produk.html")
         const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
+        const t = (key, defaultStr) => (window.i18n ? window.i18n.t(key) : defaultStr);
 
-        // Daftar menu sidebar
         const menuItems = [
-            { name: "Dashboard", href: "dashboard.html", icon: "fas fa-tachometer-alt" },
-            { name: "Orders", href: "pesanan.html", icon: "fas fa-shopping-basket" },
-            { name: "Couriers", href: "kurir.html", icon: "fas fa-truck-moving" },
-            { name: "Order History", href: "riwayat-pesanan.html", icon: "fas fa-history" },
-            { name: "Products", href: "produk.html", icon: "fas fa-tshirt" },
-            { name: "Promo & Voucher", href: "promo.html", icon: "fas fa-tags" },
-            { name: "Cabang", href: "cabang.html", icon: "fas fa-store" }
+            { key: "menu_dashboard", defaultName: "Dashboard", href: "dashboard.html", icon: "fas fa-tachometer-alt" },
+            { key: "menu_orders", defaultName: "Orders", href: "pesanan.html", icon: "fas fa-shopping-basket" },
+            { key: "menu_couriers", defaultName: "Couriers", href: "kurir.html", icon: "fas fa-truck-moving" },
+            { key: "menu_order_history", defaultName: "Order History", href: "riwayat-pesanan.html", icon: "fas fa-history" },
+            { key: "menu_products", defaultName: "Products", href: "produk.html", icon: "fas fa-tshirt" },
+            { key: "menu_promo", defaultName: "Promo & Voucher", href: "promo.html", icon: "fas fa-tags" },
+            { key: "menu_branches", defaultName: "Cabang", href: "cabang.html", icon: "fas fa-store" }
         ];
 
-        // Buat list HTML menu dengan deteksi menu yang sedang aktif
         const menuListHTML = menuItems.map(item => {
-            // Deteksi apakah path saat ini cocok dengan href menu
             const isActive = currentPath === item.href || 
                              (item.href === "produk.html" && (currentPath === "tambahkan-produk-baru.html" || currentPath === "edit-produk.html")) ||
                              (item.href === "pesanan.html" && currentPath === "detail-pesanan.html");
 
-            // Tentukan style berdasarkan status aktif
             const activeStyle = isActive 
                 ? 'background-color: #C2E9F9; border-left: 5px solid #0007B0; font-weight: bold;' 
                 : 'background-color: rgb(235, 248, 253); opacity: 0.85;';
+
+            const nameStr = t(item.key, item.defaultName);
 
             return `
                 <div style="${activeStyle}" class="side-nav-menu-bar mb-2">
                     <a class="nav-link" href="${item.href}">
                         <div class="sb-nav-link-icon" style="color: #0B1739;"><i class="${item.icon}"></i></div>
-                        <span style="color: #0B1739;">${item.name}</span>
+                        <span style="color: #0B1739;" data-i18n="${item.key}">${nameStr}</span>
                     </a>
                 </div>
             `;
         }).join('');
 
+        const mainMenuHeading = t('menu_main', 'Main Menu');
+        const signOutText = t('menu_sign_out', 'Sign Out');
+        const loggedInAsText = t('nav_logged_in_as', 'Logged in as:');
+
         this.innerHTML = `
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <!-- Sidebar Header with Logo and Mobile Close Button -->
                     <div class="d-flex align-items-center justify-content-between px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
                         <a href="dashboard.html" class="d-flex align-items-center">
                             <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
@@ -130,16 +169,14 @@ class AdminSidebar extends HTMLElement {
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading"> 
-                                <span style="color: #0B1739;">Main Menu</span>
+                                <span style="color: #0B1739;" data-i18n="menu_main">${mainMenuHeading}</span>
                             </div>
                             <hr class="dropdown-divider mx-3" style="margin-top: 0; margin-bottom: 10px;" />
                             
-                            <!-- Menu List Dinamis -->
                             ${menuListHTML}
 
                             <div class="sb-sidenav-menu-heading"></div>
                             
-                            <!-- Menu Keluar -->
                             <div class="side-nav-menu-bar-keluar">
                                 <a class="nav-link" href="login.html">
                                     <div class="sb-nav-link-icon" style="color: #ffffff;">
@@ -148,13 +185,13 @@ class AdminSidebar extends HTMLElement {
                                             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
                                         </svg>
                                     </div>
-                                    <span style="color: #ffffff;">Sign Out</span>
+                                    <span style="color: #ffffff;" data-i18n="menu_sign_out">${signOutText}</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
+                        <div class="small" data-i18n="nav_logged_in_as">${loggedInAsText}</div>
                         <span class="sb-sidenav-footer-user">Loading...</span>
                     </div>
                 </nav>
