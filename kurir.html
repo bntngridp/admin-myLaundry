@@ -112,9 +112,11 @@
                     // Aggregate courier stats from orders
                     const courierStats = {};
                     couriers.forEach(c => {
+                        const isOff = (c.is_available === false || c.is_available === 0 || c.is_available === 'false');
                         courierStats[c.id] = {
+                            isAvailable: !isOff,
                             activeCount: 0,
-                            status: c.is_available === false ? 'Offline' : 'Available',
+                            status: isOff ? 'Offline' : 'Available',
                             latestSchedule: 'No Schedule'
                         };
                     });
@@ -126,13 +128,15 @@
                             if (orderStatus !== 'done' && orderStatus !== 'completed' && orderStatus !== 'cancelled') {
                                 courierStats[order.courier.id].activeCount++;
                                 
-                                // Determine courier status
-                                if (orderStatus === 'courier en route' || orderStatus === 'arrived') {
-                                    courierStats[order.courier.id].status = 'Delivering';
-                                } else if (orderStatus === 'awaiting payment' || orderStatus === 'pending') {
-                                    courierStats[order.courier.id].status = 'Picking Up';
-                                } else {
-                                    courierStats[order.courier.id].status = 'Active';
+                                // Determine courier status only if courier is on-duty/available
+                                if (courierStats[order.courier.id].isAvailable) {
+                                    if (orderStatus === 'courier en route' || orderStatus === 'arrived') {
+                                        courierStats[order.courier.id].status = 'Delivering';
+                                    } else if (orderStatus === 'awaiting payment' || orderStatus === 'pending') {
+                                        courierStats[order.courier.id].status = 'Picking Up';
+                                    } else {
+                                        courierStats[order.courier.id].status = 'Active';
+                                    }
                                 }
 
                                 // Safe date parsing
@@ -346,6 +350,11 @@
 
             window.addEventListener('DOMContentLoaded', () => {
                 loadCouriers();
+
+                // Auto-sync courier status with backend DB every 5 seconds
+                setInterval(() => {
+                    loadCouriers();
+                }, 5000);
 
                 // ── Form: Tambah Kurir Baru ──────────────────────────────────────────
                 const formAdd = document.getElementById('formAddCourier');
