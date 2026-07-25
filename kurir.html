@@ -93,7 +93,7 @@
             let dataTableInstance = null;
 
             async function loadCouriers() {
-                const tbody = document.getElementById('couriersTableBody');
+                const tbody = document.getElementById('couriersTableBody') || document.querySelector('#datatablesSimple tbody');
                 if (!tbody) return;
 
                 try {

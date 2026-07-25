@@ -195,8 +195,18 @@
 
             try {
                 const username = `${firstName} ${lastName}`;
+                const adminToken = localStorage.getItem('admin_token');
+                if (!adminToken) {
+                    showAlert('You must be logged in as an admin to create a new admin account. <a href="login.html">Sign in first</a>.', 'danger');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Create Account';
+                    return;
+                }
                 await apiFetch('/auth/register', {
                     method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    },
                     body: {
                         username: username,
                         email: email,
