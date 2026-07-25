@@ -86,7 +86,8 @@ class AdminSidebar extends HTMLElement {
             { name: "Couriers", href: "kurir.html", icon: "fas fa-truck-moving" },
             { name: "Order History", href: "riwayat-pesanan.html", icon: "fas fa-history" },
             { name: "Products", href: "produk.html", icon: "fas fa-tshirt" },
-            { name: "Promo & Voucher", href: "promo.html", icon: "fas fa-tags" }
+            { name: "Promo & Voucher", href: "promo.html", icon: "fas fa-tags" },
+            { name: "Cabang", href: "cabang.html", icon: "fas fa-store" }
         ];
 
         // Buat list HTML menu dengan deteksi menu yang sedang aktif

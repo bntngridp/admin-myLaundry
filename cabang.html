@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Kelola Cabang - myLaundry Admin</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="js/components.js"></script>
+    <style>
+        .card-branch {
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+        .card-branch:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,7,176,0.08);
+        }
+        .branch-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .badge-active {
+            background-color: #DEF7EC;
+            color: #03543F;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge-inactive {
+            background-color: #FDE8E8;
+            color: #9B1C1C;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <admin-navbar></admin-navbar>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <admin-sidebar></admin-sidebar>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4 py-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 fw-bold text-dark mb-1">Kelola Cabang Outlet</h1>
+                            <p class="text-muted small mb-0">Kelola lokasi cabang fisik myLaundry dan koordinat GPS untuk perhitungan jarak presisi pengguna</p>
+                        </div>
+                        <button class="btn btn-primary px-4 py-2 rounded-3 fw-semibold" onclick="openBranchModal()">
+                            <i class="fas fa-plus me-2"></i>Tambah Cabang Baru
+                        </button>
+                    </div>
+
+                    <!-- Branches Grid -->
+                    <div class="row g-4" id="branchesGrid">
+                        <div class="col-12 text-center py-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="text-muted mt-2">Memuat daftar cabang...</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <admin-footer></admin-footer>
+        </div>
+    </div>
+
+    <!-- Modal Form Add/Edit Branch -->
+    <div class="modal fade" id="branchModal" tabindex="-1" aria-labelledby="branchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark" id="branchModalLabel">Tambah Cabang Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="branchForm">
+                        <input type="hidden" id="branchId" />
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Nama Cabang</label>
+                            <input type="text" class="form-control rounded-3" id="branchName" placeholder="Contoh: myLaundry Bojongsoang" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Alamat Lengkap</label>
+                            <textarea class="form-control rounded-3" id="branchAddress" rows="2" placeholder="Contoh: Jl. Raya Bojongsoang No. 12" required></textarea>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark">Latitude (GPS)</label>
+                                <input type="number" step="any" class="form-control rounded-3" id="branchLat" placeholder="-6.9740" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark">Longitude (GPS)</label>
+                                <input type="number" step="any" class="form-control rounded-3" id="branchLng" placeholder="107.6303" required />
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark">Rating</label>
+                                <input type="number" step="0.1" max="5.0" class="form-control rounded-3" id="branchRating" value="4.8" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-dark">Status</label>
+                                <select class="form-select rounded-3" id="branchIsActive">
+                                    <option value="true">Aktif</option>
+                                    <option value="false">Nonaktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">URL Foto Cabang</label>
+                            <input type="url" class="form-control rounded-3" id="branchImage" placeholder="https://..." />
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary rounded-3 px-4 fw-semibold" id="btnSaveBranch">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm Delete -->
+    <div class="modal fade" id="deleteBranchModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <div class="bg-danger-subtle text-danger rounded-circle d-inline-flex p-3 mb-3">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Hapus Cabang?</h5>
+                    <p class="text-muted small mb-4">Apakah Anda yakin ingin menghapus cabang ini?</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-light rounded-3 px-3" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger rounded-3 px-3 fw-semibold" id="btnConfirmDeleteBranch">Hapus</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+        let branchesData = [];
+        let selectedDeleteId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchBranches();
+
+            document.getElementById('branchForm').addEventListener('submit', handleSaveBranch);
+            document.getElementById('btnConfirmDeleteBranch').addEventListener('click', handleConfirmDelete);
+        });
+
+        async function fetchBranches() {
+            try {
+                const res = await fetch('http://localhost:8083/api/branches');
+                const result = await res.json();
+
+                if (result.success && Array.isArray(result.data)) {
+                    branchesData = result.data;
+                    renderBranches();
+                } else {
+                    document.getElementById('branchesGrid').innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">Gagal memuat data cabang.</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('branchesGrid').innerHTML = `
+                    <div class="col-12 text-center py-5 text-danger">
+                        <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                        <p>Koneksi ke backend API terputus.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderBranches() {
+            const grid = document.getElementById('branchesGrid');
+            if (branchesData.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-store-slash fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Belum ada cabang terdaftar</h5>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = branchesData.map(b => `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card-branch h-100 d-flex flex-column">
+                        <img src="${b.image_url || 'assets/img/logo-mylaundry.png'}" class="branch-img" alt="${b.name}" />
+                        <div class="p-3 flex-grow-1 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold text-dark mb-0">${b.name}</h5>
+                                <span class="${b.is_active ? 'badge-active' : 'badge-inactive'}">
+                                    ${b.is_active ? 'Aktif' : 'Nonaktif'}
+                                </span>
+                            </div>
+                            <p class="text-muted small mb-2"><i class="fas fa-map-marker-alt text-primary me-1"></i>${b.address}</p>
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="badge bg-warning text-dark"><i class="fas fa-star me-1"></i>${b.rating}</span>
+                                <span class="text-muted small">GPS: (${b.latitude}, ${b.longitude})</span>
+                            </div>
+                            <div class="mt-auto pt-2 border-top d-flex justify-content-end gap-2">
+                                <button class="btn btn-sm btn-outline-primary rounded-3 px-3" onclick="openBranchModal(${b.id})">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger rounded-3 px-3" onclick="confirmDeleteBranch(${b.id})">
+                                    <i class="fas fa-trash me-1"></i>Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openBranchModal(id = null) {
+            const modalLabel = document.getElementById('branchModalLabel');
+            const branchIdInput = document.getElementById('branchId');
+            const branchForm = document.getElementById('branchForm');
+
+            branchForm.reset();
+
+            if (id) {
+                const b = branchesData.find(item => item.id === id);
+                if (!b) return;
+
+                modalLabel.textContent = 'Edit Detail Cabang';
+                branchIdInput.value = b.id;
+                document.getElementById('branchName').value = b.name;
+                document.getElementById('branchAddress').value = b.address;
+                document.getElementById('branchLat').value = b.latitude;
+                document.getElementById('branchLng').value = b.longitude;
+                document.getElementById('branchRating').value = b.rating;
+                document.getElementById('branchIsActive').value = b.is_active ? 'true' : 'false';
+                document.getElementById('branchImage').value = b.image_url;
+            } else {
+                modalLabel.textContent = 'Tambah Cabang Baru';
+                branchIdInput.value = '';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('branchModal'));
+            modal.show();
+        }
+
+        async function handleSaveBranch(e) {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const id = document.getElementById('branchId').value;
+            const payload = {
+                name: document.getElementById('branchName').value.trim(),
+                address: document.getElementById('branchAddress').value.trim(),
+                latitude: parseFloat(document.getElementById('branchLat').value),
+                longitude: parseFloat(document.getElementById('branchLng').value),
+                rating: parseFloat(document.getElementById('branchRating').value),
+                is_active: document.getElementById('branchIsActive').value === 'true',
+                image_url: document.getElementById('branchImage').value.trim()
+            };
+
+            const url = id ? `http://localhost:8083/api/branches/${id}` : 'http://localhost:8083/api/branches';
+            const method = id ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('branchModal')).hide();
+                    fetchBranches();
+                } else {
+                    alert(result.message || 'Gagal menyimpan data cabang');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Terjadi kesalahan jaringan.');
+            }
+        }
+
+        function confirmDeleteBranch(id) {
+            selectedDeleteId = id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteBranchModal'));
+            modal.show();
+        }
+
+        async function handleConfirmDelete() {
+            if (!selectedDeleteId) return;
+            const token = localStorage.getItem('token');
+
+            try {
+                const res = await fetch(`http://localhost:8083/api/branches/${selectedDeleteId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('deleteBranchModal')).hide();
+                    fetchBranches();
+                } else {
+                    alert(result.message || 'Gagal menghapus cabang.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Terjadi kesalahan jaringan.');
+            }
+        }
+    </script>
+</body>
+</html>
