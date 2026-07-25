@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Keuangan & Dompet Kurir — myLaundry Admin</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="js/components.js" defer></script>
+    <style>
+        .stat-card-custom {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .stat-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .btn-deposit-custom {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-deposit-custom:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(16,185,129,0.25);
+            color: white;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <admin-navbar></admin-navbar>
+    <div id="layoutSidenav">
+        <admin-sidebar></admin-sidebar>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                        <div>
+                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;">Keuangan & Dompet Kurir</h1>
+                            <p class="text-muted m-0" style="font-size: 14px;">Rekapitulasi pendapatan Midtrans, saldo cash kurir, dan setoran tunai</p>
+                        </div>
+                    </div>
+
+                    <div id="alert-container"></div>
+
+                    <!-- Summary Stats Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="stat-card-custom">
+                                <div class="stat-icon-wrapper" style="background: #EEF2FF; color: #4F46E5;">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Total Pendapatan Lunas</div>
+                                    <div id="statTotalRevenue" class="fw-bold" style="font-size: 20px; color: #0F172A;">Rp0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="stat-card-custom">
+                                <div class="stat-icon-wrapper" style="background: #ECFDF5; color: #059669;">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Digital Midtrans (QRIS/VA)</div>
+                                    <div id="statDigitalRevenue" class="fw-bold" style="font-size: 20px; color: #059669;">Rp0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="stat-card-custom">
+                                <div class="stat-icon-wrapper" style="background: #FEF3C7; color: #D97706;">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Cash di Tangan Kurir (COD)</div>
+                                    <div id="statCashOnHand" class="fw-bold" style="font-size: 20px; color: #D97706;">Rp0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="stat-card-custom">
+                                <div class="stat-icon-wrapper" style="background: #F1F5F9; color: #475569;">
+                                    <i class="fas fa-cash-register"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Setoran Tunai ke Admin</div>
+                                    <div id="statTotalDeposited" class="fw-bold" style="font-size: 20px; color: #0F172A;">Rp0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courier Wallets & Deposits Tables -->
+                    <div class="card mb-4 border-0 shadow-sm" style="border-radius: 16px;">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <ul class="nav nav-tabs card-header-tabs border-bottom-0" id="financeTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active fw-bold text-dark" id="wallets-tab" data-bs-toggle="tab" data-bs-target="#wallets-tab-pane" type="button" role="tab">
+                                        <i class="fas fa-motorcycle me-2 text-primary"></i>Saldo Cash & Komisi Kurir
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link fw-bold text-dark" id="deposits-tab" data-bs-toggle="tab" data-bs-target="#deposits-tab-pane" type="button" role="tab">
+                                        <i class="fas fa-receipt me-2 text-success"></i>Riwayat Setoran Tunai
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="tab-content" id="financeTabContent">
+                                <!-- Tab 1: Courier Wallets -->
+                                <div class="tab-pane fade show active" id="wallets-tab-pane" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Kurir</th>
+                                                    <th>No. HP</th>
+                                                    <th>Cash di Tangan (COD)</th>
+                                                    <th>Estimasi Komisi</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="courierWalletsTableBody">
+                                                <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data dompet kurir...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Tab 2: Recent Deposits -->
+                                <div class="tab-pane fade" id="deposits-tab-pane" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>ID Setoran</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Kurir Setor</th>
+                                                    <th>Jumlah Setoran</th>
+                                                    <th>Admin Penerima</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="depositsTableBody">
+                                                <tr><td colspan="6" class="text-center py-4 text-muted">Memuat riwayat setoran...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <admin-footer></admin-footer>
+        </div>
+    </div>
+
+    <!-- Modal Form Terima Setoran Tunai Kurir -->
+    <div id="depositModal" class="modal-overlay">
+        <div class="modal-box">
+            <h4 style="margin-top: 0; color: #0F172A; font-weight: 700;">Konfirmasi Setoran Tunai</h4>
+            <p class="text-muted" style="font-size: 13px;">Terima setoran uang cash COD dari kurir ke kasir outlet Admin</p>
+            <form id="depositForm" onsubmit="submitDeposit(event)">
+                <input type="hidden" id="depositCourierId">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted small">Nama Kurir</label>
+                    <input type="text" id="depositCourierName" class="form-control" readonly style="background: #F8FAFC;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted small">Maksimal Uang Cash di Tangan</label>
+                    <input type="text" id="depositMaxCash" class="form-control" readonly style="background: #FEF3C7; color: #D97706; font-weight: 700;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-dark small">Nominal Setoran Tunai (Rp)</label>
+                    <input type="number" id="depositAmount" class="form-control" required placeholder="Masukkan nominal setoran">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark small">Catatan / Keterangan</label>
+                    <input type="text" id="depositNotes" class="form-control" placeholder="Contoh: Setoran cash COD order sore">
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-light" onclick="closeDepositModal()">Batal</button>
+                    <button type="submit" class="btn-deposit-custom">Konfirmasi Terima Setoran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/api.js"></script>
+
+    <script>
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alert-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show mb-4" role="alert" style="border-radius: 12px; font-weight: 500;">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-triangle text-danger'} me-2"></i>
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadFinancialData() {
+            try {
+                const res = await apiFetch('/admin/financial/summary');
+                if (res && res.success && res.data) {
+                    const { summary, courier_wallets, recent_deposits } = res.data;
+
+                    // Update summary stats
+                    document.getElementById('statTotalRevenue').textContent = `Rp${(summary.total_revenue || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('statDigitalRevenue').textContent = `Rp${(summary.digital_midtrans_revenue || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('statCashOnHand').textContent = `Rp${(summary.cash_on_hand_couriers || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('statTotalDeposited').textContent = `Rp${(summary.total_deposited_admin || 0).toLocaleString('id-ID')}`;
+
+                    // Render Courier Wallets Table
+                    const walletsTbody = document.getElementById('courierWalletsTableBody');
+                    if (courier_wallets && courier_wallets.length > 0) {
+                        walletsTbody.innerHTML = courier_wallets.map(w => `
+                            <tr>
+                                <td>
+                                    <div class="fw-bold text-dark">${w.courier ? w.courier.username : `Kurir #${w.courier_id}`}</div>
+                                    <div class="text-muted small">${w.courier ? w.courier.email : ''}</div>
+                                </td>
+                                <td>${w.courier ? (w.courier.phone_number || '-') : '-'}</td>
+                                <td><span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.85rem;">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
+                                <td><span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.85rem;">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
+                                <td>
+                                    <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username : `Kurir #${w.courier_id}`}', ${w.cash_on_hand})">
+                                        <i class="fas fa-hand-holding-usd me-1"></i> Terima Setoran
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        walletsTbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data dompet kurir.</td></tr>';
+                    }
+
+                    // Render Deposits Table
+                    const depositsTbody = document.getElementById('depositsTableBody');
+                    if (recent_deposits && recent_deposits.length > 0) {
+                        depositsTbody.innerHTML = recent_deposits.map(d => {
+                            const dateStr = new Date(d.deposited_at || d.CreatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                            return `
+                                <tr>
+                                    <td class="fw-bold">#DEP-${d.id}</td>
+                                    <td>${dateStr}</td>
+                                    <td>${d.courier ? d.courier.username : `Kurir #${d.courier_id}`}</td>
+                                    <td><strong class="text-success">Rp${(d.amount || 0).toLocaleString('id-ID')}</strong></td>
+                                    <td>${d.admin ? d.admin.username : 'Admin Outlet'}</td>
+                                    <td><span class="badge bg-success px-3 py-1">Selesai</span></td>
+                                </tr>
+                            `;
+                        }).join('');
+                    } else {
+                        depositsTbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada riwayat setoran tunai.</td></tr>';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('Gagal memuat ringkasan keuangan: ' + err.message, 'danger');
+            }
+        }
+
+        function openDepositModal(courierId, courierName, maxCash) {
+            document.getElementById('depositCourierId').value = courierId;
+            document.getElementById('depositCourierName').value = courierName;
+            document.getElementById('depositMaxCash').value = `Rp${maxCash.toLocaleString('id-ID')}`;
+            document.getElementById('depositAmount').value = maxCash;
+            document.getElementById('depositModal').style.display = 'flex';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('depositModal').style.display = 'none';
+        }
+
+        async function submitDeposit(e) {
+            e.preventDefault();
+            const courierId = parseInt(document.getElementById('depositCourierId').value);
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const notes = document.getElementById('depositNotes').value;
+
+            if (!amount || amount <= 0) {
+                alert('Nominal setoran harus lebih besar dari 0');
+                return;
+            }
+
+            try {
+                const res = await apiFetch('/admin/financial/confirm-deposit', {
+                    method: 'POST',
+                    body: {
+                        courier_id: courierId,
+                        amount: amount,
+                        notes: notes
+                    }
+                });
+
+                if (res && res.success) {
+                    closeDepositModal();
+                    showAlert('Setoran tunai kurir berhasil dikonfirmasi dan dicatat ke kasir!', 'success');
+                    loadFinancialData();
+                } else {
+                    alert((res && res.message) ? res.message : 'Gagal memproses setoran.');
+                }
+            } catch (err) {
+                alert('Error memproses setoran: ' + err.message);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadFinancialData);
+        window.addEventListener('languageChanged', loadFinancialData);
+    </script>
+</body>
+</html>

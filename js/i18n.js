@@ -22,6 +22,7 @@
             "menu_order_history": "Riwayat Pesanan",
             "menu_products": "Produk",
             "menu_promo": "Promo & Voucher",
+            "menu_finance": "Keuangan & Setoran",
             "menu_branches": "Cabang Outlet",
             "menu_sign_out": "Keluar",
 
@@ -202,6 +203,7 @@
             "menu_order_history": "Order History",
             "menu_products": "Products",
             "menu_promo": "Promo & Voucher",
+            "menu_finance": "Finance & Deposits",
             "menu_branches": "Branches",
             "menu_sign_out": "Sign Out",
 
