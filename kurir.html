@@ -32,9 +32,14 @@
                             <div class="card-footer small text-muted">Last updated yesterday at 11:59 PM.</div>
                         </div>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Courier Delivery List
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-table me-1"></i>
+                                    Courier Delivery List
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCourierModal">
+                                    <i class="fas fa-plus me-1"></i> Tambah Kurir Baru
+                                </button>
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -253,7 +258,101 @@
                 });
             }
 
-            window.addEventListener('DOMContentLoaded', loadCouriers);
+            window.addEventListener('DOMContentLoaded', () => {
+                loadCouriers();
+
+                const form = document.getElementById('formAddCourier');
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const btn = document.getElementById('btnSubmitAddCourier');
+                        const alertDiv = document.getElementById('addCourierAlert');
+                        alertDiv.innerHTML = '';
+
+                        const username = document.getElementById('courierUsername').value.trim();
+                        const email = document.getElementById('courierEmail').value.trim();
+                        const phoneNumber = document.getElementById('courierPhone').value.trim();
+                        const password = document.getElementById('courierPassword').value;
+
+                        btn.disabled = true;
+                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+
+                        try {
+                            const res = await apiFetch('/auth/register', {
+                                method: 'POST',
+                                body: {
+                                    username,
+                                    email,
+                                    phone_number: phoneNumber,
+                                    password,
+                                    confirm_password: password,
+                                    role: 'courier'
+                                }
+                            });
+
+                            if (res && (res.success || res.code === 201)) {
+                                alertDiv.innerHTML = `<div class="alert alert-success small py-2 rounded-3">Akun kurir ${username} berhasil dibuat!</div>`;
+                                setTimeout(() => {
+                                    const modalEl = document.getElementById('addCourierModal');
+                                    const modal = bootstrap.Modal.getInstance(modalEl);
+                                    if (modal) modal.hide();
+                                    form.reset();
+                                    alertDiv.innerHTML = '';
+                                    loadCouriers();
+                                }, 1200);
+                            } else {
+                                throw new Error(res.message || 'Gagal membuat akun kurir');
+                            }
+                        } catch (err) {
+                            alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-save me-1"></i> Simpan Akun Kurir';
+                        }
+                    });
+                }
+            });
         </script>
+
+        <!-- Modal Tambah Kurir Baru -->
+        <div class="modal fade" id="addCourierModal" tabindex="-1" aria-labelledby="addCourierModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <div class="modal-header bg-primary text-white py-3 px-4">
+                        <h5 class="modal-title font-weight-bold fs-6" id="addCourierModalLabel">
+                            <i class="fas fa-user-plus me-2"></i>Tambah Akun Kurir Baru
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formAddCourier">
+                        <div class="modal-body p-4">
+                            <div id="addCourierAlert"></div>
+                            <div class="mb-3">
+                                <label for="courierUsername" class="form-label font-weight-semibold small text-muted">Nama Kurir</label>
+                                <input type="text" class="form-control" id="courierUsername" placeholder="Contoh: Kurir Bintang" required style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="courierEmail" class="form-label font-weight-semibold small text-muted">Email Kurir</label>
+                                <input type="email" class="form-control" id="courierEmail" placeholder="Contoh: kurirbintang@mylaundry.com" required style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="courierPhone" class="form-label font-weight-semibold small text-muted">Nomor Telepon</label>
+                                <input type="text" class="form-control" id="courierPhone" placeholder="Contoh: 08123456789" required style="border-radius: 10px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="courierPassword" class="form-label font-weight-semibold small text-muted">Kata Sandi Akun</label>
+                                <input type="password" class="form-control" id="courierPassword" placeholder="Min. 8 karakter (1 Kapital, 1 Simbol, 1 Angka)" required style="border-radius: 10px;">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light py-2 px-4">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4" id="btnSubmitAddCourier">
+                                <i class="fas fa-save me-1"></i> Simpan Akun Kurir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
