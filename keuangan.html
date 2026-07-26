@@ -248,68 +248,81 @@
             }
         }
 
-        async function loadFinancialData() {
+        let cachedFinancialData = null;
+
+        function renderFinancialTables(data) {
+            if (!data) return;
+            const { summary, courier_wallets, recent_deposits } = data;
+            const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+            const locale = lang === 'en' ? 'en-US' : 'id-ID';
+
+            // Update summary stats
+            document.getElementById('statTotalRevenue').textContent = `Rp${(summary.total_revenue || 0).toLocaleString('id-ID')}`;
+            document.getElementById('statDigitalRevenue').textContent = `Rp${(summary.digital_midtrans_revenue || 0).toLocaleString('id-ID')}`;
+            document.getElementById('statCashOnHand').textContent = `Rp${(summary.cash_on_hand_couriers || 0).toLocaleString('id-ID')}`;
+            document.getElementById('statTotalDeposited').textContent = `Rp${(summary.total_deposited_admin || 0).toLocaleString('id-ID')}`;
+
+            // Render Courier Wallets Table
+            const walletsTbody = document.getElementById('courierWalletsTableBody');
+            if (courier_wallets && courier_wallets.length > 0) {
+                const receiveBtnText = window.i18n ? window.i18n.t('fin_btn_receive_deposit') : 'Terima Setoran';
+                const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
+                walletsTbody.innerHTML = courier_wallets.map(w => `
+                    <tr>
+                        <td>
+                            <div class="fw-bold text-dark">${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}</div>
+                            <div class="text-muted small">${w.courier ? w.courier.email : ''}</div>
+                        </td>
+                        <td>${w.courier ? (w.courier.phone_number || '-') : '-'}</td>
+                        <td><span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.85rem;">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
+                        <td><span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.85rem;">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
+                        <td>
+                            <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}', ${w.cash_on_hand})">
+                                <i class="fas fa-hand-holding-usd me-1"></i> ${receiveBtnText}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                const emptyWalletsText = window.i18n ? window.i18n.t('fin_empty_wallets') : 'Belum ada data dompet kurir.';
+                walletsTbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">${emptyWalletsText}</td></tr>`;
+            }
+
+            // Render Deposits Table
+            const depositsTbody = document.getElementById('depositsTableBody');
+            if (recent_deposits && recent_deposits.length > 0) {
+                const completedStatusText = window.i18n ? window.i18n.t('status_completed') : 'Selesai';
+                const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
+                depositsTbody.innerHTML = recent_deposits.map(d => {
+                    const dateStr = new Date(d.deposited_at || d.CreatedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    return `
+                        <tr>
+                            <td class="fw-bold">#DEP-${d.id}</td>
+                            <td>${dateStr}</td>
+                            <td>${d.courier ? d.courier.username : `${courierLabel} #${d.courier_id}`}</td>
+                            <td><strong class="text-success">Rp${(d.amount || 0).toLocaleString('id-ID')}</strong></td>
+                            <td>${d.admin ? d.admin.username : 'Admin Outlet'}</td>
+                            <td><span class="badge bg-success px-3 py-1">${completedStatusText}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                const emptyDepositsText = window.i18n ? window.i18n.t('fin_empty_deposits') : 'Belum ada riwayat setoran tunai.';
+                depositsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">${emptyDepositsText}</td></tr>`;
+            }
+        }
+
+        async function loadFinancialData(forceFetch = false) {
+            if (cachedFinancialData && !forceFetch) {
+                renderFinancialTables(cachedFinancialData);
+                return;
+            }
+
             try {
                 const res = await apiFetch('/admin/financial/summary');
                 if (res && res.success && res.data) {
-                    const { summary, courier_wallets, recent_deposits } = res.data;
-                    const lang = window.i18n ? window.i18n.getLanguage() : 'id';
-                    const locale = lang === 'en' ? 'en-US' : 'id-ID';
-
-                    // Update summary stats
-                    document.getElementById('statTotalRevenue').textContent = `Rp${(summary.total_revenue || 0).toLocaleString('id-ID')}`;
-                    document.getElementById('statDigitalRevenue').textContent = `Rp${(summary.digital_midtrans_revenue || 0).toLocaleString('id-ID')}`;
-                    document.getElementById('statCashOnHand').textContent = `Rp${(summary.cash_on_hand_couriers || 0).toLocaleString('id-ID')}`;
-                    document.getElementById('statTotalDeposited').textContent = `Rp${(summary.total_deposited_admin || 0).toLocaleString('id-ID')}`;
-
-                    // Render Courier Wallets Table
-                    const walletsTbody = document.getElementById('courierWalletsTableBody');
-                    if (courier_wallets && courier_wallets.length > 0) {
-                        const receiveBtnText = window.i18n ? window.i18n.t('fin_btn_receive_deposit') : 'Terima Setoran';
-                        const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
-                        walletsTbody.innerHTML = courier_wallets.map(w => `
-                            <tr>
-                                <td>
-                                    <div class="fw-bold text-dark">${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}</div>
-                                    <div class="text-muted small">${w.courier ? w.courier.email : ''}</div>
-                                </td>
-                                <td>${w.courier ? (w.courier.phone_number || '-') : '-'}</td>
-                                <td><span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.85rem;">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
-                                <td><span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.85rem;">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
-                                <td>
-                                    <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}', ${w.cash_on_hand})">
-                                        <i class="fas fa-hand-holding-usd me-1"></i> ${receiveBtnText}
-                                    </button>
-                                </td>
-                            </tr>
-                        `).join('');
-                    } else {
-                        const emptyWalletsText = window.i18n ? window.i18n.t('fin_empty_wallets') : 'Belum ada data dompet kurir.';
-                        walletsTbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">${emptyWalletsText}</td></tr>`;
-                    }
-
-                    // Render Deposits Table
-                    const depositsTbody = document.getElementById('depositsTableBody');
-                    if (recent_deposits && recent_deposits.length > 0) {
-                        const completedStatusText = window.i18n ? window.i18n.t('status_completed') : 'Selesai';
-                        const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
-                        depositsTbody.innerHTML = recent_deposits.map(d => {
-                            const dateStr = new Date(d.deposited_at || d.CreatedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                            return `
-                                <tr>
-                                    <td class="fw-bold">#DEP-${d.id}</td>
-                                    <td>${dateStr}</td>
-                                    <td>${d.courier ? d.courier.username : `${courierLabel} #${d.courier_id}`}</td>
-                                    <td><strong class="text-success">Rp${(d.amount || 0).toLocaleString('id-ID')}</strong></td>
-                                    <td>${d.admin ? d.admin.username : 'Admin Outlet'}</td>
-                                    <td><span class="badge bg-success px-3 py-1">${completedStatusText}</span></td>
-                                </tr>
-                            `;
-                        }).join('');
-                    } else {
-                        const emptyDepositsText = window.i18n ? window.i18n.t('fin_empty_deposits') : 'Belum ada riwayat setoran tunai.';
-                        depositsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">${emptyDepositsText}</td></tr>`;
-                    }
+                    cachedFinancialData = res.data;
+                    renderFinancialTables(cachedFinancialData);
                 }
             } catch (err) {
                 console.error(err);
@@ -431,7 +444,11 @@
         });
         window.addEventListener('languageChanged', () => {
             if (window.i18n) window.i18n.applyTranslations();
-            loadFinancialData();
+            if (cachedFinancialData) {
+                renderFinancialTables(cachedFinancialData);
+            } else {
+                loadFinancialData(true);
+            }
         });
     </script>
 </body>
