@@ -11,6 +11,7 @@
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/custom-components.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="js/i18n.js"></script>
         <!-- Custom Web Components -->
         <script src="js/components.js" defer></script>
     </head>
@@ -21,35 +22,35 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Order History</h1>
+                        <h1 class="mt-4" data-i18n="history_title">Order History</h1>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Order History
+                                <span data-i18n="history_list">Order History Table</span>
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                     <tr>
-                                        <th>Order</th>
-                                        <th>Customer</th>
-                                        <th>Date</th>
-                                        <th>Address</th>
-                                        <th>Service Type</th>
-                                        <th>Status</th>
-                                        <th>Total</th>
+                                        <th data-i18n="history_col_order">Order</th>
+                                        <th data-i18n="history_col_customer">Customer</th>
+                                        <th data-i18n="history_col_date">Date</th>
+                                        <th data-i18n="history_col_address">Address</th>
+                                        <th data-i18n="history_col_service">Service Type</th>
+                                        <th data-i18n="history_col_status">Status</th>
+                                        <th data-i18n="history_col_total">Total</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
-                                        <th>Order</th>
-                                        <th>Customer</th>
-                                        <th>Date</th>
-                                        <th>Address</th>
-                                        <th>Service Type</th>
-                                        <th>Status</th>
-                                        <th>Total</th>
+                                        <th data-i18n="history_col_order">Order</th>
+                                        <th data-i18n="history_col_customer">Customer</th>
+                                        <th data-i18n="history_col_date">Date</th>
+                                        <th data-i18n="history_col_address">Address</th>
+                                        <th data-i18n="history_col_service">Service Type</th>
+                                        <th data-i18n="history_col_status">Status</th>
+                                        <th data-i18n="history_col_total">Total</th>
                                         <th></th>
                                     </tr>
                                     </tfoot>
@@ -60,7 +61,7 @@
                                                     <div class="spinner-border text-primary spinner-border-sm" role="status">
                                                         <span class="visually-hidden">Loading...</span>
                                                     </div>
-                                                    <span>Memuat riwayat pesanan...</span>
+                                                    <span data-i18n="history_loading">Memuat riwayat pesanan...</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -91,9 +92,10 @@
             }
 
             function getStatusLabel(status) {
-                if (!status) return 'Completed';
-                if (status.toLowerCase() === 'completed' || status.toLowerCase() === 'done') return 'Completed';
-                if (status.toLowerCase() === 'cancelled') return 'Cancelled';
+                if (!status) return window.i18n ? window.i18n.t('status_completed') : 'Completed';
+                const s = status.toLowerCase();
+                if (s === 'completed' || s === 'done') return window.i18n ? window.i18n.t('status_completed') : 'Completed';
+                if (s === 'cancelled') return window.i18n ? window.i18n.t('status_cancelled') : 'Cancelled';
                 return status.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             }
 
@@ -125,12 +127,18 @@
                             
                             const dateObj = new Date(order.created_at);
                             const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-                            const formattedDate = dateObj.toLocaleDateString('en-US', options).replace(',', '');
+                            const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                            const locale = lang === 'en' ? 'en-US' : 'id-ID';
+                            const formattedDate = dateObj.toLocaleDateString(locale, options).replace(',', '');
                             
-                            const customerName = order.customer ? (order.customer.username || 'Guest') : 'Guest';
+                            const guestStr = window.i18n ? window.i18n.t('guest_customer') : 'Guest';
+                            const noAddressStr = window.i18n ? window.i18n.t('no_address') : 'No Address';
+                            const viewDetailsStr = window.i18n ? window.i18n.t('btn_view_details') : 'View Details';
+
+                            const customerName = order.customer ? (order.customer.username || guestStr) : guestStr;
                             const customerEmail = order.customer ? (order.customer.email || '') : '';
                             const addressText = order.address && order.address.street_name ? 
-                                `${order.address.receiver_name}, ${order.address.street_name}` : 'No Address';
+                                `${order.address.receiver_name}, ${order.address.street_name}` : noAddressStr;
                             const serviceText = order.service ? (order.service.title || 'Dry Clean') : 'Dry Clean';
                             
                             const priceVal = order.total_price || 0;
@@ -150,18 +158,20 @@
                                 <td>${serviceText}</td>
                                 <td><span class="status-riwayat-pesanan ${statusClass} btn ${bootstrapBtnClass}">${statusLabel}</span></td>
                                 <td>${formattedTotal}</td>
-                                <td><a href="detail-riwayat-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">View Details</a></td>
+                                <td><a href="detail-riwayat-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">${viewDetailsStr}</a></td>
                             `;
                             tbody.appendChild(row);
                         });
                     } else {
+                        const emptyTitle = window.i18n ? window.i18n.t('history_empty_title') : 'Belum Ada Riwayat';
+                        const emptyDesc = window.i18n ? window.i18n.t('history_empty_desc') : 'Semua pesanan yang telah diselesaikan atau dibatalkan akan muncul di sini.';
                         tbody.innerHTML = `
                             <tr>
                                 <td colspan="8" class="text-center py-5 text-muted">
                                     <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                         <i class="fas fa-history fa-3x mb-2" style="color: #dee2e6;"></i>
-                                        <h5 class="fw-bold" style="color: #6c757d;">Belum Ada Riwayat</h5>
-                                        <p class="text-muted small mb-0">Semua pesanan yang telah diselesaikan atau dibatalkan akan muncul di sini.</p>
+                                        <h5 class="fw-bold" style="color: #6c757d;">${emptyTitle}</h5>
+                                        <p class="text-muted small mb-0">${emptyDesc}</p>
                                     </div>
                                 </td>
                             </tr>
@@ -178,14 +188,16 @@
 
                 } catch (error) {
                     console.error('Error loading history:', error);
+                    const errorTitle = window.i18n ? window.i18n.t('history_error_title') : 'Gagal Memuat Data';
+                    const retryBtnText = window.i18n ? window.i18n.t('history_retry_btn') : 'Coba Lagi';
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="8" class="text-center py-5 text-danger">
                                 <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                     <i class="fas fa-exclamation-circle fa-3x mb-2" style="color: #dc3545;"></i>
-                                    <h5 class="fw-bold">Gagal Memuat Data</h5>
+                                    <h5 class="fw-bold">${errorTitle}</h5>
                                     <p class="small mb-0">${error.message || 'Koneksi ke server terputus. Silakan coba lagi.'}</p>
-                                    <button onclick="loadHistory()" class="btn btn-outline-danger btn-sm mt-2">Coba Lagi</button>
+                                    <button onclick="loadHistory()" class="btn btn-outline-danger btn-sm mt-2">${retryBtnText}</button>
                                 </div>
                             </td>
                         </tr>
@@ -193,7 +205,14 @@
                 }
             }
 
-            window.addEventListener('DOMContentLoaded', loadHistory);
+            window.addEventListener('DOMContentLoaded', () => {
+                if (window.i18n) window.i18n.applyTranslations();
+                loadHistory();
+            });
+            window.addEventListener('languageChanged', () => {
+                if (window.i18n) window.i18n.applyTranslations();
+                loadHistory();
+            });
         </script>
     </body>
 </html>

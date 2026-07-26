@@ -7,6 +7,7 @@
     <title>Keuangan & Dompet Kurir — myLaundry Admin</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/components.js" defer></script>
     <style>
         .stat-card-custom {
@@ -73,11 +74,11 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
                         <div>
-                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;">Keuangan & Dompet Kurir</h1>
-                            <p class="text-muted m-0" style="font-size: 14px;">Rekapitulasi pendapatan Midtrans, saldo cash kurir, dan setoran tunai</p>
+                            <h1 class="m-0" style="font-weight: 700; color: #0F172A;" data-i18n="fin_title">Keuangan & Dompet Kurir</h1>
+                            <p class="text-muted m-0" style="font-size: 14px;" data-i18n="fin_subtitle">Rekapitulasi pendapatan Midtrans, saldo cash kurir, dan setoran tunai</p>
                         </div>
                         <button class="btn btn-outline-success fw-bold px-3 py-2" id="btnExportFinancialCSV" style="border-radius: 10px; font-size: 0.88rem;">
-                            <i class="fas fa-file-excel me-2"></i>Ekspor Laporan (CSV/Excel)
+                            <i class="fas fa-file-excel me-2"></i><span data-i18n="fin_export_btn">Ekspor Laporan (CSV/Excel)</span>
                         </button>
                     </div>
 
@@ -91,7 +92,7 @@
                                     <i class="fas fa-wallet"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Total Pendapatan Lunas</div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="fin_total_rev">Total Pendapatan Lunas</div>
                                     <div id="statTotalRevenue" class="fw-bold" style="font-size: 20px; color: #0F172A;">Rp0</div>
                                 </div>
                             </div>
@@ -102,7 +103,7 @@
                                     <i class="fas fa-qrcode"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Digital Midtrans (QRIS/VA)</div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="fin_digital_rev">Digital Midtrans (QRIS/VA)</div>
                                     <div id="statDigitalRevenue" class="fw-bold" style="font-size: 20px; color: #059669;">Rp0</div>
                                 </div>
                             </div>
@@ -113,7 +114,7 @@
                                     <i class="fas fa-hand-holding-usd"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Cash di Tangan Kurir (COD)</div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="fin_cash_hand">Cash di Tangan Kurir (COD)</div>
                                     <div id="statCashOnHand" class="fw-bold" style="font-size: 20px; color: #D97706;">Rp0</div>
                                 </div>
                             </div>
@@ -124,7 +125,7 @@
                                     <i class="fas fa-cash-register"></i>
                                 </div>
                                 <div>
-                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;">Setoran Tunai ke Admin</div>
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="fin_total_dep">Setoran Tunai ke Admin</div>
                                     <div id="statTotalDeposited" class="fw-bold" style="font-size: 20px; color: #0F172A;">Rp0</div>
                                 </div>
                             </div>
@@ -137,12 +138,12 @@
                             <ul class="nav nav-tabs card-header-tabs border-bottom-0" id="financeTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active fw-bold text-dark" id="wallets-tab" data-bs-toggle="tab" data-bs-target="#wallets-tab-pane" type="button" role="tab">
-                                        <i class="fas fa-motorcycle me-2 text-primary"></i>Saldo Cash & Komisi Kurir
+                                        <i class="fas fa-motorcycle me-2 text-primary"></i><span data-i18n="fin_tab_wallets">Saldo Cash & Komisi Kurir</span>
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link fw-bold text-dark" id="deposits-tab" data-bs-toggle="tab" data-bs-target="#deposits-tab-pane" type="button" role="tab">
-                                        <i class="fas fa-receipt me-2 text-success"></i>Riwayat Setoran Tunai
+                                        <i class="fas fa-receipt me-2 text-success"></i><span data-i18n="fin_tab_deposits">Riwayat Setoran Tunai</span>
                                     </button>
                                 </li>
                             </ul>
@@ -155,15 +156,15 @@
                                         <table class="table table-hover align-middle">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>Kurir</th>
-                                                    <th>No. HP</th>
-                                                    <th>Cash di Tangan (COD)</th>
-                                                    <th>Estimasi Komisi</th>
-                                                    <th>Aksi</th>
+                                                    <th data-i18n="fin_col_courier">Kurir</th>
+                                                    <th data-i18n="fin_col_phone">No. HP</th>
+                                                    <th data-i18n="fin_col_cash_hand">Cash di Tangan (COD)</th>
+                                                    <th data-i18n="fin_col_est_commission">Estimasi Komisi</th>
+                                                    <th data-i18n="fin_col_action">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="courierWalletsTableBody">
-                                                <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data dompet kurir...</td></tr>
+                                                <tr><td colspan="5" class="text-center py-4 text-muted" data-i18n="fin_loading_wallets">Memuat data dompet kurir...</td></tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -175,16 +176,16 @@
                                         <table class="table table-hover align-middle">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>ID Setoran</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Kurir Setor</th>
-                                                    <th>Jumlah Setoran</th>
-                                                    <th>Admin Penerima</th>
-                                                    <th>Status</th>
+                                                    <th data-i18n="fin_col_dep_id">ID Setoran</th>
+                                                    <th data-i18n="fin_col_dep_date">Tanggal</th>
+                                                    <th data-i18n="fin_col_dep_courier">Kurir Setor</th>
+                                                    <th data-i18n="fin_col_dep_amount">Jumlah Setoran</th>
+                                                    <th data-i18n="fin_col_dep_admin">Admin Penerima</th>
+                                                    <th data-i18n="fin_col_dep_status">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="depositsTableBody">
-                                                <tr><td colspan="6" class="text-center py-4 text-muted">Memuat riwayat setoran...</td></tr>
+                                                <tr><td colspan="6" class="text-center py-4 text-muted" data-i18n="fin_loading_deposits">Memuat riwayat setoran...</td></tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -201,29 +202,29 @@
     <!-- Modal Form Terima Setoran Tunai Kurir -->
     <div id="depositModal" class="modal-overlay">
         <div class="modal-box">
-            <h4 style="margin-top: 0; color: #0F172A; font-weight: 700;">Konfirmasi Setoran Tunai</h4>
-            <p class="text-muted" style="font-size: 13px;">Terima setoran uang cash COD dari kurir ke kasir outlet Admin</p>
+            <h4 style="margin-top: 0; color: #0F172A; font-weight: 700;" data-i18n="fin_modal_title">Konfirmasi Setoran Tunai</h4>
+            <p class="text-muted" style="font-size: 13px;" data-i18n="fin_modal_subtitle">Terima setoran uang cash COD dari kurir ke kasir outlet Admin</p>
             <form id="depositForm" onsubmit="submitDeposit(event)">
                 <input type="hidden" id="depositCourierId">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-muted small">Nama Kurir</label>
+                    <label class="form-label fw-semibold text-muted small" data-i18n="fin_modal_courier_name">Nama Kurir</label>
                     <input type="text" id="depositCourierName" class="form-control" readonly style="background: #F8FAFC;">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-muted small">Maksimal Uang Cash di Tangan</label>
+                    <label class="form-label fw-semibold text-muted small" data-i18n="fin_modal_max_cash">Maksimal Uang Cash di Tangan</label>
                     <input type="text" id="depositMaxCash" class="form-control" readonly style="background: #FEF3C7; color: #D97706; font-weight: 700;">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-dark small">Nominal Setoran Tunai (Rp)</label>
-                    <input type="number" id="depositAmount" class="form-control" required placeholder="Masukkan nominal setoran">
+                    <label class="form-label fw-semibold text-dark small" data-i18n="fin_modal_amount">Nominal Setoran Tunai (Rp)</label>
+                    <input type="number" id="depositAmount" class="form-control" required data-i18n-placeholder="fin_modal_amount_placeholder" placeholder="Masukkan nominal setoran">
                 </div>
                 <div class="mb-4">
-                    <label class="form-label fw-semibold text-dark small">Catatan / Keterangan</label>
-                    <input type="text" id="depositNotes" class="form-control" placeholder="Contoh: Setoran cash COD order sore">
+                    <label class="form-label fw-semibold text-dark small" data-i18n="fin_modal_notes">Catatan / Keterangan</label>
+                    <input type="text" id="depositNotes" class="form-control" data-i18n-placeholder="fin_modal_notes_placeholder" placeholder="Contoh: Setoran cash COD order sore">
                 </div>
                 <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-light" onclick="closeDepositModal()">Batal</button>
-                    <button type="submit" class="btn-deposit-custom">Konfirmasi Terima Setoran</button>
+                    <button type="button" class="btn btn-light" onclick="closeDepositModal()" data-i18n="btn_cancel">Batal</button>
+                    <button type="submit" class="btn-deposit-custom" data-i18n="fin_modal_btn_confirm">Konfirmasi Terima Setoran</button>
                 </div>
             </form>
         </div>
@@ -252,6 +253,8 @@
                 const res = await apiFetch('/admin/financial/summary');
                 if (res && res.success && res.data) {
                     const { summary, courier_wallets, recent_deposits } = res.data;
+                    const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                    const locale = lang === 'en' ? 'en-US' : 'id-ID';
 
                     // Update summary stats
                     document.getElementById('statTotalRevenue').textContent = `Rp${(summary.total_revenue || 0).toLocaleString('id-ID')}`;
@@ -262,49 +265,56 @@
                     // Render Courier Wallets Table
                     const walletsTbody = document.getElementById('courierWalletsTableBody');
                     if (courier_wallets && courier_wallets.length > 0) {
+                        const receiveBtnText = window.i18n ? window.i18n.t('fin_btn_receive_deposit') : 'Terima Setoran';
+                        const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
                         walletsTbody.innerHTML = courier_wallets.map(w => `
                             <tr>
                                 <td>
-                                    <div class="fw-bold text-dark">${w.courier ? w.courier.username : `Kurir #${w.courier_id}`}</div>
+                                    <div class="fw-bold text-dark">${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}</div>
                                     <div class="text-muted small">${w.courier ? w.courier.email : ''}</div>
                                 </td>
                                 <td>${w.courier ? (w.courier.phone_number || '-') : '-'}</td>
                                 <td><span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.85rem;">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
                                 <td><span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.85rem;">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
                                 <td>
-                                    <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username : `Kurir #${w.courier_id}`}', ${w.cash_on_hand})">
-                                        <i class="fas fa-hand-holding-usd me-1"></i> Terima Setoran
+                                    <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username : `${courierLabel} #${w.courier_id}`}', ${w.cash_on_hand})">
+                                        <i class="fas fa-hand-holding-usd me-1"></i> ${receiveBtnText}
                                     </button>
                                 </td>
                             </tr>
                         `).join('');
                     } else {
-                        walletsTbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data dompet kurir.</td></tr>';
+                        const emptyWalletsText = window.i18n ? window.i18n.t('fin_empty_wallets') : 'Belum ada data dompet kurir.';
+                        walletsTbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">${emptyWalletsText}</td></tr>`;
                     }
 
                     // Render Deposits Table
                     const depositsTbody = document.getElementById('depositsTableBody');
                     if (recent_deposits && recent_deposits.length > 0) {
+                        const completedStatusText = window.i18n ? window.i18n.t('status_completed') : 'Selesai';
+                        const courierLabel = window.i18n ? window.i18n.t('fin_col_courier') : 'Kurir';
                         depositsTbody.innerHTML = recent_deposits.map(d => {
-                            const dateStr = new Date(d.deposited_at || d.CreatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                            const dateStr = new Date(d.deposited_at || d.CreatedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
                             return `
                                 <tr>
                                     <td class="fw-bold">#DEP-${d.id}</td>
                                     <td>${dateStr}</td>
-                                    <td>${d.courier ? d.courier.username : `Kurir #${d.courier_id}`}</td>
+                                    <td>${d.courier ? d.courier.username : `${courierLabel} #${d.courier_id}`}</td>
                                     <td><strong class="text-success">Rp${(d.amount || 0).toLocaleString('id-ID')}</strong></td>
                                     <td>${d.admin ? d.admin.username : 'Admin Outlet'}</td>
-                                    <td><span class="badge bg-success px-3 py-1">Selesai</span></td>
+                                    <td><span class="badge bg-success px-3 py-1">${completedStatusText}</span></td>
                                 </tr>
                             `;
                         }).join('');
                     } else {
-                        depositsTbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada riwayat setoran tunai.</td></tr>';
+                        const emptyDepositsText = window.i18n ? window.i18n.t('fin_empty_deposits') : 'Belum ada riwayat setoran tunai.';
+                        depositsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">${emptyDepositsText}</td></tr>`;
                     }
                 }
             } catch (err) {
                 console.error(err);
-                showAlert('Gagal memuat ringkasan keuangan: ' + err.message, 'danger');
+                const errMsg = window.i18n ? window.i18n.t('state_error') : 'Gagal memuat ringkasan keuangan';
+                showAlert(`${errMsg}: ${err.message}`, 'danger');
             }
         }
 
@@ -415,8 +425,14 @@
             return originalLoadFinancialData();
         };
 
-        window.addEventListener('DOMContentLoaded', loadFinancialData);
-        window.addEventListener('languageChanged', loadFinancialData);
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.i18n) window.i18n.applyTranslations();
+            loadFinancialData();
+        });
+        window.addEventListener('languageChanged', () => {
+            if (window.i18n) window.i18n.applyTranslations();
+            loadFinancialData();
+        });
     </script>
 </body>
 </html>

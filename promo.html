@@ -7,6 +7,7 @@
     <title>Promo & Voucher — myLaundry Admin</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/components.js" defer></script>
     <style>
         .btn-primary-custom {
@@ -470,7 +471,14 @@
             }
         }
 
-        window.onload = loadPromos;
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.i18n) window.i18n.applyTranslations();
+            loadPromos();
+        });
+        window.addEventListener('languageChanged', () => {
+            if (window.i18n) window.i18n.applyTranslations();
+            loadPromos();
+        });
     </script>
 </body>
 </html>
