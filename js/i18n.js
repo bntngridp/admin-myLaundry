@@ -23,6 +23,7 @@
             "menu_products": "Produk",
             "menu_promo": "Promo & Voucher",
             "menu_finance": "Keuangan & Setoran",
+            "menu_reviews": "Ulasan & Rating",
             "menu_branches": "Cabang Outlet",
             "menu_sign_out": "Keluar",
 
@@ -203,8 +204,9 @@
             "menu_order_history": "Order History",
             "menu_products": "Products",
             "menu_promo": "Promo & Voucher",
-            "menu_finance": "Finance & Deposits",
-            "menu_branches": "Branches",
+            "menu_finance": "Finance & Wallet",
+            "menu_reviews": "Reviews & Ratings",
+            "menu_branches": "Outlet Branches",
             "menu_sign_out": "Sign Out",
 
             // Time Periods

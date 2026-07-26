@@ -177,11 +177,16 @@
                 </div>
 
                 <!-- Page Title and Back Button (Clean, Reachable Header UI) -->
-                <div class="d-flex align-items-center mb-4">
-                    <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                    <h1 class="h3 m-0" style="color: #0B1739; font-weight: 700;">Order Details <span class="text-muted" style="font-weight: 400;" id="order-title-id">#...</span></h1>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="d-flex align-items-center">
+                        <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <h1 class="h3 m-0" style="color: #0B1739; font-weight: 700;">Order Details <span class="text-muted" style="font-weight: 400;" id="order-title-id">#...</span></h1>
+                    </div>
+                    <button class="btn btn-outline-primary fw-bold px-3 py-2" onclick="window.print()" style="border-radius: 10px; font-size: 0.88rem;">
+                        <i class="fas fa-print me-2"></i>Cetak Invoice Struk (PDF)
+                    </button>
                 </div>
 
                 <div class="row">

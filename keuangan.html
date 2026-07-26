@@ -76,6 +76,9 @@
                             <h1 class="m-0" style="font-weight: 700; color: #0F172A;">Keuangan & Dompet Kurir</h1>
                             <p class="text-muted m-0" style="font-size: 14px;">Rekapitulasi pendapatan Midtrans, saldo cash kurir, dan setoran tunai</p>
                         </div>
+                        <button class="btn btn-outline-success fw-bold px-3 py-2" id="btnExportFinancialCSV" style="border-radius: 10px; font-size: 0.88rem;">
+                            <i class="fas fa-file-excel me-2"></i>Ekspor Laporan (CSV/Excel)
+                        </button>
                     </div>
 
                     <div id="alert-container"></div>
@@ -349,6 +352,68 @@
                 alert('Error memproses setoran: ' + err.message);
             }
         }
+
+        // Export Financial Report to CSV / Excel
+        let globalFinancialSummary = null;
+
+        function exportFinancialCSV() {
+            if (!globalFinancialSummary) {
+                alert('Data keuangan belum siap untuk diekspor!');
+                return;
+            }
+
+            const { stats, couriers, recent_deposits } = globalFinancialSummary;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // Header Stats
+            csvContent += "REKAPITULASI KEUANGAN MYLAUNDRY\n";
+            csvContent += `Tanggal Ekspor,${new Date().toLocaleString('id-ID')}\n`;
+            csvContent += `Total Pendapatan Lunas,Rp ${stats.total_revenue || 0}\n`;
+            csvContent += `Pembayaran Digital Midtrans,Rp ${stats.digital_revenue || 0}\n`;
+            csvContent += `Cash di Tangan Kurir (COD),Rp ${stats.total_cash_on_hand || 0}\n`;
+            csvContent += `Total Setoran Diterima Kasir,Rp ${stats.total_deposited_cash || 0}\n\n`;
+
+            // Courier Cash Balances Table
+            csvContent += "DAFTAR CASH ON HAND KURIR\n";
+            csvContent += "ID Kurir,Nama Kurir,Email,Telepon,Cash Pegangan (COD)\n";
+            if (couriers && couriers.length > 0) {
+                couriers.forEach(c => {
+                    csvContent += `"${c.id}","${c.username}","${c.email}","${c.phone || '-'}","${c.cash_on_hand || 0}"\n`;
+                });
+            } else {
+                csvContent += "Tidak ada data kurir.\n";
+            }
+
+            csvContent += "\nRIWAYAT SETORAN TUNAI TERAKHIR\n";
+            csvContent += "ID Setoran,ID Kurir,Nama Kurir,Nominal Setoran,Tanggal Setoran,Catatan\n";
+            if (recent_deposits && recent_deposits.length > 0) {
+                recent_deposits.forEach(d => {
+                    csvContent += `"${d.id}","${d.courier_id}","${d.courier_name}","${d.amount}","${new Date(d.created_at).toLocaleString('id-ID')}","${d.notes || '-'}"\n`;
+                });
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Keuangan_myLaundry_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('btnExportFinancialCSV').addEventListener('click', exportFinancialCSV);
+
+        // Store summary globally on fetch success
+        const originalLoadFinancialData = loadFinancialData;
+        loadFinancialData = async function() {
+            try {
+                const res = await apiFetch('/admin/financial/summary');
+                if (res && res.success && res.data) {
+                    globalFinancialSummary = res.data;
+                }
+            } catch (e) {}
+            return originalLoadFinancialData();
+        };
 
         window.addEventListener('DOMContentLoaded', loadFinancialData);
         window.addEventListener('languageChanged', loadFinancialData);

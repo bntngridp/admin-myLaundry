@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Management Customer Ratings & Reviews - myLaundry Admin" />
+    <meta name="author" content="myLaundry" />
+    <title>Ulasan & Rating Pelanggan - myLaundry Admin</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body class="sb-nav-fixed bg-light">
+    <!-- Navbar Web Component -->
+    <admin-navbar></admin-navbar>
+
+    <div id="layoutSidenav">
+        <!-- Sidebar Web Component -->
+        <admin-sidebar></admin-sidebar>
+
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4 py-4">
+                    <!-- Page Title Header -->
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div>
+                            <h1 class="h3 fw-bold mb-1" style="color: #0B1739;" data-i18n="reviews_title">Ulasan & Rating Pelanggan</h1>
+                            <p class="text-muted small mb-0" data-i18n="reviews_subtitle">Pantau ulasan kepuasan pelanggan, performa kurir, dan kirim balasan resmi outlet.</p>
+                        </div>
+                    </div>
+
+                    <!-- Top Summary Stats Card -->
+                    <div class="row g-3 mb-4">
+                        <!-- Outlet Avg Rating -->
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: linear-gradient(135deg, #0007B0 0%, #1d4ed8 100%);">
+                                <div class="card-body text-white">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="small fw-semibold opacity-75">Rating Outlet</span>
+                                        <i class="fas fa-store fa-lg opacity-75"></i>
+                                    </div>
+                                    <div class="d-flex align-items-baseline gap-2">
+                                        <h2 class="display-6 fw-bold mb-0" id="statAvgBranch">5.0</h2>
+                                        <span class="text-warning"><i class="fas fa-star"></i> / 5.0</span>
+                                    </div>
+                                    <small class="opacity-75">Berdasarkan skor kebersihan & kualitas cucian</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Courier Avg Rating -->
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-2 text-muted">
+                                        <span class="small fw-semibold">Rating Kurir</span>
+                                        <i class="fas fa-truck-moving fa-lg text-primary"></i>
+                                    </div>
+                                    <div class="d-flex align-items-baseline gap-2">
+                                        <h2 class="display-6 fw-bold mb-0 text-dark" id="statAvgCourier">5.0</h2>
+                                        <span class="text-warning"><i class="fas fa-star"></i> / 5.0</span>
+                                    </div>
+                                    <small class="text-muted">Ketepatan waktu antar-jemput kurir</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Ratings Count -->
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-2 text-muted">
+                                        <span class="small fw-semibold">Total Ulasan Masuk</span>
+                                        <i class="fas fa-comments fa-lg text-success"></i>
+                                    </div>
+                                    <h2 class="display-6 fw-bold mb-0 text-dark" id="statTotalRatings">0</h2>
+                                    <small class="text-muted">Ulasan dari pelanggan terverifikasi</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Star Distribution Breakdown -->
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
+                                <div class="card-body py-3">
+                                    <span class="small fw-bold text-dark d-block mb-2">Distribusi Bintang</span>
+                                    <div class="d-flex align-items-center gap-2 mb-1" style="font-size: 0.75rem;">
+                                        <span class="fw-bold" style="width: 20px;">5★</span>
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" id="barScore5" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-muted" id="countScore5">0</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mb-1" style="font-size: 0.75rem;">
+                                        <span class="fw-bold" style="width: 20px;">4★</span>
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-info" id="barScore4" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-muted" id="countScore4">0</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mb-1" style="font-size: 0.75rem;">
+                                        <span class="fw-bold" style="width: 20px;">3★</span>
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-secondary" id="barScore3" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-muted" id="countScore3">0</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2" style="font-size: 0.75rem;">
+                                        <span class="fw-bold" style="width: 20px;">1-2★</span>
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-danger" id="barScoreLow" style="width: 0%"></div>
+                                        </div>
+                                        <span class="text-muted" id="countScoreLow">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter & Search Toolbar -->
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px;">
+                        <div class="card-body p-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex flex-wrap gap-2" id="filterTabs">
+                                        <button class="btn btn-sm btn-primary active px-3 filter-btn" data-score="">Semua Ulasan</button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="5">⭐⭐⭐⭐⭐ (5 Stars)</button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="4">⭐⭐⭐⭐ (4 Stars)</button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="3">⭐⭐⭐ (3 Stars)</button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="1">⭐ (1-2 Stars)</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Cari isi ulasan atau tag...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews List Feed -->
+                    <div id="reviewsContainer">
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-circle-notch fa-spin fa-2x mb-3 text-primary"></i>
+                            <div>Memuat daftar ulasan pelanggan...</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer Web Component -->
+            <admin-footer></admin-footer>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" style="color: #0B1739;"><i class="fas fa-reply text-primary me-2"></i>Kirim Balasan Resmi Outlet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <input type="hidden" id="replyRatingId" />
+                    <div class="mb-3 p-3 bg-light" style="border-radius: 10px; font-size: 0.88rem;">
+                        <span class="fw-bold text-dark d-block mb-1" id="replyCustomerName">Customer</span>
+                        <div class="text-muted" id="replyReviewText">"Ulasan pelanggan..."</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="adminReplyInput" class="form-label fw-semibold text-dark small">Pesan Balasan Admin</label>
+                        <textarea id="adminReplyInput" class="form-control" rows="4" placeholder="Tulis ucapan terima kasih atau solusi penanganan keluhan pelanggan..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="btnSubmitReply" class="btn btn-primary px-4" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px;">Kirim Balasan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        let currentScoreFilter = '';
+        let currentSearchQuery = '';
+
+        async function loadRatings() {
+            const container = document.getElementById('reviewsContainer');
+            try {
+                let endpoint = '/admin/ratings?';
+                if (currentScoreFilter) endpoint += `score=${currentScoreFilter}&`;
+                if (currentSearchQuery) endpoint += `search=${encodeURIComponent(currentSearchQuery)}&`;
+
+                const res = await apiFetch(endpoint);
+                if (res && res.success && res.data) {
+                    const { ratings, stats } = res.data;
+
+                    // Update Top Stats Card
+                    if (stats) {
+                        document.getElementById('statAvgBranch').textContent = stats.avg_branch_score || '5.0';
+                        document.getElementById('statAvgCourier').textContent = stats.avg_courier_score || '5.0';
+                        document.getElementById('statTotalRatings').textContent = stats.total_ratings || '0';
+
+                        const total = stats.total_ratings || 1;
+                        document.getElementById('barScore5').style.width = `${((stats.score_5_count || 0) / total) * 100}%`;
+                        document.getElementById('countScore5').textContent = stats.score_5_count || 0;
+
+                        document.getElementById('barScore4').style.width = `${((stats.score_4_count || 0) / total) * 100}%`;
+                        document.getElementById('countScore4').textContent = stats.score_4_count || 0;
+
+                        document.getElementById('barScore3').style.width = `${((stats.score_3_count || 0) / total) * 100}%`;
+                        document.getElementById('countScore3').textContent = stats.score_3_count || 0;
+
+                        const lowCount = (stats.score_2_count || 0) + (stats.score_1_count || 0);
+                        document.getElementById('barScoreLow').style.width = `${(lowCount / total) * 100}%`;
+                        document.getElementById('countScoreLow').textContent = lowCount;
+                    }
+
+                    if (!ratings || ratings.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-5 bg-white rounded-3 shadow-sm">
+                                <i class="fas fa-star-half-alt fa-3x text-secondary opacity-50 mb-3"></i>
+                                <h5 class="fw-bold text-dark mb-1">Belum Ada Ulasan</h5>
+                                <p class="text-muted small">Belum ada ulasan pelanggan yang sesuai dengan filter ini.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = ratings.map(r => renderReviewCard(r)).join('');
+                }
+            } catch (err) {
+                console.error('Error loading ratings:', err);
+                container.innerHTML = `
+                    <div class="alert alert-danger py-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Gagal memuat ulasan pelanggan: ${err.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderReviewCard(r) {
+            const customerName = r.customer ? (r.customer.username || r.customer.email) : 'Pelanggan';
+            const courierName = r.courier ? (r.courier.username || 'Kurir') : 'Kurir';
+            const branchName = r.branch ? (r.branch.name || 'Outlet Utama') : 'Outlet';
+            const dateStr = new Date(r.created_at || r.CreatedAt).toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            // Star render helper
+            const renderStars = (score) => {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= Math.floor(score)) {
+                        stars += '<i class="fas fa-star text-warning me-1"></i>';
+                    } else if (i - score <= 0.5) {
+                        stars += '<i class="fas fa-star-half-alt text-warning me-1"></i>';
+                    } else {
+                        stars += '<i class="far fa-star text-muted opacity-50 me-1"></i>';
+                    }
+                }
+                return stars;
+            };
+
+            // Tags pills
+            let tagsHTML = '';
+            if (r.tags) {
+                tagsHTML = r.tags.split(',').map(tag => `
+                    <span class="badge bg-light text-primary border border-primary-subtle me-1 mb-1 fw-normal" style="font-size: 0.75rem;">
+                        <i class="fas fa-tag me-1"></i>${tag.trim()}
+                    </span>
+                `).join('');
+            }
+
+            // Admin reply badge & content
+            let replyContent = '';
+            if (r.admin_reply) {
+                const replyDate = r.replied_at ? new Date(r.replied_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                replyContent = `
+                    <div class="mt-3 p-3" style="background: #F8FAFC; border-left: 4px solid #0007B0; border-radius: 8px;">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-bold small text-primary"><i class="fas fa-store me-1"></i>Balasan Resmi myLaundry Outlet</span>
+                            <small class="text-muted">${replyDate}</small>
+                        </div>
+                        <div class="text-dark small">${r.admin_reply}</div>
+                    </div>
+                `;
+            } else {
+                replyContent = `
+                    <div class="mt-3 d-flex justify-content-end">
+                        <button class="btn btn-sm btn-outline-primary fw-semibold px-3" onclick="openReplyModal(${r.id}, '${customerName.replace(/'/g, "\\'")}', '${(r.review_text || '').replace(/'/g, "\\'")}')" style="border-radius: 8px;">
+                            <i class="fas fa-reply me-1"></i>Balas Ulasan Ini
+                        </button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="card border-0 shadow-sm mb-3" style="border-radius: 14px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px; font-size: 1.1rem;">
+                                    ${customerName.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">${customerName}</h6>
+                                    <small class="text-muted">Pesanan <a href="detail-pesanan.html?id=${r.order_id}" class="text-decoration-none fw-semibold">#${r.order_id}</a> &bull; ${branchName} &bull; ${dateStr}</small>
+                                </div>
+                            </div>
+                            <span class="badge ${r.admin_reply ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning-emphasis border border-warning'}" style="font-size: 0.78rem;">
+                                ${r.admin_reply ? '<i class="fas fa-check-circle me-1"></i>Sudah Dibalas' : '<i class="fas fa-clock me-1"></i>Belum Dibalas'}
+                            </span>
+                        </div>
+
+                        <!-- Scores -->
+                        <div class="row g-2 mb-3 bg-light p-2 rounded-3" style="font-size: 0.85rem;">
+                            <div class="col-md-6 d-flex align-items-center justify-content-between">
+                                <span class="text-muted"><i class="fas fa-store text-primary me-2"></i>Layanan Outlet:</span>
+                                <div>${renderStars(r.branch_score)} <strong class="ms-1 text-dark">${r.branch_score}</strong></div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center justify-content-between">
+                                <span class="text-muted"><i class="fas fa-truck-moving text-info me-2"></i>Kurir (${courierName}):</span>
+                                <div>${renderStars(r.courier_score)} <strong class="ms-1 text-dark">${r.courier_score}</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Review Text & Tags -->
+                        <div class="mb-2">
+                            ${tagsHTML}
+                        </div>
+                        <p class="text-dark mb-0 fs-6" style="line-height: 1.5;">
+                            "${r.review_text || 'Tidak ada catatan ulasan tertulis.'}"
+                        </p>
+
+                        <!-- Reply Section -->
+                        ${replyContent}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openReplyModal(id, customerName, reviewText) {
+            document.getElementById('replyRatingId').value = id;
+            document.getElementById('replyCustomerName').textContent = customerName;
+            document.getElementById('replyReviewText').textContent = reviewText ? `"${reviewText}"` : 'Tidak ada ulasan tertulis.';
+            document.getElementById('adminReplyInput').value = '';
+
+            const modal = new bootstrap.Modal(document.getElementById('replyModal'));
+            modal.show();
+        }
+
+        document.getElementById('btnSubmitReply').addEventListener('click', async () => {
+            const id = document.getElementById('replyRatingId').value;
+            const adminReply = document.getElementById('adminReplyInput').value.trim();
+
+            if (!adminReply) {
+                alert('Silakan tuliskan pesan balasan ulasan terlebih dahulu.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitReply');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Mengirim...';
+
+            try {
+                const res = await apiFetch(`/admin/ratings/${id}/reply`, {
+                    method: 'POST',
+                    body: { admin_reply: adminReply }
+                });
+
+                if (res && res.success) {
+                    alert('Balasan ulasan berhasil dikirim!');
+                    bootstrap.Modal.getInstance(document.getElementById('replyModal')).hide();
+                    loadRatings();
+                }
+            } catch (err) {
+                alert('Gagal mengirim balasan: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Kirim Balasan';
+            }
+        });
+
+        // Filter tabs listener
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('btn-primary', 'active');
+                    b.classList.add('btn-outline-secondary');
+                });
+                this.classList.remove('btn-outline-secondary');
+                this.classList.add('btn-primary', 'active');
+
+                currentScoreFilter = this.dataset.score;
+                loadRatings();
+            });
+        });
+
+        // Search listener
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearchQuery = this.value.trim();
+                loadRatings();
+            }, 400);
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadRatings();
+        });
+    </script>
+</body>
+</html>

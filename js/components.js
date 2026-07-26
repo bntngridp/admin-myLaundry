@@ -127,6 +127,7 @@ class AdminSidebar extends HTMLElement {
             { key: "menu_products", defaultName: "Products", href: "produk.html", icon: "fas fa-tshirt" },
             { key: "menu_promo", defaultName: "Promo & Voucher", href: "promo.html", icon: "fas fa-tags" },
             { key: "menu_finance", defaultName: "Keuangan & Setoran", href: "keuangan.html", icon: "fas fa-wallet" },
+            { key: "menu_reviews", defaultName: "Ulasan & Rating", href: "ulasan.html", icon: "fas fa-star" },
             { key: "menu_branches", defaultName: "Cabang", href: "cabang.html", icon: "fas fa-store" }
         ];
 
