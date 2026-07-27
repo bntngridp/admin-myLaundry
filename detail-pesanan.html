@@ -48,6 +48,11 @@
             color: #0007B0;
         }
 
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         @media print {
             /* Hide web layout UI elements */
             nav, 
@@ -393,7 +398,71 @@
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Input Berat Laundry Card -->
+                        <div class="detail-card" id="card-set-weight" style="display: none; border: 2px solid #e0f2fe; background: linear-gradient(135deg, #f0f9ff, #ffffff);">
+                            <h5 style="color: #0369a1;">
+                                <i class="fas fa-weight-hanging me-2" style="color: #0369a1;"></i>Input Berat Laundry
+                            </h5>
+                            <p class="text-muted small mb-3">
+                                <i class="fas fa-info-circle me-1 text-info"></i>
+                                Masukkan berat/jumlah laundry dari outlet. Sistem akan menghitung total otomatis.
+                            </p>
+
+                            <!-- Service Info Summary -->
+                            <div id="weight-service-info" class="mb-3 p-3 rounded" style="background: #f0f9ff; border: 1px solid #bae6fd;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="text-muted small fw-semibold">Layanan</div>
+                                        <div class="fw-bold" id="ws-service-name" style="color: #0B1739;">-</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-muted small fw-semibold">Harga Satuan</div>
+                                        <div class="fw-bold text-primary" id="ws-unit-price">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weight/Quantity Input -->
+                            <div id="weight-input-group" class="mb-3">
+                                <label class="form-label fw-semibold text-muted small" id="ws-input-label">Berat (kg)</label>
+                                <div class="input-group">
+                                    <input 
+                                        type="number" 
+                                        id="ws-value-input" 
+                                        class="form-control form-control-lg" 
+                                        placeholder="0.0" 
+                                        step="0.5" 
+                                        min="0.5" 
+                                        style="border-radius: 10px 0 0 10px; font-size: 1.3rem; font-weight: 700; color: #0B1739;"
+                                        oninput="previewTotal()"
+                                    >
+                                    <span class="input-group-text fw-bold" id="ws-unit-badge" style="border-radius: 0 10px 10px 0; background: #e0f2fe; color: #0369a1; font-size: 1rem;">kg</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Preview Total -->
+                            <div id="ws-preview-total" class="mb-4 p-3 rounded text-center" style="background: #dcfce7; border: 1px solid #86efac; display: none;">
+                                <div class="text-muted small fw-semibold">Estimasi Total</div>
+                                <div class="fw-bold" id="ws-preview-amount" style="font-size: 1.6rem; color: #15803d;">Rp0</div>
+                                <div class="text-muted" style="font-size: 0.75rem;" id="ws-preview-formula">-</div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button 
+                                id="btn-set-weight"
+                                class="btn w-100 py-2 fw-bold" 
+                                style="background: linear-gradient(135deg, #0369a1, #0007B0); color: white; border-radius: 10px; font-size: 1rem;"
+                                onclick="submitWeight()"
+                            >
+                                <i class="fas fa-save me-2"></i>Simpan & Kirim Notifikasi ke Customer
+                            </button>
+                            <div class="text-muted text-center mt-2" style="font-size: 0.75rem;">
+                                <i class="fas fa-bell me-1"></i>Customer akan mendapat notifikasi total yang harus dibayar
+                            </div>
+                        </div>
                     </div>
+
                 <!-- Print Footer -->
                 <div class="d-none d-print-block text-center mt-5" id="print-footer">
                     <div style="border-top: 2px dashed #dee2e6; margin-bottom: 15px;"></div>
@@ -461,13 +530,20 @@
     const statusClasses = {
         'pending': { bg: '#fee2e2', text: '#b91c1c', label: 'Pending' },
         'awaiting payment': { bg: '#fef3c7', text: '#d97706', label: 'Awaiting Payment' },
+        'waiting for courier approval': { bg: '#fef9c3', text: '#854d0e', label: 'Menunggu Kurir' },
+        'kurir on the way': { bg: '#dbeafe', text: '#1d4ed8', label: 'Kurir On The Way' },
+        'arrived - proses pembayaran': { bg: '#fde68a', text: '#92400e', label: 'Tiba — Proses Pembayaran' },
         'courier en route': { bg: '#dbeafe', text: '#1d4ed8', label: 'Courier En Route' },
         'arrived': { bg: '#e0e7ff', text: '#4338ca', label: 'Courier Arrived' },
         'in progress': { bg: '#e0f2fe', text: '#0369a1', label: 'In Progress' },
         'completed': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
         'done': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
+        'delivering': { bg: '#d1fae5', text: '#065f46', label: 'Sedang Diantar' },
         'cancelled': { bg: '#fee2e2', text: '#b91c1c', label: 'Cancelled' }
     };
+
+    // Global order state for weight submission
+    let _currentOrder = null;
 
     async function loadOrderDetail() {
         try {
@@ -588,17 +664,147 @@
                 btnComplete.style.display = 'block';
                 btnComplete.disabled = false;
             } else {
-                // If order is not yet in progress (e.g. pending/awaiting payment), they cannot complete it yet.
-                // We keep it visible but disabled or update its text.
                 btnComplete.style.display = 'block';
                 btnComplete.disabled = true;
                 btnComplete.title = 'Pesanan harus berada dalam status In Progress sebelum diselesaikan.';
+            }
+
+            // === Show/hide weight input card ===
+            // Show if: order has no total_price set yet AND status allows weight input
+            const weightableStatuses = [
+                'waiting for courier approval',
+                'kurir on the way',
+                'in progress'
+            ];
+            const hasNoTotal = !order.total_price || order.total_price === 0;
+            const cardSetWeight = document.getElementById('card-set-weight');
+
+            if (weightableStatuses.includes(cleanStatus) && hasNoTotal) {
+                cardSetWeight.style.display = 'block';
+
+                // Store current order for weight submission
+                _currentOrder = order;
+
+                // Populate service info in weight card
+                const svcName = order.service ? order.service.title : '-';
+                const svcPrice = order.service ? (order.service.price || 0) : 0;
+                const svcCat = order.service ? (order.service.category || '') : '';
+                const isSatuan = svcCat.toLowerCase().includes('satuan');
+                const unitLabel = isSatuan ? 'pcs' : 'kg';
+                const stepVal = isSatuan ? '1' : '0.5';
+                const minVal = isSatuan ? '1' : '0.5';
+
+                document.getElementById('ws-service-name').textContent = svcName;
+                document.getElementById('ws-unit-price').textContent =
+                    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(svcPrice)
+                    + ' / ' + unitLabel;
+                document.getElementById('ws-input-label').textContent =
+                    isSatuan ? 'Jumlah (pcs)' : 'Berat (kg)';
+                document.getElementById('ws-unit-badge').textContent = unitLabel;
+
+                const inputEl = document.getElementById('ws-value-input');
+                inputEl.step = stepVal;
+                inputEl.min = minVal;
+                inputEl.placeholder = isSatuan ? '1' : '0.0';
+                inputEl.setAttribute('data-unit', unitLabel);
+                inputEl.setAttribute('data-price', svcPrice);
+                inputEl.setAttribute('data-is-satuan', isSatuan ? '1' : '0');
+            } else {
+                cardSetWeight.style.display = 'none';
             }
 
         } catch (error) {
             console.error('Error loading order detail:', error);
             alert('Gagal memuat detail pesanan: ' + error.message);
         }
+    }
+
+    // Preview total price realtime
+    function previewTotal() {
+        const inputEl = document.getElementById('ws-value-input');
+        const val = parseFloat(inputEl.value) || 0;
+        const price = parseFloat(inputEl.getAttribute('data-price')) || 0;
+        const isSatuan = inputEl.getAttribute('data-is-satuan') === '1';
+        const unit = inputEl.getAttribute('data-unit') || 'kg';
+        const total = price * val;
+
+        const previewBox = document.getElementById('ws-preview-total');
+        if (val > 0) {
+            previewBox.style.display = 'block';
+            document.getElementById('ws-preview-amount').textContent =
+                new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(total);
+            document.getElementById('ws-preview-formula').textContent =
+                `${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)} × ${val} ${unit}`;
+        } else {
+            previewBox.style.display = 'none';
+        }
+    }
+
+    // Submit weight to backend
+    async function submitWeight() {
+        const inputEl = document.getElementById('ws-value-input');
+        const val = parseFloat(inputEl.value) || 0;
+        const isSatuan = inputEl.getAttribute('data-is-satuan') === '1';
+
+        if (val <= 0) {
+            alert('Masukkan berat atau jumlah yang valid!');
+            return;
+        }
+
+        const btnSubmit = document.getElementById('btn-set-weight');
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+
+        try {
+            const payload = { order_id: orderId };
+            if (isSatuan) {
+                payload.quantity = Math.round(val);
+            } else {
+                payload.weight = val;
+            }
+
+            const result = await apiFetch('/orders/admin-set-weight', {
+                method: 'POST',
+                body: payload
+            });
+
+            if (result && result.success) {
+                // Show success toast
+                showToast('✅ Berhasil! Total laundry telah ditetapkan dan notifikasi dikirim ke customer.', 'success');
+                // Reload order detail to reflect new data
+                setTimeout(() => loadOrderDetail(), 1200);
+            } else {
+                throw new Error(result?.message || 'Gagal menyimpan berat');
+            }
+        } catch (err) {
+            console.error('Error submitting weight:', err);
+            showToast('❌ Gagal: ' + err.message, 'danger');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i>Simpan & Kirim Notifikasi ke Customer';
+        }
+    }
+
+    // Toast notification helper
+    function showToast(message, type = 'success') {
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px;';
+            document.body.appendChild(toastContainer);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} shadow-lg d-flex align-items-center`;
+        toast.style.cssText = 'min-width: 320px; max-width: 420px; border-radius: 12px; padding: 16px 20px; margin: 0; animation: slideInRight 0.3s ease;';
+        toast.innerHTML = `<span>${message}</span>`;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.4s ease';
+            setTimeout(() => toast.remove(), 400);
+        }, 4000);
     }
 
     // Complete Order Action
