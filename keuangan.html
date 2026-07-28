@@ -322,6 +322,7 @@
                 const res = await apiFetch('/admin/financial/summary');
                 if (res && res.success && res.data) {
                     cachedFinancialData = res.data;
+                    globalFinancialSummary = res.data; // Store globally for CSV export
                     renderFinancialTables(cachedFinancialData);
                 }
             } catch (err) {
@@ -385,34 +386,43 @@
                 return;
             }
 
-            const { stats, couriers, recent_deposits } = globalFinancialSummary;
+            // Use correct API field names: summary, courier_wallets, recent_deposits
+            const summary = globalFinancialSummary.summary || {};
+            const courier_wallets = globalFinancialSummary.courier_wallets || [];
+            const recent_deposits = globalFinancialSummary.recent_deposits || [];
+
             let csvContent = "data:text/csv;charset=utf-8,";
             
             // Header Stats
             csvContent += "REKAPITULASI KEUANGAN MYLAUNDRY\n";
             csvContent += `Tanggal Ekspor,${new Date().toLocaleString('id-ID')}\n`;
-            csvContent += `Total Pendapatan Lunas,Rp ${stats.total_revenue || 0}\n`;
-            csvContent += `Pembayaran Digital Midtrans,Rp ${stats.digital_revenue || 0}\n`;
-            csvContent += `Cash di Tangan Kurir (COD),Rp ${stats.total_cash_on_hand || 0}\n`;
-            csvContent += `Total Setoran Diterima Kasir,Rp ${stats.total_deposited_cash || 0}\n\n`;
+            csvContent += `Total Pendapatan Lunas,Rp ${summary.total_revenue || 0}\n`;
+            csvContent += `Pembayaran Digital Midtrans,Rp ${summary.digital_midtrans_revenue || 0}\n`;
+            csvContent += `Cash di Tangan Kurir (COD),Rp ${summary.cash_on_hand_couriers || 0}\n`;
+            csvContent += `Total Setoran Diterima Kasir,Rp ${summary.total_deposited_admin || 0}\n\n`;
 
             // Courier Cash Balances Table
             csvContent += "DAFTAR CASH ON HAND KURIR\n";
-            csvContent += "ID Kurir,Nama Kurir,Email,Telepon,Cash Pegangan (COD)\n";
-            if (couriers && couriers.length > 0) {
-                couriers.forEach(c => {
-                    csvContent += `"${c.id}","${c.username}","${c.email}","${c.phone || '-'}","${c.cash_on_hand || 0}"\n`;
+            csvContent += "ID Kurir,Nama Kurir,Email,No HP,Cash di Tangan (COD),Total Komisi\n";
+            if (courier_wallets && courier_wallets.length > 0) {
+                courier_wallets.forEach(w => {
+                    const courier = w.courier || {};
+                    csvContent += `"${w.courier_id}","${courier.username || '-'}","${courier.email || '-'}","${courier.phone_number || '-'}","${w.cash_on_hand || 0}","${w.total_earnings || 0}"\n`;
                 });
             } else {
-                csvContent += "Tidak ada data kurir.\n";
+                csvContent += "Tidak ada data dompet kurir.\n";
             }
 
             csvContent += "\nRIWAYAT SETORAN TUNAI TERAKHIR\n";
             csvContent += "ID Setoran,ID Kurir,Nama Kurir,Nominal Setoran,Tanggal Setoran,Catatan\n";
             if (recent_deposits && recent_deposits.length > 0) {
                 recent_deposits.forEach(d => {
-                    csvContent += `"${d.id}","${d.courier_id}","${d.courier_name}","${d.amount}","${new Date(d.created_at).toLocaleString('id-ID')}","${d.notes || '-'}"\n`;
+                    const depositedAt = d.deposited_at || d.CreatedAt || d.created_at;
+                    const courierName = d.courier ? d.courier.username : `Kurir #${d.courier_id}`;
+                    csvContent += `"${d.ID || d.id}","${d.courier_id}","${courierName}","${d.amount}","${new Date(depositedAt).toLocaleString('id-ID')}","${d.notes || '-'}"\n`;
                 });
+            } else {
+                csvContent += "Belum ada riwayat setoran tunai.\n";
             }
 
             const encodedUri = encodeURI(csvContent);
@@ -425,18 +435,6 @@
         }
 
         document.getElementById('btnExportFinancialCSV').addEventListener('click', exportFinancialCSV);
-
-        // Store summary globally on fetch success
-        const originalLoadFinancialData = loadFinancialData;
-        loadFinancialData = async function() {
-            try {
-                const res = await apiFetch('/admin/financial/summary');
-                if (res && res.success && res.data) {
-                    globalFinancialSummary = res.data;
-                }
-            } catch (e) {}
-            return originalLoadFinancialData();
-        };
 
         window.addEventListener('DOMContentLoaded', () => {
             if (window.i18n) window.i18n.applyTranslations();

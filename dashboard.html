@@ -275,12 +275,23 @@
 
             // Status Mappers
             const statusClasses = {
+                // Indonesian statuses (from backend)
+                'selesai': 'selesai',
+                'dibatalkan': 'dibatalkan',
+                'diproses': 'kurir-dalam-perjalanan',
+                'dikonfirmasi': 'kurir-dalam-perjalanan',
+                'dijemput': 'kurir-dalam-perjalanan',
+                'diantar': 'kurir-dalam-perjalanan',
+                'menunggu_pembayaran': 'menunggu-pembayaran',
+                'menunggu pembayaran': 'menunggu-pembayaran',
+                // English statuses
                 'awaiting payment': 'menunggu-pembayaran',
                 'pending': 'menunggu-pembayaran',
                 'courier en route': 'kurir-dalam-perjalanan',
                 'arrived': 'kurir-dalam-perjalanan',
                 'in progress': 'kurir-dalam-perjalanan',
                 'completed': 'selesai',
+                'done': 'selesai',
                 'cancelled': 'dibatalkan'
             };
 
@@ -292,6 +303,15 @@
             function getStatusLabel(status) {
                 if (!status) return window.i18n ? window.i18n.t('status_awaiting_payment') : 'Menunggu Pembayaran';
                 const s = status.toLowerCase();
+                // Indonesian statuses
+                if (s === 'selesai') return 'Selesai';
+                if (s === 'dibatalkan') return 'Dibatalkan';
+                if (s === 'diproses') return 'Sedang Diproses';
+                if (s === 'dikonfirmasi') return 'Dikonfirmasi';
+                if (s === 'dijemput') return 'Sedang Dijemput';
+                if (s === 'diantar') return 'Sedang Diantar';
+                if (s === 'menunggu_pembayaran' || s === 'menunggu pembayaran') return 'Menunggu Pembayaran';
+                // English statuses
                 if (s === 'completed' || s === 'done') return window.i18n ? window.i18n.t('status_completed') : 'Selesai';
                 if (s === 'cancelled') return window.i18n ? window.i18n.t('status_cancelled') : 'Dibatalkan';
                 if (s === 'in progress') return window.i18n ? window.i18n.t('status_in_progress') : 'Sedang Diproses';
@@ -411,8 +431,9 @@
                         const day = date.getDay();
                         const hour = date.getHours();
                         const price = order.total_price || 0;
+                        const orderStatus = (order.status || '').toLowerCase();
 
-                        if (order.status && (order.status.toLowerCase() === 'completed' || order.status.toLowerCase() === 'done')) {
+                        if (orderStatus === 'selesai' || orderStatus === 'completed' || orderStatus === 'done') {
                             totalSalesVal += price;
 
                             // Group Monthly
