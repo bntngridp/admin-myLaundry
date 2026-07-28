@@ -72,6 +72,13 @@ class AdminNavbar extends HTMLElement {
                 </form>
                 
                 <div class="d-flex align-items-center me-3 me-lg-4">
+                    <!-- Branch Selector Dropdown -->
+                    <div class="me-2">
+                        <select id="globalBranchSelect" class="form-select form-select-sm fw-bold border-primary text-primary" style="border-radius: 8px; font-size: 0.82rem; background-color: #F0F4FF;" onchange="window.handleBranchChange(this.value)">
+                            <option value="">🏢 Semua Cabang</option>
+                        </select>
+                    </div>
+
                     <!-- Language Switcher Dropdown -->
                     <div class="dropdown me-2">
                         <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 py-1 px-2" id="dropdownLang" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px; font-size: 0.82rem; font-weight: 600; background-color: #f8fafc;">
@@ -111,6 +118,7 @@ class AdminNavbar extends HTMLElement {
                 </div>
             </nav>
         `;
+        setTimeout(() => loadBranchSelectorOptions(), 50);
     }
 }
 customElements.define('admin-navbar', AdminNavbar);
@@ -420,13 +428,39 @@ function initializeAuthInteractions() {
     });
 }
 
+window.handleBranchChange = function(val) {
+    if (val) {
+        localStorage.setItem('selected_branch_id', val);
+    } else {
+        localStorage.removeItem('selected_branch_id');
+    }
+    window.location.reload();
+};
+
+async function loadBranchSelectorOptions() {
+    const select = document.getElementById('globalBranchSelect');
+    if (!select) return;
+
+    try {
+        const res = await fetch('http://localhost:8083/api/branches');
+        const result = await res.json();
+        if (res.ok && result.success && Array.isArray(result.data)) {
+            const currentSelected = localStorage.getItem('selected_branch_id') || '';
+            select.innerHTML = '<option value="">🏢 Semua Cabang</option>' + 
+                result.data.map(b => `<option value="${b.id}" ${String(b.id) === String(currentSelected) ? 'selected' : ''}>📍 ${b.name}</option>`).join('');
+        }
+    } catch (_) {}
+}
+
 // Run as soon as possible
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         attachSidebarToggle();
         initializeAuthInteractions();
+        loadBranchSelectorOptions();
     });
 } else {
     attachSidebarToggle();
     initializeAuthInteractions();
+    loadBranchSelectorOptions();
 }
