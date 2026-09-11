@@ -13,6 +13,7 @@
             "nav_activity_log": "Log Aktivitas",
             "nav_sign_out": "Keluar",
             "nav_logged_in_as": "Masuk sebagai:",
+            "nav_all_branches": "Semua Cabang",
             
             // Sidebar Menu
             "menu_main": "Menu Utama",
@@ -173,8 +174,8 @@
             "promo_valid": "Masa Berlaku",
             "promo_expiry": "Batas Waktu",
             "promo_forever": "Berlaku Selamanya",
-            "promo_active": "● Aktif",
-            "promo_inactive": "○ Nonaktif",
+            "promo_active": "Aktif",
+            "promo_inactive": "Nonaktif",
             "promo_delete_confirm_title": "Hapus Promo Permanen?",
             "promo_delete_confirm_desc": "Apakah Anda yakin ingin menghapus promo ini?",
             "promo_delete_confirm_btn": "Ya, Hapus Promo",
@@ -192,7 +193,12 @@
             "settings_title": "Pengaturan Akun",
             "settings_subtitle": "Kelola profil dan preferensi keamanan",
 
+            // Reviews Page
+            "reviews_title": "Ulasan & Rating Pelanggan",
+            "reviews_subtitle": "Pantau ulasan kepuasan pelanggan, performa kurir, dan kirim balasan resmi outlet.",
+
             // Auth Pages (Login, Register, Forgot, Reset)
+            "auth_signin": "Masuk",
             "auth_signin_title": "Masuk ke myLaundry Admin",
             "auth_signin_subtitle": "Silakan masukkan email dan kata sandi Anda",
             "auth_email_label": "Alamat Email",
@@ -241,11 +247,12 @@
         },
         en: {
             // Navbar & General Header
-            "nav_search_placeholder": "Search for...",
+            "nav_search_placeholder": "Search...",
             "nav_settings": "Settings",
             "nav_activity_log": "Activity Log",
             "nav_sign_out": "Sign Out",
             "nav_logged_in_as": "Logged in as:",
+            "nav_all_branches": "All Branches",
 
             // Sidebar Menu
             "menu_main": "Main Menu",
@@ -406,8 +413,8 @@
             "promo_valid": "Valid Until",
             "promo_expiry": "Expiry Date",
             "promo_forever": "Valid Forever",
-            "promo_active": "● Active",
-            "promo_inactive": "○ Inactive",
+            "promo_active": "Active",
+            "promo_inactive": "Inactive",
             "promo_delete_confirm_title": "Delete Promo Permanently?",
             "promo_delete_confirm_desc": "Are you sure you want to delete this promo?",
             "promo_delete_confirm_btn": "Yes, Delete Promo",
@@ -425,7 +432,12 @@
             "settings_title": "Account Settings",
             "settings_subtitle": "Manage admin profile and security preferences",
 
+            // Reviews Page
+            "reviews_title": "Customer Reviews & Ratings",
+            "reviews_subtitle": "Monitor customer reviews, courier performance, and send official replies.",
+
             // Auth Pages (Login, Register, Forgot, Reset)
+            "auth_signin": "Sign In",
             "auth_signin_title": "myLaundry Admin Sign In",
             "auth_signin_subtitle": "Please enter your registered email and password",
             "auth_email_label": "Email Address",

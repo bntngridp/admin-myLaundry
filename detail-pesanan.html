@@ -775,7 +775,7 @@
 
             if (result && result.success) {
                 // Show success toast
-                showToast('✅ Berhasil! Total laundry telah ditetapkan dan notifikasi dikirim ke customer.', 'success');
+                showToast('<i class="fas fa-check-circle me-1"></i> Berhasil! Total laundry telah ditetapkan dan notifikasi dikirim ke customer.', 'success');
                 // Reload order detail to reflect new data
                 setTimeout(() => loadOrderDetail(), 1200);
             } else {
@@ -783,7 +783,7 @@
             }
         } catch (err) {
             console.error('Error submitting weight:', err);
-            showToast('❌ Gagal: ' + err.message, 'danger');
+            showToast('<i class="fas fa-exclamation-circle me-1"></i> Gagal: ' + err.message, 'danger');
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i>Simpan & Kirim Notifikasi ke Customer';
         }
@@ -885,25 +885,25 @@
                     // Motorbike Icon
                     const motorIcon = L.divIcon({
                         className: 'custom-motor-icon',
-                        html: `<div style="font-size: 34px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3)); transform: rotate(${courierLoc.heading || 0}deg); transition: all 0.5s ease-out;">🛵</div>`,
-                        iconSize: [40, 40],
-                        iconAnchor: [20, 20]
+                        html: `<div style="width: 38px; height: 38px; background: #0007B0; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,7,176,0.35); border: 2.5px solid #ffffff; transform: rotate(${courierLoc.heading || 0}deg); transition: all 0.5s ease-out;"><i class="fas fa-motorcycle" style="font-size: 15px;"></i></div>`,
+                        iconSize: [38, 38],
+                        iconAnchor: [19, 19]
                     });
 
                     // Outlet Icon
                     const outletIcon = L.divIcon({
                         className: 'custom-outlet-icon',
-                        html: `<div style="font-size: 28px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));">🏬</div>`,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16]
+                        html: `<div style="width: 34px; height: 34px; background: #2563EB; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(37,99,235,0.3); border: 2px solid #ffffff;"><i class="fas fa-store" style="font-size: 14px;"></i></div>`,
+                        iconSize: [34, 34],
+                        iconAnchor: [17, 17]
                     });
 
                     // Customer Destination Icon
                     const destIcon = L.divIcon({
                         className: 'custom-dest-icon',
-                        html: `<div style="font-size: 28px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));">🏠</div>`,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16]
+                        html: `<div style="width: 34px; height: 34px; background: #10B981; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(16,185,129,0.3); border: 2px solid #ffffff;"><i class="fas fa-home" style="font-size: 14px;"></i></div>`,
+                        iconSize: [34, 34],
+                        iconAnchor: [17, 17]
                     });
 
                     outletMarker = L.marker(outletLatLng, { icon: outletIcon }).addTo(trackingMap).bindPopup(`<b>${outletLoc.name || 'Outlet myLaundry'}</b>`);
@@ -943,6 +943,16 @@
         trackingInterval = setInterval(updateLiveTrackingMap, 3000);
     }
 
+    function formatChatMessageText(text) {
+        if (!text) return '';
+        return text
+            .replace(/📷/g, '<i class="fas fa-camera text-primary me-1"></i>')
+            .replace(/📹/g, '<i class="fas fa-video text-primary me-1"></i>')
+            .replace(/🎙️?/g, '<i class="fas fa-microphone text-primary me-1"></i>')
+            .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B50}]/gu, '')
+            .trim();
+    }
+
     // Chat Timeline & Delivery Proof Logic
     async function loadOrderChatTimeline() {
         if (!orderId) return;
@@ -977,7 +987,7 @@
                                 </div>
                                 <small class="text-muted" style="font-size: 0.75rem;">${dateStr}</small>
                             </div>
-                            <div class="text-dark my-1">${m.message || ''}</div>
+                            <div class="text-dark my-1">${formatChatMessageText(m.message)}</div>
                             ${isProof && m.image_url ? `
                                 <div class="mt-2">
                                     <div class="text-muted small mb-1 fw-semibold"><i class="fas fa-info-circle text-danger me-1"></i>Foto Bukti Laundry Digantung (Klik untuk memperbesar):</div>
@@ -1034,7 +1044,7 @@
                 const res = await apiFetch(`/chats/order/${orderId}`, {
                     method: 'POST',
                     body: {
-                        message: '📷 Bukti Pengiriman: Laundry telah digantung di pagar/pintu kamar (Customer tidak di lokasi).',
+                        message: 'Bukti Pengiriman: Laundry telah digantung di pagar/pintu kamar (Customer tidak di lokasi).',
                         image_url: base64Image,
                         message_type: 'DELIVERY_PROOF'
                     }

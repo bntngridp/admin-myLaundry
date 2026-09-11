@@ -45,8 +45,9 @@ document.head.appendChild(favicon);
 class AdminNavbar extends HTMLElement {
     connectedCallback() {
         const currentLang = window.i18n ? window.i18n.getLanguage() : (localStorage.getItem('app_lang') || 'id');
-        const langLabel = currentLang === 'en' ? '🇬🇧 English' : '🇮🇩 Indonesia';
+        const langLabel = currentLang === 'en' ? 'English' : 'Indonesia';
         const searchPlaceholder = window.i18n ? window.i18n.t('nav_search_placeholder') : 'Cari sesuatu...';
+        const allBranchesText = window.i18n ? window.i18n.t('nav_all_branches') : 'Semua Cabang';
         const settingsText = window.i18n ? window.i18n.t('nav_settings') : 'Settings';
         const activityLogText = window.i18n ? window.i18n.t('nav_activity_log') : 'Activity Log';
         const signOutText = window.i18n ? window.i18n.t('nav_sign_out') : 'Sign Out';
@@ -59,62 +60,57 @@ class AdminNavbar extends HTMLElement {
                 </a>
                 <!-- Sidebar Toggle -->
                 <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
-                    <i class="fas fa-bars" style="color: #0B1739; font-size: 1.25rem;"></i>
+                    <i class="fas fa-bars" style="color: #0B1739; font-size: 1.15rem;"></i>
                 </button>
-                <!-- Navbar Search -->
-                <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                    <div class="input-group">
-                        <input class="form-control" id="searchInput" type="text" placeholder="${searchPlaceholder}" data-i18n-placeholder="nav_search_placeholder" aria-label="Search" />
-                        <button class="btn btn-primary" id="btnNavbarSearch" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
                 
-                <div class="d-flex align-items-center me-3 me-lg-4">
-                    <!-- Branch Selector Dropdown -->
-                    <div class="me-2">
-                        <select id="globalBranchSelect" class="form-select form-select-sm fw-bold border-primary text-primary" style="border-radius: 8px; font-size: 0.82rem; background-color: #F0F4FF;" onchange="window.handleBranchChange(this.value)">
-                            <option value="">🏢 Semua Cabang</option>
+                <!-- Modern Minimalist Search Bar -->
+                <div class="header-search-wrapper d-none d-md-block ms-auto me-3">
+                    <i class="fas fa-search header-search-icon"></i>
+                    <input class="header-search-input" id="searchInput" type="text" placeholder="${searchPlaceholder}" data-i18n-placeholder="nav_search_placeholder" aria-label="Search" />
+                </div>
+                
+                <div class="d-flex align-items-center me-3 me-lg-4 gap-2">
+                    <!-- Branch Selector Dropdown (Minimalist, Zero Emoticons) -->
+                    <div>
+                        <select id="globalBranchSelect" class="form-select form-select-sm header-branch-select" onchange="window.handleBranchChange(this.value)">
+                            <option value="">${allBranchesText}</option>
                         </select>
                     </div>
 
-                    <!-- Language Switcher Dropdown -->
-                    <div class="dropdown me-2">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 py-1 px-2" id="dropdownLang" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px; font-size: 0.82rem; font-weight: 600; background-color: #f8fafc;">
-                            <i class="fas fa-globe text-primary"></i>
+                    <!-- Language Switcher Dropdown (Minimalist, Zero Emoticons) -->
+                    <div class="dropdown">
+                        <button class="btn btn-sm header-action-btn dropdown-toggle" id="dropdownLang" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe text-secondary me-1"></i>
                             <span>${langLabel}</span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownLang" style="border-radius: 12px; font-size: 0.85rem;">
+                        <ul class="dropdown-menu dropdown-menu-end header-dropdown-menu" aria-labelledby="dropdownLang">
                             <li>
-                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'id' ? 'active fw-bold' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('id');">
-                                    <span>🇮🇩 Bahasa Indonesia</span>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'id' ? 'active' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('id');">
+                                    <span>Bahasa Indonesia</span>
                                     ${currentLang === 'id' ? '<i class="fas fa-check text-primary ms-2"></i>' : ''}
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'en' ? 'active fw-bold' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('en');">
-                                    <span>🇬🇧 English</span>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between py-2 ${currentLang === 'en' ? 'active' : ''}" href="#" onclick="event.preventDefault(); window.i18n.setLanguage('en');">
+                                    <span>English</span>
                                     ${currentLang === 'en' ? '<i class="fas fa-check text-primary ms-2"></i>' : ''}
                                 </a>
                             </li>
                         </ul>
                     </div>
 
-                    <!-- Navbar Profile Dropdown -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user fa-fw" style="color: #0B1739;"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="navbarDropdown" style="border-radius: 12px; font-size: 0.85rem;">
-                                <li><a class="dropdown-item py-2" href="settings.html" data-i18n="nav_settings">${settingsText}</a></li>
-                                <li><a class="dropdown-item py-2" href="activity-log.html" data-i18n="nav_activity_log">${activityLogText}</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item text-danger py-2" href="login.html" data-i18n="nav_sign_out">${signOutText}</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <!-- Modern Navbar Profile Avatar Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-sm header-profile-btn dropdown-toggle" id="navbarDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User Profile">
+                            <i class="fas fa-user text-secondary" style="font-size: 0.95rem;"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end header-dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item py-2" href="settings.html" data-i18n="nav_settings">${settingsText}</a></li>
+                            <li><a class="dropdown-item py-2" href="activity-log.html" data-i18n="nav_activity_log">${activityLogText}</a></li>
+                            <li><hr class="dropdown-divider my-1" /></li>
+                            <li><a class="dropdown-item text-danger py-2" href="login.html" data-i18n="nav_sign_out">${signOutText}</a></li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
         `;
@@ -445,9 +441,9 @@ async function loadBranchSelectorOptions() {
         const res = await fetch('http://localhost:8083/api/branches');
         const result = await res.json();
         if (res.ok && result.success && Array.isArray(result.data)) {
-            const currentSelected = localStorage.getItem('selected_branch_id') || '';
-            select.innerHTML = '<option value="">🏢 Semua Cabang</option>' + 
-                result.data.map(b => `<option value="${b.id}" ${String(b.id) === String(currentSelected) ? 'selected' : ''}>📍 ${b.name}</option>`).join('');
+            const allBranchesText = window.i18n ? window.i18n.t('nav_all_branches') : 'Semua Cabang';
+            select.innerHTML = `<option value="">${allBranchesText}</option>` + 
+                result.data.map(b => `<option value="${b.id}" ${String(b.id) === String(currentSelected) ? 'selected' : ''}>${b.name}</option>`).join('');
         }
     } catch (_) {}
 }
