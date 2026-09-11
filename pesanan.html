@@ -29,12 +29,19 @@
                         </div>
                         <div id="alert-container" class="mt-3"></div>
                         <div class="card mb-4">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-table me-1"></i>
-                                    <span data-i18n="orders_list">Today's Orders</span>
+                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-table me-2 text-primary"></i>
+                                    <span class="fw-bold" data-i18n="orders_list">Today's Orders</span>
                                 </div>
-                                <div class="card-body">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="table-header-search">
+                                        <i class="fas fa-search table-search-icon"></i>
+                                        <input type="text" id="orderSearchInput" class="form-control form-control-sm table-search-input" placeholder="Cari pesanan..." data-i18n-placeholder="orders_search">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
                                     <table id="datatablesSimple" style="font-size: 13px">
                                         <thead>
                                         <tr>
@@ -73,7 +80,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
                 </main>
                 <admin-footer></admin-footer>
             </div>
@@ -190,9 +196,17 @@
                     if (activeOrders.length > 0) {
                         const datatablesSimple = document.getElementById('datatablesSimple');
                         if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                            new simpleDatatables.DataTable(datatablesSimple, {
+                            const orderTable = new simpleDatatables.DataTable(datatablesSimple, {
+                                perPage: 10,
                                 perPageSelect: false
                             });
+
+                            const orderSearchInput = document.getElementById('orderSearchInput');
+                            if (orderSearchInput) {
+                                orderSearchInput.addEventListener('input', function() {
+                                    if (orderTable) orderTable.search(this.value);
+                                });
+                            }
                         }
                     }
 

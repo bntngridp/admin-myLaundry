@@ -37,14 +37,20 @@
                             <div class="card-footer small text-muted">Last updated yesterday at 11:59 PM.</div>
                         </div>
                         <div class="card mb-4">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-table me-1"></i>
-                                    <span data-i18n="courier_list">Courier Delivery List</span>
+                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-table me-2 text-primary"></i>
+                                    <span class="fw-bold" data-i18n="courier_list">Courier Delivery List</span>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCourierModal">
-                                    <i class="fas fa-plus me-1"></i> <span data-i18n="courier_add_btn">Tambah Kurir Baru</span>
-                                </button>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="table-header-search">
+                                        <i class="fas fa-search table-search-icon"></i>
+                                        <input type="text" id="courierSearchInput" class="form-control form-control-sm table-search-input" placeholder="Cari kurir..." data-i18n-placeholder="courier_search">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1 text-nowrap" data-bs-toggle="modal" data-bs-target="#addCourierModal">
+                                        <i class="fas fa-plus me-1"></i> <span data-i18n="courier_add_btn">Tambah Kurir Baru</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -294,8 +300,16 @@
                         const datatablesSimple = document.getElementById('datatablesSimple');
                         if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
                             dataTableInstance = new simpleDatatables.DataTable(datatablesSimple, {
+                                perPage: 10,
                                 perPageSelect: false
                             });
+
+                            const courierSearchInput = document.getElementById('courierSearchInput');
+                            if (courierSearchInput) {
+                                courierSearchInput.addEventListener('input', function() {
+                                    if (dataTableInstance) dataTableInstance.search(this.value);
+                                });
+                            }
                         }
                     }
 

@@ -695,37 +695,125 @@ a.dataTable-sorter:hover,
     text-decoration: none !important;
 }
 
-/* simple-datatables layout & hide entries per page */
-.datatable-dropdown {
+/* Hide simple-datatables built-in top bar (dropdown & duplicate search) */
+.datatable-dropdown,
+.datatable-top {
     display: none !important;
 }
 
-.datatable-top {
-    display: flex !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-    padding: 0 0 16px 0 !important;
+/* Card Header Search Bar */
+.table-header-search {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.datatable-top .datatable-search {
-    margin-left: auto !important;
+.table-header-search .table-search-icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.table-header-search .table-search-input {
+    padding-left: 36px !important;
+    padding-right: 14px !important;
+    height: 38px !important;
+    border-radius: 20px !important;
+    border: 1px solid #e2e8f0 !important;
+    font-size: 0.85rem !important;
+    width: 220px !important;
+    background-color: #f8fafc !important;
+    color: #1e293b !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.table-header-search .table-search-input:focus {
+    width: 280px !important;
+    background-color: #ffffff !important;
+    border-color: #0007B0 !important;
+    box-shadow: 0 0 0 3px rgba(0, 7, 176, 0.12) !important;
+    outline: none !important;
+}
+
+/* simple-datatables bottom & pagination (Pojok Kanan) */
+.datatable-bottom {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 16px 20px !important;
+    border-top: 1px solid #f1f5f9 !important;
+    background-color: #ffffff !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.datatable-info {
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
     float: none !important;
 }
 
-.datatable-top .datatable-input {
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 8px !important;
-    padding: 8px 14px !important;
-    font-size: 0.85rem !important;
-    outline: none !important;
-    box-shadow: none !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+.datatable-pagination {
+    margin: 0 !important;
+    float: none !important;
+    margin-left: auto !important; /* Always push to bottom right / pojok kanan */
 }
 
-.datatable-top .datatable-input:focus {
-    border-color: #0007b0 !important;
-    box-shadow: 0 0 0 3px rgba(0, 7, 176, 0.1) !important;
+.datatable-pagination ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    gap: 6px !important;
+    align-items: center !important;
 }
+
+.datatable-pagination li {
+    list-style: none !important;
+    float: none !important;
+}
+
+.datatable-pagination a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    padding: 0 10px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    color: #475569 !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.datatable-pagination a:hover {
+    background-color: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0007B0 !important;
+}
+
+.datatable-pagination .datatable-active a,
+.datatable-pagination .datatable-active a:hover,
+.datatable-pagination .datatable-active a:focus {
+    background-color: #0007B0 !important;
+    border-color: #0007B0 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 5px rgba(0, 7, 176, 0.25) !important;
+}
+
+.datatable-pagination .datatable-disabled a {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
 
 /* ==========================================================================
    ENTERPRISE ENTITY BADGES

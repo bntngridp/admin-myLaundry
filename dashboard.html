@@ -76,9 +76,17 @@
                             </div>
                         </div>
                         <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                <span data-i18n="dash_recent_orders">Today's Orders</span>
+                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-table me-2 text-primary"></i>
+                                    <span class="fw-bold" data-i18n="dash_recent_orders">Today's Orders</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="table-header-search">
+                                        <i class="fas fa-search table-search-icon"></i>
+                                        <input type="text" id="dashSearchInput" class="form-control form-control-sm table-search-input" placeholder="Cari pesanan..." data-i18n-placeholder="orders_search">
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -567,11 +575,12 @@
                 const datatablesSimple = document.getElementById('datatablesSimple');
                 if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
                     const dataTable = new simpleDatatables.DataTable(datatablesSimple, {
+                        paging: false,
                         perPageSelect: false
                     });
-                    const searchInput = document.getElementById('searchInput');
-                    if (searchInput) {
-                        searchInput.addEventListener('keyup', function() {
+                    const dashSearchInput = document.getElementById('dashSearchInput');
+                    if (dashSearchInput) {
+                        dashSearchInput.addEventListener('input', function() {
                             dataTable.search(this.value);
                         });
                     }
