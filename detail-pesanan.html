@@ -565,7 +565,7 @@
             }
 
             // Populate Text Info
-            document.getElementById('order-title-id').textContent = `#${order.id}`;
+            document.getElementById('order-title-id').textContent = formatOrderId(order.id);
             document.getElementById('customer-name').textContent = order.customer ? (order.customer.username || 'Guest') : 'Guest';
 
             const dateObj = new Date(order.created_at);

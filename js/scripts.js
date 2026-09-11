@@ -48,3 +48,25 @@ window.addEventListener('DOMContentLoaded', event => {
         }
     });
 });
+
+// Enterprise Entity Code Formatters
+window.formatOrderId = window.formatOrderId || function(id) {
+    if (!id && id !== 0) return '-';
+    return `#ORD-${String(id).padStart(4, '0')}`;
+};
+
+window.formatCourierId = window.formatCourierId || function(id) {
+    if (!id && id !== 0) return '-';
+    return `#KRR-${String(id).padStart(4, '0')}`;
+};
+
+window.formatProductId = window.formatProductId || function(id) {
+    if (!id && id !== 0) return '-';
+    return `#PRD-${String(id).padStart(4, '0')}`;
+};
+
+window.formatDepositId = window.formatDepositId || function(id) {
+    if (!id && id !== 0) return '-';
+    return `#DEP-${String(id).padStart(4, '0')}`;
+};
+

@@ -386,7 +386,7 @@
                                 const viewDetailsText = window.i18n ? window.i18n.t('btn_view_details') : 'Lihat Detail';
                                 
                                 row.innerHTML = `
-                                    <td>#${order.id}</td>
+                                    <td><span class="order-id-badge">${formatOrderId(order.id)}</span></td>
                                     <td>
                                         ${customerName} <br> <small class="text-muted">${customerEmail}</small>
                                     </td>
@@ -566,7 +566,9 @@
             function initDataTable() {
                 const datatablesSimple = document.getElementById('datatablesSimple');
                 if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                    const dataTable = new simpleDatatables.DataTable(datatablesSimple);
+                    const dataTable = new simpleDatatables.DataTable(datatablesSimple, {
+                        perPageSelect: false
+                    });
                     const searchInput = document.getElementById('searchInput');
                     if (searchInput) {
                         searchInput.addEventListener('keyup', function() {

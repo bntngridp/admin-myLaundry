@@ -4,16 +4,92 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="description" content="Riwayat Pesanan myLaundry Admin" />
         <title>Order History — myLaundry Admin</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/custom-components.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="js/i18n.js"></script>
         <!-- Custom Web Components -->
         <script src="js/components.js" defer></script>
+        <style>
+            .table-responsive {
+                border-radius: 0 0 16px 16px;
+                overflow-x: auto;
+            }
+            body #historyTable th, 
+            body #historyTable td {
+                padding: 12px 7px !important;
+                vertical-align: middle !important;
+                font-size: 0.83rem;
+            }
+            body #historyTable th {
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.04em !important;
+                color: #64748B !important;
+                background-color: #F8FAFC !important;
+            }
+            .order-id-badge {
+                font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #0007B0;
+                background: #EEF2FF;
+                padding: 3px 8px;
+                border-radius: 6px;
+                display: inline-block;
+                white-space: nowrap;
+            }
+            .service-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: #F1F5F9;
+                color: #334155;
+                padding: 3px 8px;
+                border-radius: 6px;
+                font-size: 0.76rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .filter-search-box {
+                position: relative;
+                width: 220px;
+                display: flex;
+                align-items: center;
+            }
+            .filter-search-box svg,
+            .filter-search-box i {
+                position: absolute !important;
+                left: 12px !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                color: #94A3B8 !important;
+                font-size: 0.85rem !important;
+                pointer-events: none !important;
+                z-index: 5 !important;
+                margin: 0 !important;
+            }
+            .filter-search-input {
+                padding-left: 34px !important;
+                border-radius: 10px !important;
+                border: 1px solid #E2E8F0 !important;
+                font-size: 0.84rem !important;
+                height: 38px !important;
+                background-color: #F8FAFC !important;
+                width: 100% !important;
+            }
+            .filter-search-input:focus {
+                background-color: #FFFFFF !important;
+                border-color: #0007B0 !important;
+                box-shadow: 0 0 0 3px rgba(0, 7, 176, 0.1) !important;
+            }
+            .history-filter-btn.active .badge {
+                background-color: rgba(255, 255, 255, 0.25) !important;
+                color: #ffffff !important;
+            }
+        </style>
     </head>
     <body class="sb-nav-fixed">
         <admin-navbar></admin-navbar>
@@ -21,56 +97,145 @@
             <admin-sidebar></admin-sidebar>
             <div id="layoutSidenav_content">
                 <main>
-                        <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                    <div class="container-fluid px-4">
+                        <!-- Header Section -->
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4 mb-4 gap-3">
                             <div>
                                 <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;" data-i18n="history_title">Riwayat Pesanan</h1>
                                 <p class="text-muted m-0" style="font-size: 0.88rem;" data-i18n="history_subtitle">Arsip lengkap pesanan selesai, dibatalkan, dan riwayat transaksi laundry</p>
                             </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                <span data-i18n="history_list">Order History Table</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold" style="border-radius: 10px;" onclick="loadHistory(true)">
+                                    <i class="fas fa-rotate-right me-1"></i>
+                                    <span>Refresh</span>
+                                </button>
+                                <button class="btn btn-outline-success btn-sm px-3 py-2 fw-semibold" style="border-radius: 10px;" onclick="exportHistoryCSV()">
+                                    <i class="fas fa-file-excel me-1"></i>
+                                    <span data-i18n="history_export">Ekspor CSV</span>
+                                </button>
                             </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                    <tr>
-                                        <th data-i18n="history_col_order">Order</th>
-                                        <th data-i18n="history_col_customer">Customer</th>
-                                        <th data-i18n="history_col_date">Date</th>
-                                        <th data-i18n="history_col_address">Address</th>
-                                        <th data-i18n="history_col_service">Service Type</th>
-                                        <th data-i18n="history_col_status">Status</th>
-                                        <th data-i18n="history_col_total">Total</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th data-i18n="history_col_order">Order</th>
-                                        <th data-i18n="history_col_customer">Customer</th>
-                                        <th data-i18n="history_col_date">Date</th>
-                                        <th data-i18n="history_col_address">Address</th>
-                                        <th data-i18n="history_col_service">Service Type</th>
-                                        <th data-i18n="history_col_status">Status</th>
-                                        <th data-i18n="history_col_total">Total</th>
-                                        <th></th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody id="ordersTableBody">
-                                        <tr>
-                                            <td colspan="8" class="text-center py-5 text-muted">
-                                                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
-                                                    <div class="spinner-border text-primary spinner-border-sm" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
+                        </div>
+
+                        <!-- 4 Stat Summary Cards -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="stat-card-custom">
+                                    <div class="stat-icon-wrapper" style="background: #EEF2FF; color: #4F46E5;">
+                                        <i class="fas fa-clock-rotate-left"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="history_stat_total">Total Riwayat</div>
+                                        <div id="statTotalHistory" class="fw-bold" style="font-size: 22px; color: #0F172A;">0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="stat-card-custom">
+                                    <div class="stat-icon-wrapper" style="background: #ECFDF5; color: #059669;">
+                                        <i class="fas fa-check-double"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="history_stat_completed">Pesanan Selesai</div>
+                                        <div id="statCompletedHistory" class="fw-bold" style="font-size: 22px; color: #059669;">0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="stat-card-custom">
+                                    <div class="stat-icon-wrapper" style="background: #FFF1F2; color: #E11D48;">
+                                        <i class="fas fa-ban"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="history_stat_cancelled">Pesanan Dibatalkan</div>
+                                        <div id="statCancelledHistory" class="fw-bold" style="font-size: 22px; color: #E11D48;">0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="stat-card-custom">
+                                    <div class="stat-icon-wrapper" style="background: #FEF3C7; color: #D97706;">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted" style="font-size: 12px; font-weight: 600;" data-i18n="history_stat_revenue">Akumulasi Omset</div>
+                                        <div id="statRevenueHistory" class="fw-bold" style="font-size: 20px; color: #0F172A;">Rp0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Table Card -->
+                        <div class="card mb-4 border-0 shadow-sm" style="border-radius: 16px;">
+                            <!-- Card Header: Filters & Search Toolbar -->
+                            <div class="card-header bg-white border-0 pt-4 px-4 pb-3">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                                    <!-- Filter Status Tabs -->
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <button type="button" class="history-filter-btn active" id="tabAll" onclick="setHistoryTab('all')">
+                                            <span data-i18n="history_tab_all">Semua Riwayat</span>
+                                            <span class="badge rounded-pill bg-light text-dark ms-1" id="countBadgeAll">0</span>
+                                        </button>
+                                        <button type="button" class="history-filter-btn" id="tabCompleted" onclick="setHistoryTab('completed')">
+                                            <span data-i18n="history_tab_completed">Selesai</span>
+                                            <span class="badge rounded-pill bg-success-subtle text-success ms-1" id="countBadgeCompleted">0</span>
+                                        </button>
+                                        <button type="button" class="history-filter-btn" id="tabCancelled" onclick="setHistoryTab('cancelled')">
+                                            <span data-i18n="history_tab_cancelled">Dibatalkan</span>
+                                            <span class="badge rounded-pill bg-danger-subtle text-danger ms-1" id="countBadgeCancelled">0</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Search & Service Filter -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="filter-search-box">
+                                            <i class="fas fa-magnifying-glass"></i>
+                                            <input type="text" id="historySearchInput" class="form-control filter-search-input" 
+                                                placeholder="Cari ID, pelanggan, alamat..." 
+                                                data-i18n-placeholder="history_search_placeholder"
+                                                oninput="handleHistorySearch(this.value)">
+                                        </div>
+                                        <select class="form-select form-select-sm border-light-subtle" id="historyServiceFilter" style="height: 38px; border-radius: 10px; font-size: 0.85rem; font-weight: 500; width: 160px;" onchange="handleServiceFilter(this.value)">
+                                            <option value="" data-i18n="history_filter_all_services">Semua Layanan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table Section -->
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0 w-100" id="historyTable" style="width: 100%;">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="ps-3" style="width: 8%;" data-i18n="history_col_order">Pesanan</th>
+                                                <th style="width: 17%;" data-i18n="history_col_customer">Pelanggan</th>
+                                                <th style="width: 12%;" data-i18n="history_col_date">Tanggal</th>
+                                                <th style="width: 20%;" data-i18n="history_col_address">Alamat Pengiriman</th>
+                                                <th style="width: 14%;" data-i18n="history_col_service">Jenis Layanan</th>
+                                                <th style="width: 9%;" data-i18n="history_col_status">Status</th>
+                                                <th style="width: 9%;" data-i18n="history_col_total">Total</th>
+                                                <th class="text-end pe-3" style="width: 11%;" data-i18n="history_col_action">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ordersTableBody">
+                                            <tr>
+                                                <td colspan="8" class="text-center py-5 text-muted">
+                                                    <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                                                        <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                        <span data-i18n="history_loading">Memuat riwayat pesanan...</span>
                                                     </div>
-                                                    <span data-i18n="history_loading">Memuat riwayat pesanan...</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Card Footer: Row count info -->
+                            <div class="card-footer bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                                <small class="text-muted" id="historyRowCountInfo">Menampilkan 0 data riwayat</small>
                             </div>
                         </div>
                     </div>
@@ -78,85 +243,248 @@
                 <admin-footer></admin-footer>
             </div>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/api.js"></script>
         <script>
-            // Status Mappers for Style Badges
-            const statusClasses = {
-                'completed': 'riwayat-selesai',
-                'done': 'riwayat-selesai',
-                'cancelled': 'riwayat-dibatalkan'
-            };
+            // Global state
+            let allHistoryOrders = [];
+            let currentFilterTab = 'all'; // 'all', 'completed', 'cancelled'
+            let searchKeyword = '';
+            let selectedServiceFilter = '';
 
-            let cachedHistoryOrders = null;
+            function isOrderCompleted(status) {
+                const s = (status || '').toLowerCase().trim();
+                return s === 'selesai' || s === 'completed' || s === 'done';
+            }
 
-            function getStatusClass(status) {
-                const key = (status || '').toLowerCase();
-                return statusClasses[key] || 'riwayat-selesai';
+            function isOrderCancelled(status) {
+                const s = (status || '').toLowerCase().trim();
+                return s === 'dibatalkan' || s === 'cancelled' || s === 'canceled';
+            }
+
+            function isHistoryOrder(status) {
+                return isOrderCompleted(status) || isOrderCancelled(status);
             }
 
             function getStatusLabel(status) {
-                if (!status) return window.i18n ? window.i18n.t('status_completed') : 'Completed';
-                const s = status.toLowerCase();
-                if (s === 'completed' || s === 'done') return window.i18n ? window.i18n.t('status_completed') : 'Completed';
-                if (s === 'cancelled') return window.i18n ? window.i18n.t('status_cancelled') : 'Cancelled';
-                return status.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                if (isOrderCompleted(status)) {
+                    return window.i18n ? window.i18n.t('status_completed') : 'Selesai';
+                }
+                if (isOrderCancelled(status)) {
+                    return window.i18n ? window.i18n.t('status_cancelled') : 'Dibatalkan';
+                }
+                return status || '-';
             }
 
-            function renderHistoryTable(orders) {
+            // Populate unique services in filter dropdown
+            function updateServiceFilterOptions(orders) {
+                const select = document.getElementById('historyServiceFilter');
+                if (!select) return;
+
+                const services = new Set();
+                orders.forEach(o => {
+                    if (o.service && o.service.title) {
+                        services.add(o.service.title);
+                    }
+                });
+
+                const currentVal = select.value;
+                const defaultText = window.i18n ? window.i18n.t('history_filter_all_services') : 'Semua Layanan';
+                let html = `<option value="">${defaultText}</option>`;
+                services.forEach(srv => {
+                    html += `<option value="${srv}" ${srv === currentVal ? 'selected' : ''}>${srv}</option>`;
+                });
+                select.innerHTML = html;
+            }
+
+            // Update 4 top stat cards & tab badges
+            function updateHistoryStats(orders) {
+                const total = orders.length;
+                let completedCount = 0;
+                let cancelledCount = 0;
+                let revenueSum = 0;
+
+                orders.forEach(o => {
+                    if (isOrderCompleted(o.status)) {
+                        completedCount++;
+                        revenueSum += Number(o.total_price || 0);
+                    } else if (isOrderCancelled(o.status)) {
+                        cancelledCount++;
+                    }
+                });
+
+                const statTotal = document.getElementById('statTotalHistory');
+                const statCompleted = document.getElementById('statCompletedHistory');
+                const statCancelled = document.getElementById('statCancelledHistory');
+                const statRevenue = document.getElementById('statRevenueHistory');
+
+                if (statTotal) statTotal.textContent = total;
+                if (statCompleted) statCompleted.textContent = completedCount;
+                if (statCancelled) statCancelled.textContent = cancelledCount;
+                if (statRevenue) {
+                    statRevenue.textContent = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0
+                    }).format(revenueSum);
+                }
+
+                // Badges on tabs
+                const badgeAll = document.getElementById('countBadgeAll');
+                const badgeCompleted = document.getElementById('countBadgeCompleted');
+                const badgeCancelled = document.getElementById('countBadgeCancelled');
+
+                if (badgeAll) badgeAll.textContent = total;
+                if (badgeCompleted) badgeCompleted.textContent = completedCount;
+                if (badgeCancelled) badgeCancelled.textContent = cancelledCount;
+            }
+
+            // Render table rows
+            function renderHistoryTable() {
                 const tbody = document.getElementById('ordersTableBody');
                 if (!tbody) return;
 
-                // Show only completed and cancelled orders
-                const historyOrders = orders.filter(order => {
-                    const status = (order.status || '').toLowerCase();
-                    return status === 'done' || status === 'completed' || status === 'cancelled';
+                // Apply tab filter
+                let filtered = allHistoryOrders.filter(order => {
+                    if (currentFilterTab === 'completed') return isOrderCompleted(order.status);
+                    if (currentFilterTab === 'cancelled') return isOrderCancelled(order.status);
+                    return true;
                 });
 
+                // Apply service filter
+                if (selectedServiceFilter) {
+                    filtered = filtered.filter(order => {
+                        const srvTitle = order.service ? order.service.title : '';
+                        return srvTitle === selectedServiceFilter;
+                    });
+                }
+
+                // Apply search keyword filter
+                if (searchKeyword) {
+                    const kw = searchKeyword.toLowerCase();
+                    filtered = filtered.filter(order => {
+                        const idStr = String(order.id);
+                        const customerName = order.customer ? (order.customer.username || '') : '';
+                        const customerEmail = order.customer ? (order.customer.email || '') : '';
+                        const addressText = order.address ? `${order.address.receiver_name || ''} ${order.address.street_name || ''} ${order.address.district || ''}` : '';
+                        const serviceName = order.service ? (order.service.title || '') : '';
+                        
+                        return idStr.includes(kw) ||
+                               customerName.toLowerCase().includes(kw) ||
+                               customerEmail.toLowerCase().includes(kw) ||
+                               addressText.toLowerCase().includes(kw) ||
+                               serviceName.toLowerCase().includes(kw);
+                    });
+                }
+
+                // Update row count label
+                const countInfo = document.getElementById('historyRowCountInfo');
+                if (countInfo) {
+                    const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                    if (lang === 'en') {
+                        countInfo.textContent = `Showing ${filtered.length} of ${allHistoryOrders.length} history records`;
+                    } else {
+                        countInfo.textContent = `Menampilkan ${filtered.length} dari ${allHistoryOrders.length} data riwayat`;
+                    }
+                }
+
                 tbody.innerHTML = '';
-                if (historyOrders.length > 0) {
-                    // Sort orders by ID descending (newest first)
-                    const sortedOrders = [...historyOrders].sort((a, b) => b.id - a.id);
-                    
-                    sortedOrders.forEach(order => {
+
+                if (filtered.length > 0) {
+                    // Sort descending by ID (newest first)
+                    const sorted = [...filtered].sort((a, b) => b.id - a.id);
+
+                    sorted.forEach(order => {
                         const row = document.createElement('tr');
                         
-                        const dateObj = new Date(order.created_at);
-                        const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-                        const lang = window.i18n ? window.i18n.getLanguage() : 'id';
-                        const locale = lang === 'en' ? 'en-US' : 'id-ID';
-                        const formattedDate = dateObj.toLocaleDateString(locale, options).replace(',', '');
-                        
-                        const guestStr = window.i18n ? window.i18n.t('guest_customer') : 'Guest';
-                        const noAddressStr = window.i18n ? window.i18n.t('no_address') : 'No Address';
-                        const viewDetailsStr = window.i18n ? window.i18n.t('btn_view_details') : 'View Details';
+                        // Parse date
+                        let formattedDate = '-';
+                        if (order.created_at) {
+                            try {
+                                const isoStr = String(order.created_at).replace(' ', 'T');
+                                const dateObj = new Date(isoStr);
+                                if (!isNaN(dateObj)) {
+                                    const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                                    const locale = lang === 'en' ? 'en-US' : 'id-ID';
+                                    formattedDate = dateObj.toLocaleDateString(locale, {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                }
+                            } catch (e) {
+                                formattedDate = order.created_at;
+                            }
+                        }
+
+                        const guestStr = window.i18n ? window.i18n.t('guest_customer') : 'Pelanggan Tamu';
+                        const noAddressStr = window.i18n ? window.i18n.t('no_address') : 'Tidak ada alamat';
+                        const viewDetailsStr = window.i18n ? window.i18n.t('history_btn_detail') : 'Lihat Detail';
 
                         const customerName = order.customer ? (order.customer.username || guestStr) : guestStr;
                         const customerEmail = order.customer ? (order.customer.email || '') : '';
-                        const addressText = order.address && order.address.street_name ? 
-                            `${order.address.receiver_name}, ${order.address.street_name}` : noAddressStr;
-                        const serviceText = order.service ? (order.service.title || 'Dry Clean') : 'Dry Clean';
                         
-                        const priceVal = order.total_price || 0;
-                        const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(priceVal);
-                        
+                        let addressHtml = noAddressStr;
+                        if (order.address && (order.address.street_name || order.address.receiver_name)) {
+                            const receiver = order.address.receiver_name ? `<span class="fw-semibold text-dark">${order.address.receiver_name}</span><br>` : '';
+                            const street = order.address.street_name || '';
+                            const area = order.address.district || order.address.city || '';
+                            const fullAddr = [street, area].filter(Boolean).join(', ');
+                            addressHtml = `${receiver}<small class="text-muted text-truncate d-inline-block" style="max-width: 170px;">${fullAddr}</small>`;
+                        }
+
+                        const serviceName = order.service ? (order.service.title || 'Dry Clean') : 'Layanan Laundry';
+                        const priceVal = Number(order.total_price || 0);
+                        const formattedTotal = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0
+                        }).format(priceVal);
+
+                        const completed = isOrderCompleted(order.status);
                         const statusLabel = getStatusLabel(order.status);
-                        const statusClass = getStatusClass(order.status);
-                        const bootstrapBtnClass = (order.status || '').toLowerCase() === 'cancelled' ? 'btn-danger' : 'btn-success';
-                        
+                        const badgeClass = completed ? 'badge-status-selesai' : 'badge-status-dibatalkan';
+                        const statusIcon = completed ? 'fas fa-check-circle' : 'fas fa-ban';
+
                         row.innerHTML = `
-                            <td>#${order.id}</td>
-                            <td>
-                                ${customerName} <br> <small class="text-muted">${customerEmail}</small>
+                            <td class="ps-3">
+                                <span class="order-id-badge">${formatOrderId(order.id)}</span>
                             </td>
-                            <td>${formattedDate}</td>
-                            <td>${addressText}</td>
-                            <td>${serviceText}</td>
-                            <td><span class="status-riwayat-pesanan ${statusClass} btn ${bootstrapBtnClass}">${statusLabel}</span></td>
-                            <td>${formattedTotal}</td>
-                            <td><a href="detail-riwayat-pesanan.html?id=${order.id}" class="details-btn btn btn-primary btn-sm">${viewDetailsStr}</a></td>
+                            <td>
+                                <div class="fw-semibold text-dark">${customerName}</div>
+                                ${customerEmail ? `<small class="text-muted" style="font-size: 0.78rem;">${customerEmail}</small>` : ''}
+                            </td>
+                            <td>
+                                <div class="text-dark fw-medium" style="font-size: 0.85rem;">${formattedDate}</div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem;">${addressHtml}</div>
+                            </td>
+                            <td>
+                                <span class="service-pill">
+                                    <i class="fas fa-shirt text-primary opacity-75"></i>
+                                    <span>${serviceName}</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="${badgeClass}">
+                                    <i class="${statusIcon}"></i>
+                                    <span>${statusLabel}</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-dark" style="font-size: 0.92rem;">${formattedTotal}</span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <a href="detail-riwayat-pesanan.html?id=${order.id}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold text-nowrap" style="font-size: 0.8rem; transition: all 0.2s;">
+                                    <i class="fas fa-eye me-1"></i>
+                                    <span>${viewDetailsStr}</span>
+                                </a>
+                            </td>
                         `;
                         tbody.appendChild(row);
                     });
@@ -166,43 +494,139 @@
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="8" class="text-center py-5 text-muted">
-                                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
-                                    <i class="fas fa-history fa-3x mb-2" style="color: #dee2e6;"></i>
-                                    <h5 class="fw-bold" style="color: #6c757d;">${emptyTitle}</h5>
-                                    <p class="text-muted small mb-0">${emptyDesc}</p>
+                                <div class="d-flex flex-column align-items-center justify-content-center gap-2 py-4">
+                                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                                        <i class="fas fa-clock-rotate-left fa-2x" style="color: #94A3B8;"></i>
+                                    </div>
+                                    <h5 class="fw-bold m-0" style="color: #334155;">${emptyTitle}</h5>
+                                    <p class="text-muted small mb-2" style="max-width: 400px;">${emptyDesc}</p>
+                                    ${(searchKeyword || selectedServiceFilter || currentFilterTab !== 'all') ? `
+                                        <button class="btn btn-sm btn-light border px-3 py-1 fw-semibold mt-1" onclick="resetAllFilters()">
+                                            <i class="fas fa-filter-circle-xmark me-1"></i> Reset Filter
+                                        </button>
+                                    ` : ''}
                                 </div>
                             </td>
                         </tr>
                     `;
                 }
-
-                // Initialize Simple DataTable only if there is data
-                if (historyOrders.length > 0) {
-                    const datatablesSimple = document.getElementById('datatablesSimple');
-                    if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                        new simpleDatatables.DataTable(datatablesSimple);
-                    }
-                }
             }
 
-            // Fetch and load order history
+            // Tab Switching Handler
+            function setHistoryTab(tab) {
+                currentFilterTab = tab;
+                document.querySelectorAll('.history-filter-btn').forEach(btn => btn.classList.remove('active'));
+                
+                if (tab === 'all') document.getElementById('tabAll').classList.add('active');
+                if (tab === 'completed') document.getElementById('tabCompleted').classList.add('active');
+                if (tab === 'cancelled') document.getElementById('tabCancelled').classList.add('active');
+
+                renderHistoryTable();
+            }
+
+            // Real-time Search Handler
+            function handleHistorySearch(val) {
+                searchKeyword = (val || '').trim();
+                renderHistoryTable();
+            }
+
+            // Service Filter Handler
+            function handleServiceFilter(val) {
+                selectedServiceFilter = val || '';
+                renderHistoryTable();
+            }
+
+            // Reset all filters
+            function resetAllFilters() {
+                searchKeyword = '';
+                selectedServiceFilter = '';
+                currentFilterTab = 'all';
+
+                const searchInput = document.getElementById('historySearchInput');
+                if (searchInput) searchInput.value = '';
+
+                const srvFilter = document.getElementById('historyServiceFilter');
+                if (srvFilter) srvFilter.value = '';
+
+                setHistoryTab('all');
+            }
+
+            // Export to CSV
+            function exportHistoryCSV() {
+                if (!allHistoryOrders || allHistoryOrders.length === 0) {
+                    alert('Tidak ada data riwayat untuk diekspor.');
+                    return;
+                }
+
+                const headers = ['Order ID', 'Pelanggan', 'Email', 'Tanggal', 'Alamat Pengiriman', 'Jenis Layanan', 'Status', 'Total Biaya (IDR)'];
+                const rows = allHistoryOrders.map(o => {
+                    const orderId = formatOrderId(o.id);
+                    const customerName = o.customer ? (o.customer.username || '') : '';
+                    const customerEmail = o.customer ? (o.customer.email || '') : '';
+                    const dateStr = o.created_at || '';
+                    const addressStr = o.address ? `${o.address.receiver_name || ''} - ${o.address.street_name || ''}, ${o.address.district || ''}` : '';
+                    const serviceStr = o.service ? o.service.title : '';
+                    const statusStr = isOrderCompleted(o.status) ? 'Selesai' : (isOrderCancelled(o.status) ? 'Dibatalkan' : o.status);
+                    const totalVal = o.total_price || 0;
+
+                    return [orderId, customerName, customerEmail, dateStr, addressStr, serviceStr, statusStr, totalVal]
+                        .map(field => `"${String(field).replace(/"/g, '""')}"`)
+                        .join(',');
+                });
+
+                const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `riwayat-pesanan-myLaundry-${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            // Fetch and load order history from API
             async function loadHistory(forceFetch = false) {
                 const tbody = document.getElementById('ordersTableBody');
                 if (!tbody) return;
 
-                if (cachedHistoryOrders && !forceFetch) {
-                    renderHistoryTable(cachedHistoryOrders);
+                if (!forceFetch && allHistoryOrders.length > 0) {
+                    renderHistoryTable();
                     return;
                 }
 
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                                <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span data-i18n="history_loading">Memuat riwayat pesanan...</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
                 try {
-                    const response = await apiFetch('/orders/');
+                    const branchId = localStorage.getItem('selected_branch_id');
+                    const branchParam = branchId ? `?branch_id=${branchId}` : '';
+                    const response = await apiFetch(`/orders/${branchParam}`);
+                    
                     if (!response || !response.success) {
                         throw new Error('Gagal mengambil riwayat pesanan dari API.');
                     }
 
-                    cachedHistoryOrders = response.data || [];
-                    renderHistoryTable(cachedHistoryOrders);
+                    const rawOrders = response.data || [];
+                    
+                    // Filter completed and cancelled orders (handling both id & en terms)
+                    allHistoryOrders = rawOrders.filter(order => isHistoryOrder(order.status));
+
+                    updateHistoryStats(allHistoryOrders);
+                    updateServiceFilterOptions(allHistoryOrders);
+                    renderHistoryTable();
+
                 } catch (error) {
                     console.error('Error loading history:', error);
                     const errorTitle = window.i18n ? window.i18n.t('history_error_title') : 'Gagal Memuat Data';
@@ -210,11 +634,13 @@
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="8" class="text-center py-5 text-danger">
-                                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
-                                    <i class="fas fa-exclamation-circle fa-3x mb-2" style="color: #dc3545;"></i>
-                                    <h5 class="fw-bold">${errorTitle}</h5>
-                                    <p class="small mb-0">${error.message || 'Koneksi ke server terputus. Silakan coba lagi.'}</p>
-                                    <button onclick="loadHistory(true)" class="btn btn-outline-danger btn-sm mt-2">${retryBtnText}</button>
+                                <div class="d-flex flex-column align-items-center justify-content-center gap-2 py-4">
+                                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #FEE2E2; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-exclamation-circle fa-2x" style="color: #DC2626;"></i>
+                                    </div>
+                                    <h5 class="fw-bold m-0" style="color: #991B1B;">${errorTitle}</h5>
+                                    <p class="small text-muted mb-2">${error.message || 'Koneksi ke server terputus. Silakan coba lagi.'}</p>
+                                    <button onclick="loadHistory(true)" class="btn btn-outline-danger btn-sm px-3 py-1 fw-semibold">${retryBtnText}</button>
                                 </div>
                             </td>
                         </tr>
@@ -222,17 +648,19 @@
                 }
             }
 
+            // Lifecycle & Event listeners
             window.addEventListener('DOMContentLoaded', () => {
                 if (window.i18n) window.i18n.applyTranslations();
-                loadHistory();
+                loadHistory(true);
             });
+
             window.addEventListener('languageChanged', () => {
                 if (window.i18n) window.i18n.applyTranslations();
-                if (cachedHistoryOrders) {
-                    renderHistoryTable(cachedHistoryOrders);
-                } else {
-                    loadHistory(true);
-                }
+                renderHistoryTable();
+            });
+
+            window.addEventListener('branchChanged', () => {
+                loadHistory(true);
             });
         </script>
     </body>

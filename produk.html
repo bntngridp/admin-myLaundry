@@ -168,7 +168,7 @@
                             const row = document.createElement('tr');
                             row.dataset.id = service.id;
                             row.innerHTML = `
-                                <td>#${service.id}</td>
+                                <td><span class="product-id-badge">${formatProductId(service.id)}</span></td>
                                 <td>${service.category}</td>
                                 <td>${service.title}</td>
                                 <td>${timeText}</td>
@@ -195,7 +195,9 @@
                         });
 
                         if (typeof simpleDatatables !== 'undefined') {
-                            productsDataTable = new simpleDatatables.DataTable(tableEl);
+                            productsDataTable = new simpleDatatables.DataTable(tableEl, {
+                                perPageSelect: false
+                            });
                             const searchInput = document.getElementById('searchInput');
                             if (searchInput) {
                                 searchInput.addEventListener('keyup', function() {

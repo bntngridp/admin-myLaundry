@@ -239,7 +239,7 @@
 
                             const phoneDisplay = courier.phone_number || '-';
                             row.innerHTML = `
-                                <td>#${courier.id}</td>
+                                <td><span class="courier-id-badge">${formatCourierId(courier.id)}</span></td>
                                 <td>
                                     ${courier.username} <br> <small class="text-muted">${courier.email}</small>
                                 </td>
@@ -293,7 +293,9 @@
                     if (couriers.length > 0) {
                         const datatablesSimple = document.getElementById('datatablesSimple');
                         if (datatablesSimple && !datatablesSimple.classList.contains('dataTable-table')) {
-                            dataTableInstance = new simpleDatatables.DataTable(datatablesSimple);
+                            dataTableInstance = new simpleDatatables.DataTable(datatablesSimple, {
+                                perPageSelect: false
+                            });
                         }
                     }
 

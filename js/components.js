@@ -54,12 +54,12 @@ class AdminNavbar extends HTMLElement {
 
         this.innerHTML = `
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-white">
-                <!-- Navbar Brand: logo always visible in navbar -->
-                <a href="dashboard.html" class="navbar-brand ps-3 d-flex align-items-center">
-                    <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
+                <!-- Navbar Brand: logo visible when sidebar is collapsed or on mobile -->
+                <a href="dashboard.html" class="navbar-brand navbar-brand-collapsed align-items-center">
+                    <img src="assets/img/logo-mylaundry.png" alt="myLaundry" class="navbar-brand-logo-img" style="height: 32px; width: auto; max-width: 150px; object-fit: contain;">
                 </a>
                 <!-- Sidebar Toggle -->
-                <button class="btn btn-link btn-sm ms-3" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                <button class="btn btn-link btn-sm ms-2 me-2" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
                     <i class="fas fa-bars" style="color: #0B1739; font-size: 1.15rem;"></i>
                 </button>
                 
@@ -166,9 +166,9 @@ class AdminSidebar extends HTMLElement {
         this.innerHTML = `
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="d-flex align-items-center justify-content-between px-3" style="height: 56px; border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
-                        <a href="dashboard.html" class="d-flex align-items-center">
-                            <img src="assets/img/logo-mylaundry.png" alt="myLaundry" style="width: 7rem;">
+                    <div class="sidebar-brand-header d-flex align-items-center justify-content-between px-3">
+                        <a href="dashboard.html" class="d-flex align-items-center text-decoration-none">
+                            <img src="assets/img/logo-mylaundry.png" alt="myLaundry" class="sidebar-brand-logo" style="height: 32px; width: auto; max-width: 155px; object-fit: contain;">
                         </a>
                         <button class="btn btn-link btn-sm p-0 d-lg-none" id="sidebarCloseMobile" type="button" aria-label="Close sidebar">
                             <i class="fas fa-times" style="color: #0B1739; font-size: 1.2rem;"></i>
@@ -460,3 +460,27 @@ if (document.readyState === 'loading') {
     initializeAuthInteractions();
     loadBranchSelectorOptions();
 }
+
+// =============================================
+// ENTERPRISE ENTITY CODE FORMATTERS
+// =============================================
+window.formatOrderId = function(id) {
+    if (!id && id !== 0) return '-';
+    return `#ORD-${String(id).padStart(4, '0')}`;
+};
+
+window.formatCourierId = function(id) {
+    if (!id && id !== 0) return '-';
+    return `#KRR-${String(id).padStart(4, '0')}`;
+};
+
+window.formatProductId = function(id) {
+    if (!id && id !== 0) return '-';
+    return `#PRD-${String(id).padStart(4, '0')}`;
+};
+
+window.formatDepositId = function(id) {
+    if (!id && id !== 0) return '-';
+    return `#DEP-${String(id).padStart(4, '0')}`;
+};
+
