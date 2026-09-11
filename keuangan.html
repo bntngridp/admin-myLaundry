@@ -274,8 +274,8 @@
                             <div class="text-muted small">${w.courier ? w.courier.email : ''}</div>
                         </td>
                         <td>${w.courier ? (w.courier.phone_number || '-') : '-'}</td>
-                        <td><span class="badge bg-warning text-dark px-3 py-2" style="font-size: 0.85rem;">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
-                        <td><span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.85rem;">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
+                        <td><span class="fw-semibold text-dark">Rp${(w.cash_on_hand || 0).toLocaleString('id-ID')}</span></td>
+                        <td><span class="fw-semibold text-dark">Rp${(w.total_earnings || 0).toLocaleString('id-ID')}</span></td>
                         <td>
                             <button class="btn-deposit-custom" onclick="openDepositModal(${w.courier_id}, '${w.courier ? w.courier.username.replace(/'/g, "\\'") : `${courierLabel} ${formatCourierId(w.courier_id)}`}', ${w.cash_on_hand})">
                                 <i class="fas fa-hand-holding-usd me-1"></i> ${receiveBtnText}
