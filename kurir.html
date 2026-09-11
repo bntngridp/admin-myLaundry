@@ -20,7 +20,12 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                    <h1 class="mt-4" data-i18n="courier_title">Couriers</h1>
+                        <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                            <div>
+                                <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;" data-i18n="courier_title">Kelola Kurir</h1>
+                                <p class="text-muted m-0" style="font-size: 0.88rem;" data-i18n="courier_subtitle">Kelola armada kurir, pantau performa pengiriman, dan status deposit</p>
+                            </div>
+                        </div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-chart-pie me-1"></i>
@@ -40,7 +45,7 @@
                                 <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCourierModal">
                                     <i class="fas fa-plus me-1"></i> <span data-i18n="courier_add_btn">Tambah Kurir Baru</span>
                                 </button>
-                            </div>v>
+                            </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>

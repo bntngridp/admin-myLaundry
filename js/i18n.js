@@ -35,7 +35,7 @@
 
             // Dashboard Page
             "dash_title": "Dashboard",
-            "dash_subtitle": "Ringkasan performa dan statistik bisnis myLaundry",
+            "dash_subtitle": "Ringkasan performa dan analitik bisnis myLaundry",
             "dash_total_orders": "Total Pesanan",
             "dash_active_couriers": "Kurir Aktif",
             "dash_revenue": "Total Pendapatan",
@@ -51,7 +51,8 @@
             "dash_reports": "Laporan",
 
             // Couriers Page
-            "courier_title": "Kurir",
+            "courier_title": "Kelola Kurir",
+            "courier_subtitle": "Kelola armada kurir, pantau performa pengiriman, dan status deposit",
             "courier_dispatched": "Total {busy} kurir bertugas dan {available} kurir bersiap (tersedia)",
             "courier_list": "Daftar Kurir Antar-Jemput",
             "courier_add_btn": "Tambah Kurir Baru",
@@ -71,7 +72,7 @@
 
             // Orders Page
             "orders_title": "Kelola Pesanan",
-            "orders_subtitle": "Kelola seluruh pesanan masuk dan alur pencucian",
+            "orders_subtitle": "Kelola dan pantau seluruh status pesanan masuk dan penugasan kurir",
             "orders_list": "Daftar Pesanan Aktif",
             "orders_search": "Cari pesanan...",
             "orders_col_id": "ID Pesanan",
@@ -87,7 +88,7 @@
 
             // Order History Page
             "history_title": "Riwayat Pesanan",
-            "history_subtitle": "Daftar pesanan yang telah selesai atau dibatalkan",
+            "history_subtitle": "Arsip lengkap pesanan selesai, dibatalkan, dan riwayat transaksi laundry",
             "history_list": "Tabel Riwayat Pesanan",
             "history_filter_date": "Filter Tanggal",
             "history_export": "Ekspor PDF/Excel",
@@ -284,6 +285,7 @@
 
             // Couriers Page
             "courier_title": "Couriers",
+            "courier_subtitle": "Manage courier fleet, monitor delivery performance, and deposit status",
             "courier_dispatched": "Total {busy} couriers busy and {available} couriers ready (available)",
             "courier_list": "Courier Delivery List",
             "courier_add_btn": "Add New Courier",
@@ -303,7 +305,7 @@
 
             // Orders Page
             "orders_title": "Manage Orders",
-            "orders_subtitle": "Manage all incoming orders and laundry workflow",
+            "orders_subtitle": "Manage and monitor all incoming orders and courier assignments",
             "orders_list": "Active Orders List",
             "orders_search": "Search orders...",
             "orders_col_id": "Order ID",
@@ -319,7 +321,7 @@
 
             // Order History Page
             "history_title": "Order History",
-            "history_subtitle": "List of completed or cancelled orders",
+            "history_subtitle": "Complete archive of completed, cancelled, and transaction history",
             "history_list": "Order History Table",
             "history_filter_date": "Date Filter",
             "history_export": "Export PDF/Excel",
