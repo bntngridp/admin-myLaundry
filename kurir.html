@@ -253,14 +253,14 @@
                                 <td><span id="courier-schedule-${courier.id}">${stats.latestSchedule}</span></td>
                                 <td><span id="courier-active-count-${courier.id}">${stats.activeCount}</span></td>
                                 <td>
-                                    <div class="d-flex gap-1 flex-nowrap">
-                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-1" title="Edit Kurir"
+                                    <div class="d-flex gap-2 flex-nowrap align-items-center">
+                                        <button type="button" class="btn-table-action btn-table-action-edit" title="Edit Kurir"
                                             onclick="openEditCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${courier.email}', '${phoneDisplay}')"
                                         ><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="btn btn-sm btn-outline-info rounded-pill px-2 py-1" title="Riwayat Login"
+                                        <button type="button" class="btn-table-action btn-table-action-history" title="Riwayat Login"
                                             onclick="openLoginHistory(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
                                         ><i class="fas fa-history"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Hapus Kurir"
+                                        <button type="button" class="btn-table-action btn-table-action-delete" title="Hapus Kurir"
                                             onclick="openDeleteCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
                                         ><i class="fas fa-trash-alt"></i></button>
                                     </div>

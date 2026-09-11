@@ -195,6 +195,59 @@ table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table t
 }
 
 /* ==========================================================================
+   TABLE ROW ACTION BUTTONS (MODERN & MINIMALIST)
+   ========================================================================== */
+.btn-table-action {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+    font-size: 0.82rem !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-table-action:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Edit action: subtle soft blue tint on hover */
+.btn-table-action-edit:hover {
+    background-color: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #2563eb !important;
+}
+
+/* History action: subtle slate tint on hover */
+.btn-table-action-history:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #1e293b !important;
+}
+
+/* Delete action: subtle soft red tint on hover */
+.btn-table-action-delete:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fecaca !important;
+    color: #dc2626 !important;
+}
+
+.btn-table-action:active {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
    PRODUCT TABLE BUTTON ACTION OVERRIDES
    ========================================================================== */
 .produk-button-edit, a.btn-success, table .btn-success {
