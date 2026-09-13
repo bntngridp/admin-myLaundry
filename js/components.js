@@ -108,7 +108,7 @@ class AdminNavbar extends HTMLElement {
                             <li><a class="dropdown-item py-2" href="settings.html" data-i18n="nav_settings">${settingsText}</a></li>
                             <li><a class="dropdown-item py-2" href="activity-log.html" data-i18n="nav_activity_log">${activityLogText}</a></li>
                             <li><hr class="dropdown-divider my-1" /></li>
-                            <li><a class="dropdown-item text-danger py-2" href="login.html" data-i18n="nav_sign_out">${signOutText}</a></li>
+                            <li><a class="dropdown-item text-danger py-2" href="login.html" onclick="event.preventDefault(); window.showLogoutConfirmation();" data-i18n="nav_sign_out">${signOutText}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ class AdminSidebar extends HTMLElement {
                             <div class="sb-sidenav-menu-heading"></div>
                             
                             <div class="side-nav-menu-bar-keluar">
-                                <a class="nav-link" href="login.html">
+                                <a class="nav-link" href="login.html" onclick="event.preventDefault(); window.showLogoutConfirmation();">
                                     <div class="sb-nav-link-icon" style="color: #ffffff;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 14 14">
                                             <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -415,13 +415,124 @@ function initializeAuthInteractions() {
         });
     }
 
-    // Logout buttons
-    document.querySelectorAll('a[href="login.html"]').forEach(btn => {
-        btn.addEventListener('click', () => {
+    // Setup logout confirmation modal & interactions
+    setupLogoutConfirmation();
+}
+
+// =============================================
+// LOGOUT CONFIRMATION MODAL & INTERACTIONS
+// =============================================
+function ensureLogoutConfirmationModal() {
+    if (document.getElementById('logoutConfirmModal')) return;
+
+    const t = (key, fallback) => (window.i18n ? window.i18n.t(key) : fallback);
+
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal fade';
+    modalDiv.id = 'logoutConfirmModal';
+    modalDiv.tabIndex = -1;
+    modalDiv.setAttribute('aria-labelledby', 'logoutConfirmModalLabel');
+    modalDiv.setAttribute('aria-hidden', 'true');
+    modalDiv.style.zIndex = '1090';
+
+    modalDiv.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16); overflow: hidden; background: #ffffff;">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10; font-size: 0.8rem;"></button>
+                <div class="modal-body p-4 pt-4 text-center">
+                    <!-- Danger / Sign Out Icon Circle -->
+                    <div style="width: 58px; height: 58px; border-radius: 50%; background-color: #fef2f2; border: 1px solid #fee2e2; display: flex; align-items: center; justify-content: center; margin: 4px auto 16px;">
+                        <i class="fas fa-sign-out-alt" style="color: #dc2626; font-size: 1.35rem; margin-left: 2px;"></i>
+                    </div>
+                    
+                    <!-- Title & Subtitle -->
+                    <h5 class="fw-bold mb-2" id="logoutConfirmModalLabel" style="color: #0f172a; font-size: 1.2rem;" data-i18n="modal_logout_title">
+                        ${t('modal_logout_title', 'Konfirmasi Keluar')}
+                    </h5>
+                    <p class="text-muted mb-3" style="font-size: 0.9rem; line-height: 1.5;" data-i18n="modal_logout_desc">
+                        ${t('modal_logout_desc', 'Apakah Anda yakin ingin keluar dari sesi admin myLaundry?')}
+                    </p>
+                    
+                    <!-- Admin User Session Preview Card -->
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px; text-align: left;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background-color: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div class="fw-bold text-dark text-truncate" id="logoutModalUserText" style="font-size: 0.92rem;">Administrator</div>
+                            <div class="text-muted text-truncate" style="font-size: 0.78rem;" data-i18n="modal_logout_warn">
+                                ${t('modal_logout_warn', 'Anda perlu masuk kembali untuk mengakses panel administrasi.')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-2 w-100">
+                        <button type="button" class="btn" data-bs-dismiss="modal" style="flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; transition: all 0.2s;" data-i18n="btn_cancel">
+                            ${t('btn_cancel', 'Batal')}
+                        </button>
+                        <button type="button" class="btn" id="btnConfirmLogout" style="flex: 1.2; background: #dc2626 !important; border: 1px solid #dc2626 !important; color: #ffffff !important; font-weight: 600 !important; border-radius: 10px !important; padding: 10px 16px !important; font-size: 0.9rem !important; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);">
+                            <i class="fas fa-sign-out-alt me-1"></i> <span data-i18n="modal_logout_btn_confirm">${t('modal_logout_btn_confirm', 'Ya, Keluar')}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalDiv);
+
+    // Attach confirmation click
+    const btnConfirm = modalDiv.querySelector('#btnConfirmLogout');
+    if (btnConfirm) {
+        btnConfirm.addEventListener('click', () => {
+            btnConfirm.classList.add('disabled');
+            btnConfirm.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>...';
             localStorage.removeItem('admin_token');
             localStorage.removeItem('admin_role');
+            localStorage.removeItem('selected_branch_id');
+            window.location.href = 'login.html';
         });
-    });
+    }
+
+    if (window.i18n) {
+        window.i18n.applyTranslations();
+    }
+}
+
+window.showLogoutConfirmation = function() {
+    ensureLogoutConfirmationModal();
+
+    // Update username preview if available
+    const sidebarUser = document.querySelector('.sb-sidenav-footer-user');
+    const modalUserText = document.getElementById('logoutModalUserText');
+    if (sidebarUser && modalUserText && sidebarUser.textContent.trim() && sidebarUser.textContent.trim() !== 'Loading...') {
+        modalUserText.textContent = sidebarUser.textContent.trim();
+    }
+
+    const modalEl = document.getElementById('logoutConfirmModal');
+    if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modalInstance.show();
+    }
+};
+
+function setupLogoutConfirmation() {
+    ensureLogoutConfirmationModal();
+
+    // Event delegation to catch any logout clicks
+    document.addEventListener('click', (e) => {
+        const logoutTrigger = e.target.closest('a[href="login.html"], [data-action="logout"], [data-i18n="nav_sign_out"], [data-i18n="menu_sign_out"]');
+        if (logoutTrigger) {
+            const isInsideAuthPage = logoutTrigger.closest('#auth-login-container, .card-footer, form');
+            const isInsideAdminLayout = logoutTrigger.closest('admin-navbar, admin-sidebar, #layoutSidenav, #layoutSidenav_nav, .sb-topnav');
+            
+            if (isInsideAdminLayout || (!isInsideAuthPage && localStorage.getItem('admin_token'))) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.showLogoutConfirmation();
+            }
+        }
+    }, true);
 }
 
 window.handleBranchChange = function(val) {
@@ -460,6 +571,12 @@ if (document.readyState === 'loading') {
     initializeAuthInteractions();
     loadBranchSelectorOptions();
 }
+
+window.addEventListener('languageChanged', () => {
+    if (window.i18n) {
+        window.i18n.applyTranslations();
+    }
+});
 
 // =============================================
 // ENTERPRISE ENTITY CODE FORMATTERS
