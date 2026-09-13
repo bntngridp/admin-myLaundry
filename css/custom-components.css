@@ -869,48 +869,23 @@ a.dataTable-sorter:hover,
 
 
 /* ==========================================================================
-   ENTERPRISE ENTITY BADGES
+   TABLE ENTITY ID STYLING (PLAIN & MINIMALIST - NO BOX / NO COLOR)
    ========================================================================== */
-.order-id-badge {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-    color: #0007B0 !important;
-    background: #EEF2FF !important;
-    padding: 3px 8px !important;
-    border-radius: 6px !important;
-    display: inline-block !important;
-    white-space: nowrap !important;
-    border: 1px solid rgba(0, 7, 176, 0.12) !important;
-    letter-spacing: 0.02em !important;
-}
-
-.courier-id-badge {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-    color: #047857 !important;
-    background: #ECFDF5 !important;
-    padding: 3px 8px !important;
-    border-radius: 6px !important;
-    display: inline-block !important;
-    white-space: nowrap !important;
-    border: 1px solid rgba(4, 120, 87, 0.15) !important;
-    letter-spacing: 0.02em !important;
-}
-
+.order-id-badge,
+.courier-id-badge,
 .product-id-badge {
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-    color: #334155 !important;
-    background: #F1F5F9 !important;
-    padding: 3px 8px !important;
-    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
     display: inline-block !important;
     white-space: nowrap !important;
-    border: 1px solid rgba(51, 65, 85, 0.15) !important;
     letter-spacing: 0.02em !important;
+    box-shadow: none !important;
 }
 
 /* Courier Status Badges */
