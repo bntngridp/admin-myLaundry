@@ -40,14 +40,14 @@
                             <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: linear-gradient(135deg, #0007B0 0%, #1d4ed8 100%);">
                                 <div class="card-body text-white">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="small fw-semibold opacity-75">Rating Outlet</span>
+                                        <span class="small fw-semibold opacity-75" data-i18n="reviews_stat_outlet">Rating Outlet</span>
                                         <i class="fas fa-store fa-lg opacity-75"></i>
                                     </div>
                                     <div class="d-flex align-items-baseline gap-2">
                                         <h2 class="display-6 fw-bold mb-0" id="statAvgBranch">5.0</h2>
                                         <span class="text-warning"><i class="fas fa-star"></i> / 5.0</span>
                                     </div>
-                                    <small class="opacity-75">Berdasarkan skor kebersihan & kualitas cucian</small>
+                                    <small class="opacity-75" data-i18n="reviews_stat_outlet_sub">Berdasarkan skor kebersihan & kualitas cucian</small>
                                 </div>
                             </div>
                         </div>
@@ -57,14 +57,14 @@
                             <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between mb-2 text-muted">
-                                        <span class="small fw-semibold">Rating Kurir</span>
+                                        <span class="small fw-semibold" data-i18n="reviews_stat_courier">Rating Kurir</span>
                                         <i class="fas fa-truck-moving fa-lg text-primary"></i>
                                     </div>
                                     <div class="d-flex align-items-baseline gap-2">
                                         <h2 class="display-6 fw-bold mb-0 text-dark" id="statAvgCourier">5.0</h2>
                                         <span class="text-warning"><i class="fas fa-star"></i> / 5.0</span>
                                     </div>
-                                    <small class="text-muted">Ketepatan waktu antar-jemput kurir</small>
+                                    <small class="text-muted" data-i18n="reviews_stat_courier_sub">Ketepatan waktu antar-jemput kurir</small>
                                 </div>
                             </div>
                         </div>
@@ -74,11 +74,11 @@
                             <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between mb-2 text-muted">
-                                        <span class="small fw-semibold">Total Ulasan Masuk</span>
+                                        <span class="small fw-semibold" data-i18n="reviews_stat_total">Total Ulasan Masuk</span>
                                         <i class="fas fa-comments fa-lg text-success"></i>
                                     </div>
                                     <h2 class="display-6 fw-bold mb-0 text-dark" id="statTotalRatings">0</h2>
-                                    <small class="text-muted">Ulasan dari pelanggan terverifikasi</small>
+                                    <small class="text-muted" data-i18n="reviews_stat_total_sub">Ulasan dari pelanggan terverifikasi</small>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                         <div class="col-xl-3 col-md-6">
                             <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; background: white;">
                                 <div class="card-body py-3">
-                                    <span class="small fw-bold text-dark d-block mb-2">Distribusi Bintang</span>
+                                    <span class="small fw-bold text-dark d-block mb-2" data-i18n="reviews_stat_dist">Distribusi Bintang</span>
                                     <div class="d-flex align-items-center gap-2 mb-1" style="font-size: 0.75rem;">
                                         <span class="fw-bold d-flex align-items-center" style="width: 24px;">5 <i class="fas fa-star text-warning ms-1" style="font-size: 0.65rem;"></i></span>
                                         <div class="progress flex-grow-1" style="height: 6px;">
@@ -127,17 +127,17 @@
                             <div class="row g-2 align-items-center">
                                 <div class="col-md-8">
                                     <div class="d-flex flex-wrap gap-2" id="filterTabs">
-                                        <button class="btn btn-sm btn-primary active px-3 filter-btn" data-score="">Semua Ulasan</button>
-                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="5"><i class="fas fa-star text-warning me-1"></i>5 Bintang</button>
-                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="4"><i class="fas fa-star text-warning me-1"></i>4 Bintang</button>
-                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="3"><i class="fas fa-star text-warning me-1"></i>3 Bintang</button>
-                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="1"><i class="fas fa-star text-warning me-1"></i>1-2 Bintang</button>
+                                        <button class="btn btn-sm btn-primary active px-3 filter-btn" data-score="" data-i18n="reviews_filter_all">Semua Ulasan</button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="5"><i class="fas fa-star text-warning me-1"></i><span data-i18n="reviews_filter_5star">5 Bintang</span></button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="4"><i class="fas fa-star text-warning me-1"></i><span data-i18n="reviews_filter_4star">4 Bintang</span></button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="3"><i class="fas fa-star text-warning me-1"></i><span data-i18n="reviews_filter_3star">3 Bintang</span></button>
+                                        <button class="btn btn-sm btn-outline-secondary px-3 filter-btn" data-score="1"><i class="fas fa-star text-warning me-1"></i><span data-i18n="reviews_filter_low">1-2 Bintang</span></button>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Cari isi ulasan atau tag...">
+                                        <input type="text" id="searchInput" class="form-control border-start-0" data-i18n-placeholder="reviews_search_ph" placeholder="Cari isi ulasan atau tag...">
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" style="color: #0B1739;"><i class="fas fa-reply text-primary me-2"></i>Kirim Balasan Resmi Outlet</h5>
+                    <h5 class="modal-title fw-bold" style="color: #0B1739;"><i class="fas fa-reply text-primary me-2"></i><span data-i18n="modal_reply_title">Kirim Balasan Resmi Outlet</span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body py-3">
@@ -174,13 +174,13 @@
                         <div class="text-muted" id="replyReviewText">"Ulasan pelanggan..."</div>
                     </div>
                     <div class="mb-3">
-                        <label for="adminReplyInput" class="form-label fw-semibold text-dark small">Pesan Balasan Admin</label>
-                        <textarea id="adminReplyInput" class="form-control" rows="4" placeholder="Tulis ucapan terima kasih atau solusi penanganan keluhan pelanggan..."></textarea>
+                        <label for="adminReplyInput" class="form-label fw-semibold text-dark small" data-i18n="modal_reply_message_label">Pesan Balasan Admin</label>
+                        <textarea id="adminReplyInput" class="form-control" rows="4" data-i18n-placeholder="modal_reply_ph" placeholder="Tulis ucapan terima kasih atau solusi penanganan keluhan pelanggan..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" id="btnSubmitReply" class="btn btn-primary px-4" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px;">Kirim Balasan</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" data-i18n="btn_cancel">Batal</button>
+                    <button type="button" id="btnSubmitReply" class="btn btn-primary px-4" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px;" data-i18n="modal_reply_btn">Kirim Balasan</button>
                 </div>
             </div>
         </div>
@@ -249,10 +249,14 @@
         }
 
         function renderReviewCard(r) {
-            const customerName = r.customer ? (r.customer.username || r.customer.email) : 'Pelanggan';
-            const courierName = r.courier ? (r.courier.username || 'Kurir') : 'Kurir';
-            const branchName = r.branch ? (r.branch.name || 'Outlet Utama') : 'Outlet';
-            const dateStr = new Date(r.created_at || r.CreatedAt).toLocaleDateString('id-ID', {
+            const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+            const defaultCustomer = lang === 'en' ? 'Customer' : 'Pelanggan';
+            const defaultCourier = lang === 'en' ? 'Courier' : 'Kurir';
+            const defaultBranch = lang === 'en' ? 'Main Outlet' : 'Outlet Utama';
+            const customerName = r.customer ? (r.customer.username || r.customer.email) : defaultCustomer;
+            const courierName = r.courier ? (r.courier.username || defaultCourier) : defaultCourier;
+            const branchName = r.branch ? (r.branch.name || defaultBranch) : defaultBranch;
+            const dateStr = new Date(r.created_at || r.CreatedAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', {
                 day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
@@ -283,12 +287,20 @@
 
             // Admin reply badge & content
             let replyContent = '';
+            const officialReplyLabel = window.i18n ? window.i18n.t('official_outlet_reply') : 'Balasan Resmi myLaundry Outlet';
+            const replyBtnLabel = window.i18n ? window.i18n.t('btn_reply_review') : 'Balas Ulasan Ini';
+            const repliedBadgeText = window.i18n ? window.i18n.t('reviews_replied') : 'Sudah Dibalas';
+            const unrepliedBadgeText = window.i18n ? window.i18n.t('reviews_not_replied') : 'Belum Dibalas';
+            const outletServiceLabel = window.i18n ? window.i18n.t('outlet_service_label') : 'Layanan Outlet:';
+            const courierLabel = window.i18n ? window.i18n.t('courier_label') : 'Kurir';
+            const orderLabel = window.i18n ? window.i18n.t('th_order') : 'Pesanan';
+
             if (r.admin_reply) {
-                const replyDate = r.replied_at ? new Date(r.replied_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                const replyDate = r.replied_at ? new Date(r.replied_at).toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
                 replyContent = `
                     <div class="mt-3 p-3" style="background: #F8FAFC; border-left: 4px solid #0007B0; border-radius: 8px;">
                         <div class="d-flex align-items-center justify-content-between mb-1">
-                            <span class="fw-bold small text-primary"><i class="fas fa-store me-1"></i>Balasan Resmi myLaundry Outlet</span>
+                            <span class="fw-bold small text-primary"><i class="fas fa-store me-1"></i>${officialReplyLabel}</span>
                             <small class="text-muted">${replyDate}</small>
                         </div>
                         <div class="text-dark small">${r.admin_reply}</div>
@@ -298,7 +310,7 @@
                 replyContent = `
                     <div class="mt-3 d-flex justify-content-end">
                         <button class="btn btn-sm btn-outline-primary fw-semibold px-3" onclick="openReplyModal(${r.id}, '${customerName.replace(/'/g, "\\'")}', '${(r.review_text || '').replace(/'/g, "\\'")}')" style="border-radius: 8px;">
-                            <i class="fas fa-reply me-1"></i>Balas Ulasan Ini
+                            <i class="fas fa-reply me-1"></i>${replyBtnLabel}
                         </button>
                     </div>
                 `;
@@ -314,22 +326,22 @@
                                 </div>
                                 <div>
                                     <h6 class="fw-bold mb-0 text-dark">${customerName}</h6>
-                                    <small class="text-muted">Pesanan <a href="detail-pesanan.html?id=${r.order_id}" class="text-decoration-none fw-semibold">${formatOrderId(r.order_id)}</a> &bull; ${branchName} &bull; ${dateStr}</small>
+                                    <small class="text-muted">${orderLabel} <a href="detail-pesanan.html?id=${r.order_id}" class="text-decoration-none fw-semibold">${formatOrderId(r.order_id)}</a> &bull; ${branchName} &bull; ${dateStr}</small>
                                 </div>
                             </div>
                             <span class="badge ${r.admin_reply ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning-emphasis border border-warning'}" style="font-size: 0.78rem;">
-                                ${r.admin_reply ? '<i class="fas fa-check-circle me-1"></i>Sudah Dibalas' : '<i class="fas fa-clock me-1"></i>Belum Dibalas'}
+                                ${r.admin_reply ? `<i class="fas fa-check-circle me-1"></i>${repliedBadgeText}` : `<i class="fas fa-clock me-1"></i>${unrepliedBadgeText}`}
                             </span>
                         </div>
 
                         <!-- Scores -->
                         <div class="row g-2 mb-3 bg-light p-2 rounded-3" style="font-size: 0.85rem;">
                             <div class="col-md-6 d-flex align-items-center justify-content-between">
-                                <span class="text-muted"><i class="fas fa-store text-primary me-2"></i>Layanan Outlet:</span>
+                                <span class="text-muted"><i class="fas fa-store text-primary me-2"></i>${outletServiceLabel}</span>
                                 <div>${renderStars(r.branch_score)} <strong class="ms-1 text-dark">${r.branch_score}</strong></div>
                             </div>
                             <div class="col-md-6 d-flex align-items-center justify-content-between">
-                                <span class="text-muted"><i class="fas fa-truck-moving text-info me-2"></i>Kurir (${courierName}):</span>
+                                <span class="text-muted"><i class="fas fa-truck-moving text-info me-2"></i>${courierLabel} (${courierName}):</span>
                                 <div>${renderStars(r.courier_score)} <strong class="ms-1 text-dark">${r.courier_score}</strong></div>
                             </div>
                         </div>
@@ -339,7 +351,7 @@
                             ${tagsHTML}
                         </div>
                         <p class="text-dark mb-0 fs-6" style="line-height: 1.5;">
-                            "${r.review_text || 'Tidak ada catatan ulasan tertulis.'}"
+                            "${r.review_text || (lang === 'en' ? 'No written review notes.' : 'Tidak ada catatan ulasan tertulis.')}"
                         </p>
 
                         <!-- Reply Section -->

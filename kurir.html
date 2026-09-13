@@ -56,32 +56,32 @@
                                 <table id="datatablesSimple">
                                     <thead>
                                     <tr>
-                                        <th>Courier ID</th>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Delivery Schedule</th>
-                                        <th>Total</th>
-                                        <th>Aksi</th>
+                                        <th data-i18n="courier_id">ID Kurir</th>
+                                        <th data-i18n="courier_name">Nama Kurir</th>
+                                        <th data-i18n="courier_status">Status</th>
+                                        <th data-i18n="courier_schedule">Jadwal Tugas</th>
+                                        <th data-i18n="courier_total_orders">Total Antaran</th>
+                                        <th data-i18n="courier_action">Aksi</th>
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
-                                        <th>Courier ID</th>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Delivery Schedule</th>
-                                        <th>Total</th>
-                                        <th>Aksi</th>
+                                        <th data-i18n="courier_id">ID Kurir</th>
+                                        <th data-i18n="courier_name">Nama Kurir</th>
+                                        <th data-i18n="courier_status">Status</th>
+                                        <th data-i18n="courier_schedule">Jadwal Tugas</th>
+                                        <th data-i18n="courier_total_orders">Total Antaran</th>
+                                        <th data-i18n="courier_action">Aksi</th>
                                     </tr>
                                     </tfoot>
                                     <tbody id="couriersTableBody">
                                         <tr>
-                                            <td colspan="5" class="text-center py-5 text-muted">
+                                            <td colspan="6" class="text-center py-5 text-muted">
                                                 <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                                                     <div class="spinner-border text-primary spinner-border-sm" role="status">
                                                         <span class="visually-hidden">Loading...</span>
                                                     </div>
-                                                    <span>Memuat data kurir...</span>
+                                                    <span data-i18n="state_loading">Memuat data kurir...</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -253,14 +253,14 @@
                                 <td><span id="courier-schedule-${courier.id}">${stats.latestSchedule}</span></td>
                                 <td><span id="courier-active-count-${courier.id}">${stats.activeCount}</span></td>
                                 <td>
-                                    <div class="d-flex gap-2 flex-nowrap align-items-center">
-                                        <button type="button" class="btn-table-action btn-table-action-edit" title="Edit Kurir"
-                                            onclick="openEditCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${courier.email}', '${phoneDisplay}')"
-                                        ><i class="fas fa-pencil-alt"></i></button>
-                                        <button type="button" class="btn-table-action btn-table-action-history" title="Riwayat Login"
+                                    <div class="table-actions-cluster">
+                                        <button type="button" class="btn-table-action btn-table-action-edit" title="${window.i18n ? window.i18n.t('courier_edit') : 'Edit Kurir'}"
+                                            onclick="openEditCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${courier.email.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${(courier.phone_number || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+                                        ><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn-table-action btn-table-action-history" title="${window.i18n ? window.i18n.t('courier_login_history') : 'Riwayat Login'}"
                                             onclick="openLoginHistory(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
                                         ><i class="fas fa-history"></i></button>
-                                        <button type="button" class="btn-table-action btn-table-action-delete" title="Hapus Kurir"
+                                        <button type="button" class="btn-table-action btn-table-action-delete" title="${window.i18n ? window.i18n.t('courier_delete') : 'Hapus Kurir'}"
                                             onclick="openDeleteCourier(${courier.id}, '${courier.username.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
                                         ><i class="fas fa-trash-alt"></i></button>
                                     </div>
@@ -278,7 +278,11 @@
                         // Update description card header
                         const chartHeaderText = document.getElementById('chartHeaderText');
                         if (chartHeaderText) {
-                            chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                            if (window.i18n) {
+                                chartHeaderText.textContent = window.i18n.t('courier_dispatched', { busy: busyTotal, available: availableTotal });
+                            } else {
+                                chartHeaderText.textContent = `Total ${busyTotal} kurir bertugas dan ${availableTotal} kurir bersiap (tersedia)`;
+                            }
                         }
                     } else {
                         tbody.innerHTML = `
@@ -479,7 +483,7 @@
                         }
 
                         btn.disabled = true;
-                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+                        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> ${window.i18n ? window.i18n.t('state_loading') : 'Menyimpan...'}`;
 
                         try {
                             const res = await apiFetch('/auth/register', {
@@ -501,7 +505,7 @@
                             alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
                         } finally {
                             btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-save me-1"></i> Simpan Akun Kurir';
+                            btn.innerHTML = `<i class="fas fa-save me-1"></i> <span data-i18n="modal_courier_save_btn">${window.i18n ? window.i18n.t('modal_courier_save_btn') : 'Simpan Akun Kurir'}</span>`;
                         }
                     });
                 }
@@ -525,7 +529,7 @@
                         if (password) body.password = password;
 
                         btn.disabled = true;
-                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+                        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> ${window.i18n ? window.i18n.t('state_loading') : 'Menyimpan...'}`;
 
                         try {
                             const res = await apiFetch(`/couriers/${id}`, { method: 'PUT', body });
@@ -543,7 +547,7 @@
                             alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
                         } finally {
                             btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-save me-1"></i> Simpan Perubahan';
+                            btn.innerHTML = `<i class="fas fa-save me-1"></i> <span data-i18n="btn_save">${window.i18n ? window.i18n.t('btn_save') : 'Simpan Perubahan'}</span>`;
                         }
                     });
                 }
@@ -558,7 +562,7 @@
                         const name = document.getElementById('deleteCourierName').textContent;
 
                         btnConfirmDelete.disabled = true;
-                        btnConfirmDelete.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menghapus...';
+                        btnConfirmDelete.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> ${window.i18n ? window.i18n.t('state_loading') : 'Menghapus...'}`;
 
                         try {
                             const res = await apiFetch(`/couriers/${id}`, { method: 'DELETE' });
@@ -576,10 +580,18 @@
                             alertDiv.innerHTML = `<div class="alert alert-danger small py-2 rounded-3">${err.message}</div>`;
                         } finally {
                             btnConfirmDelete.disabled = false;
-                            btnConfirmDelete.innerHTML = '<i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir';
+                            btnConfirmDelete.innerHTML = `<i class="fas fa-trash-alt me-1"></i> <span data-i18n="modal_delete_courier_btn">${window.i18n ? window.i18n.t('modal_delete_courier_btn') : 'Ya, Hapus Kurir'}</span>`;
                         }
                     });
                 }
+
+                // Listen for language change to update dynamic strings
+                window.addEventListener('languageChanged', () => {
+                    loadCouriers();
+                    if (window.i18n) {
+                        window.i18n.applyTranslations();
+                    }
+                });
             });
         </script>
 
@@ -589,7 +601,7 @@
                 <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                     <div class="modal-header bg-primary text-white py-3 px-4">
                         <h5 class="modal-title fs-6 fw-bold" id="addCourierModalLabel">
-                            <i class="fas fa-user-plus me-2"></i>Tambah Akun Kurir Baru
+                            <i class="fas fa-user-plus me-2"></i><span data-i18n="modal_add_courier_title">Tambah Akun Kurir Baru</span>
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -597,30 +609,30 @@
                         <div class="modal-body p-4">
                             <div id="addCourierAlert"></div>
                             <div class="mb-3">
-                                <label for="courierUsername" class="form-label small text-muted fw-semibold">Nama Kurir</label>
-                                <input type="text" class="form-control" id="courierUsername" placeholder="Contoh: Kurir Bintang" required style="border-radius: 10px;">
+                                <label for="courierUsername" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_name">Nama Kurir</label>
+                                <input type="text" class="form-control" id="courierUsername" placeholder="Contoh: Kurir Bintang" data-i18n-placeholder="modal_courier_name_ph" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierEmail" class="form-label small text-muted fw-semibold">Email</label>
-                                <input type="email" class="form-control" id="courierEmail" placeholder="Contoh: kurir@mylaundry.com" required style="border-radius: 10px;">
+                                <label for="courierEmail" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_email">Email</label>
+                                <input type="email" class="form-control" id="courierEmail" placeholder="Contoh: kurir@mylaundry.com" data-i18n-placeholder="modal_courier_email_ph" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierPhone" class="form-label small text-muted fw-semibold">Nomor Telepon</label>
-                                <input type="text" class="form-control" id="courierPhone" placeholder="Contoh: 08123456789" required style="border-radius: 10px;">
+                                <label for="courierPhone" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_phone">Nomor Telepon</label>
+                                <input type="text" class="form-control" id="courierPhone" placeholder="Contoh: 08123456789" data-i18n-placeholder="modal_courier_phone_ph" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="courierPassword" class="form-label small text-muted fw-semibold">Kata Sandi</label>
+                                <label for="courierPassword" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_password">Kata Sandi</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="courierPassword" placeholder="Minimal 6 karakter" required style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+                                    <input type="password" class="form-control" id="courierPassword" placeholder="Minimal 6 karakter" data-i18n-placeholder="modal_courier_password_ph" required style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('courierPassword', 'toggleIconAddPass')" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-left: none;">
                                         <i class="far fa-eye" id="toggleIconAddPass"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="courierConfirmPassword" class="form-label small text-muted fw-semibold">Konfirmasi Kata Sandi</label>
+                                <label for="courierConfirmPassword" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_confirm_password">Konfirmasi Kata Sandi</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="courierConfirmPassword" placeholder="Ulangi kata sandi" required style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+                                    <input type="password" class="form-control" id="courierConfirmPassword" placeholder="Ulangi kata sandi" data-i18n-placeholder="modal_courier_confirm_password_ph" required style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('courierConfirmPassword', 'toggleIconAddConfirmPass')" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-left: none;">
                                         <i class="far fa-eye" id="toggleIconAddConfirmPass"></i>
                                     </button>
@@ -628,9 +640,9 @@
                             </div>
                         </div>
                         <div class="modal-footer bg-light py-2 px-4">
-                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal" data-i18n="btn_cancel">Batal</button>
                             <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4" id="btnSubmitAddCourier">
-                                <i class="fas fa-save me-1"></i> Simpan Akun Kurir
+                                <i class="fas fa-save me-1"></i> <span data-i18n="modal_courier_save_btn">Simpan Akun Kurir</span>
                             </button>
                         </div>
                     </form>
@@ -644,7 +656,7 @@
                 <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                     <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0d6efd, #0043a8); color: white;">
                         <h5 class="modal-title fs-6 fw-bold" id="editCourierModalLabel">
-                            <i class="fas fa-user-edit me-2"></i>Edit Data Kurir
+                            <i class="fas fa-user-edit me-2"></i><span data-i18n="modal_edit_courier_title">Edit Data Kurir</span>
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -653,21 +665,21 @@
                         <div class="modal-body p-4">
                             <div id="editCourierAlert"></div>
                             <div class="mb-3">
-                                <label for="editCourierUsername" class="form-label small text-muted fw-semibold">Nama Kurir</label>
+                                <label for="editCourierUsername" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_name">Nama Kurir</label>
                                 <input type="text" class="form-control" id="editCourierUsername" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="editCourierEmail" class="form-label small text-muted fw-semibold">Email</label>
+                                <label for="editCourierEmail" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_email">Email</label>
                                 <input type="email" class="form-control" id="editCourierEmail" required style="border-radius: 10px;">
                             </div>
                             <div class="mb-3">
-                                <label for="editCourierPhone" class="form-label small text-muted fw-semibold">Nomor Telepon</label>
+                                <label for="editCourierPhone" class="form-label small text-muted fw-semibold" data-i18n="modal_courier_phone">Nomor Telepon</label>
                                 <input type="text" class="form-control" id="editCourierPhone" style="border-radius: 10px;">
                             </div>
                             <div class="mb-1">
-                                <label for="editCourierPassword" class="form-label small text-muted fw-semibold">Kata Sandi Baru <span class="text-muted fw-normal">(kosongkan jika tidak diubah)</span></label>
+                                <label for="editCourierPassword" class="form-label small text-muted fw-semibold"><span data-i18n="modal_courier_password_optional">Kata Sandi Baru</span> <span class="text-muted fw-normal" data-i18n="modal_courier_password_optional_hint">(kosongkan jika tidak diubah)</span></label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="editCourierPassword" placeholder="Masukkan kata sandi baru..." style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+                                    <input type="password" class="form-control" id="editCourierPassword" placeholder="Masukkan kata sandi baru..." data-i18n-placeholder="auth_new_pass_ph" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editCourierPassword', 'toggleIconEditPass')" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-left: none;">
                                         <i class="far fa-eye" id="toggleIconEditPass"></i>
                                     </button>
@@ -675,9 +687,9 @@
                             </div>
                         </div>
                         <div class="modal-footer bg-light py-2 px-4">
-                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal" data-i18n="btn_cancel">Batal</button>
                             <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4" id="btnSubmitEditCourier">
-                                <i class="fas fa-save me-1"></i> Simpan Perubahan
+                                <i class="fas fa-save me-1"></i> <span data-i18n="btn_save">Simpan Perubahan</span>
                             </button>
                         </div>
                     </form>
@@ -700,8 +712,8 @@
                         </div>
                         
                         <!-- Title & Subtitle -->
-                        <h5 class="fw-bold mb-2" id="deleteCourierModalLabel" style="color: #0f172a; font-size: 1.2rem;">Hapus Akun Kurir?</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.9rem; line-height: 1.5;">Apakah Anda yakin ingin menghapus akun kurir ini?</p>
+                        <h5 class="fw-bold mb-2" id="deleteCourierModalLabel" style="color: #0f172a; font-size: 1.2rem;" data-i18n="modal_delete_courier_title">Hapus Akun Kurir?</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.9rem; line-height: 1.5;" data-i18n="modal_delete_courier_desc">Apakah Anda yakin ingin menghapus akun kurir ini?</p>
                         
                         <!-- Courier Info Preview Card -->
                         <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px; text-align: left;">
@@ -710,17 +722,17 @@
                             </div>
                             <div style="flex: 1; min-width: 0;">
                                 <div class="fw-bold text-dark text-truncate" id="deleteCourierName" style="font-size: 0.95rem;">-</div>
-                                <div class="text-muted text-truncate" style="font-size: 0.78rem;">Tindakan ini tidak dapat dibatalkan</div>
+                                <div class="text-muted text-truncate" style="font-size: 0.78rem;" data-i18n="modal_delete_courier_warn">Tindakan ini tidak dapat dibatalkan</div>
                             </div>
                         </div>
                         
                         <!-- Action Buttons -->
                         <div class="d-flex gap-2 w-100">
-                            <button type="button" class="btn" data-bs-dismiss="modal" style="flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; transition: all 0.2s;">
+                            <button type="button" class="btn" data-bs-dismiss="modal" style="flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; transition: all 0.2s;" data-i18n="btn_cancel">
                                 Batal
                             </button>
                             <button type="button" class="btn" id="btnConfirmDeleteCourier" style="flex: 1.2; background: #dc2626 !important; border: 1px solid #dc2626 !important; color: #ffffff !important; font-weight: 600 !important; border-radius: 10px !important; padding: 10px 16px !important; font-size: 0.9rem !important; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);">
-                                <i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir
+                                <i class="fas fa-trash-alt me-1"></i> <span data-i18n="modal_delete_courier_btn">Ya, Hapus Kurir</span>
                             </button>
                         </div>
                     </div>
@@ -734,7 +746,7 @@
                 <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                     <div class="modal-header py-3 px-4" style="background: linear-gradient(135deg, #0891b2, #0e7490); color: white;">
                         <h5 class="modal-title fs-6 fw-bold" id="loginHistoryTitle">
-                            <i class="fas fa-history me-2"></i>Riwayat Login Kurir
+                            <i class="fas fa-history me-2"></i><span data-i18n="modal_login_history_title">Riwayat Login Kurir</span>
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -742,7 +754,7 @@
                         <div id="loginHistoryContainer"></div>
                     </div>
                     <div class="modal-footer bg-light py-2 px-4">
-                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal" data-i18n="btn_close">Tutup</button>
                     </div>
                 </div>
             </div>

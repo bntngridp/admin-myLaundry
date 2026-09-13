@@ -10,6 +10,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Custom Web Components & Styles -->
+    <script src="js/i18n.js"></script>
     <script src="js/components.js?v=1.0.1" defer></script>
 </head>
 <body class="bg-login-password-register">
@@ -23,56 +24,56 @@
                     </div>
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-login-password-register">Create Account</h3></div>
+                            <div class="card-header"><h3 class="text-login-password-register" data-i18n="auth_signup_title">Buat Akun</h3></div>
                             <div class="card-body">
                                 <div id="alert-container"></div>
                                 <form id="register-form">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" />
-                                                <label for="inputFirstName">First Name</label>
+                                                <input class="form-control" id="inputFirstName" type="text" placeholder="Masukkan nama depan Anda" data-i18n-placeholder="auth_first_name_ph" />
+                                                <label for="inputFirstName" data-i18n="auth_first_name">Nama Depan</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating">
-                                                <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" />
-                                                <label for="inputLastName">Last Name</label>
+                                                <input class="form-control" id="inputLastName" type="text" placeholder="Masukkan nama belakang Anda" data-i18n-placeholder="auth_last_name_ph" />
+                                                <label for="inputLastName" data-i18n="auth_last_name">Nama Belakang</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
-                                        <label for="inputEmail">Email address</label>
+                                        <input class="form-control" id="inputEmail" type="email" placeholder="nama@mylaundry.com" data-i18n-placeholder="auth_email_placeholder" />
+                                        <label for="inputEmail" data-i18n="auth_email_label">Alamat Email</label>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" />
-                                                <label for="inputPassword">Password</label>
+                                                <input class="form-control" id="inputPassword" type="password" placeholder="Masukkan kata sandi..." data-i18n-placeholder="auth_pass_placeholder" />
+                                                <label for="inputPassword" data-i18n="auth_pass_label">Kata Sandi</label>
                                             </div>
                                             <div class="password-requirements mt-2 text-muted px-2" style="font-size: 0.8rem; display: none;">
-                                                <div class="req-item mb-1" id="req-len"><span class="icon-container me-1"></span>Min. 8 characters</div>
-                                                <div class="req-item mb-1" id="req-upper"><span class="icon-container me-1"></span>Min. 1 uppercase (A-Z)</div>
-                                                <div class="req-item mb-1" id="req-lower"><span class="icon-container me-1"></span>Min. 1 lowercase (a-z)</div>
-                                                <div class="req-item mb-1" id="req-num"><span class="icon-container me-1"></span>Min. 1 number (0-9)</div>
-                                                <div class="req-item mb-1" id="req-special"><span class="icon-container me-1"></span>Min. 1 symbol (e.g. !, @, #)</div>
+                                                <div class="req-item mb-1" id="req-len"><span class="icon-container me-1"></span><span data-i18n="auth_req_len">Min. 8 karakter</span></div>
+                                                <div class="req-item mb-1" id="req-upper"><span class="icon-container me-1"></span><span data-i18n="auth_req_upper">Min. 1 huruf besar (A-Z)</span></div>
+                                                <div class="req-item mb-1" id="req-lower"><span class="icon-container me-1"></span><span data-i18n="auth_req_lower">Min. 1 huruf kecil (a-z)</span></div>
+                                                <div class="req-item mb-1" id="req-num"><span class="icon-container me-1"></span><span data-i18n="auth_req_num">Min. 1 angka (0-9)</span></div>
+                                                <div class="req-item mb-1" id="req-special"><span class="icon-container me-1"></span><span data-i18n="auth_req_special">Min. 1 simbol (contoh: !, @, #)</span></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" />
-                                                <label for="inputPasswordConfirm">Confirm Password</label>
+                                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Konfirmasi kata sandi Anda" data-i18n-placeholder="auth_confirm_pass_ph" />
+                                                <label for="inputPasswordConfirm" data-i18n="auth_confirm_pass">Konfirmasi Kata Sandi</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><button type="submit" class="btn btn-primary btn-block" id="btn-register">Create Account</button></div>
+                                        <div class="d-grid"><button type="submit" class="btn btn-primary btn-block" id="btn-register" data-i18n="auth_signup_btn">Buat Akun</button></div>
                                     </div>
                                 </form>
                             </div>
                             <div class="card-footer text-center py-3">
-                                <div class="small"><a href="login.html">Already have an account? Sign in!</a></div>
+                                <div class="small"><a href="login.html" data-i18n="auth_already_account">Sudah punya akun? Masuk!</a></div>
                             </div>
                         </div>
                     </div>
@@ -86,9 +87,9 @@
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted">Copyright &copy; myLaundry 2024</div>
                     <div>
-                        <a href="#">Privacy Policy</a>
+                        <a href="#" data-i18n="footer_privacy">Privacy Policy</a>
                         &middot;
-                        <a href="#">Terms &amp; Conditions</a>
+                        <a href="#" data-i18n="footer_terms">Terms &amp; Conditions</a>
                     </div>
                 </div>
             </div>
@@ -235,6 +236,10 @@
                 </div>
             `;
         }
+
+        window.addEventListener('languageChanged', () => {
+            if (window.i18n) window.i18n.applyTranslations();
+        });
     });
 </script>
 </body>

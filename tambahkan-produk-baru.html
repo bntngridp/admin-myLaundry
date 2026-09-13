@@ -50,8 +50,8 @@
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <div>
-                        <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;">Tambah Produk Baru</h1>
-                        <p class="text-muted m-0" style="font-size: 0.88rem;">Formulir penambahan item produk dan paket layanan laundry baru</p>
+                        <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;" data-i18n="product_new_title">Tambah Produk Baru</h1>
+                        <p class="text-muted m-0" style="font-size: 0.88rem;" data-i18n="product_new_subtitle">Formulir penambahan item produk dan paket layanan laundry baru</p>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
                     <!-- Left Column: Product Photo Upload -->
                     <div class="col-md-5 col-12 mb-4">
                         <div class="form-card text-center">
-                            <h5>Product Image</h5>
+                            <h5 data-i18n="product_image_header">Product Image</h5>
                             <div class="preview-container mb-3">
                                 <img src="assets/img/gambar-satu.jpg" alt="Product Photo Preview" class="img-fluid rounded mb-3" id="preview-img" style="max-height: 220px; object-fit: cover;">
                                 <div class="text-muted text-truncate mx-auto mb-2" id="file-name-btn" style="max-width: 80%; font-size: 0.85rem;">
@@ -76,12 +76,12 @@
                     <!-- Right Column: Product Details Form -->
                     <div class="col-md-7 col-12 mb-4">
                         <div class="form-card">
-                            <h5>Product Information</h5>
+                            <h5 data-i18n="product_info_header">Product Information</h5>
                             <form id="add-product-form">
                                 <!-- Category & ID -->
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="kategori" class="form-label">Category</label>
+                                        <label for="kategori" class="form-label" data-i18n="product_category_label">Category</label>
                                         <select class="form-select" id="kategori">
                                             <option value="Wash & Fold" selected>Wash & Fold</option>
                                             <option value="Wash & Iron">Wash & Iron</option>
@@ -89,56 +89,56 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="id" class="form-label">Product ID</label>
+                                        <label for="id" class="form-label" data-i18n="products_col_id">Product ID</label>
                                         <input type="text" class="form-control" id="id" value="Auto-generated" readonly style="background-color: #f8fafc; font-style: italic; color: #6c757d;">
                                     </div>
                                 </div>
 
                                 <!-- Product Name -->
                                 <div class="mb-3">
-                                    <label for="nama-produk" class="form-label">Product Name</label>
-                                    <input type="text" class="form-control" id="nama-produk" placeholder="e.g. Wash & Fold Regular">
+                                    <label for="nama-produk" class="form-label" data-i18n="product_name_label">Product Name</label>
+                                    <input type="text" class="form-control" id="nama-produk" placeholder="e.g. Wash & Fold Regular" data-i18n-placeholder="product_name_ph">
                                 </div>
 
                                 <!-- Estimated Duration -->
-                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;">Estimated Duration</h6>
+                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;" data-i18n="product_duration_header">Estimated Duration</h6>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
-                                        <label for="satuan-hari" class="form-label">Duration Unit</label>
+                                        <label for="satuan-hari" class="form-label" data-i18n="product_duration_unit">Duration Unit</label>
                                         <select class="form-select" id="satuan-hari">
-                                            <option value="days" selected>Days</option>
-                                            <option value="hours">Hours</option>
+                                            <option value="days" selected data-i18n="unit_days">Days</option>
+                                            <option value="hours" data-i18n="unit_hours">Hours</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 mb-3">
-                                        <label for="jumlah-hari" class="form-label">Amount</label>
+                                        <label for="jumlah-hari" class="form-label" data-i18n="product_duration_val">Amount</label>
                                         <input type="number" class="form-control" id="jumlah-hari" value="1" min="1">
                                     </div>
                                 </div>
 
                                 <!-- Price -->
-                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;">Pricing</h6>
+                                <h6 class="mt-4 mb-3 text-muted" style="font-size: 0.9rem; font-weight: 600;" data-i18n="product_pricing_header">Pricing</h6>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
-                                        <label for="satuan-kg" class="form-label">Pricing Unit</label>
+                                        <label for="satuan-kg" class="form-label" data-i18n="product_unit_label">Pricing Unit</label>
                                         <select class="form-select" id="satuan-kg">
                                             <option value="kg" selected>Per Kilogram (kg)</option>
                                             <option value="pcs">Per Piece (pcs)</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 mb-3">
-                                        <label for="jumlah-kg" class="form-label">Price (Rp)</label>
+                                        <label for="jumlah-kg" class="form-label" data-i18n="product_price_label">Price (Rp)</label>
                                         <input type="number" class="form-control" id="jumlah-kg" placeholder="0" min="0">
                                     </div>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="d-flex justify-content-end gap-2 mt-4 pt-3" style="border-top: 1px solid #f1f5f9;">
-                                    <a href="produk.html" class="btn btn-outline-danger">
+                                    <a href="produk.html" class="btn btn-outline-danger" data-i18n="btn_cancel">
                                         <i class="fas fa-times me-1"></i>Cancel
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-plus me-1"></i>Add Product
+                                        <i class="fas fa-plus me-1"></i><span data-i18n="product_btn_add">Add Product</span>
                                     </button>
                                 </div>
                             </form>

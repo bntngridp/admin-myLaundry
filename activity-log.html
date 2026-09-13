@@ -27,33 +27,33 @@
                         <p class="text-muted m-0" style="font-size: 0.88rem;" data-i18n="activity_subtitle">Catatan aktivitas sistem dan audit log operasi admin</p>
                     </div>
                     <button class="btn btn-outline-danger" id="clear-logs-btn">
-                        <i class="fas fa-trash me-1"></i>Clear Logs
+                        <i class="fas fa-trash me-1"></i><span data-i18n="activity_btn_clear">Bersihkan Log</span>
                     </button>
                 </div>
                 
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-history me-1" style="color: #0007B0;"></i>
-                        System Operations History
+                        <span data-i18n="activity_card_header">Riwayat Operasi Sistem</span>
                     </div>
                     <div class="card-body">
                         <table id="datatablesSimple">
                             <thead>
                             <tr>
-                                <th>Timestamp</th>
-                                <th>Admin User</th>
-                                <th>Module</th>
-                                <th>Action Description</th>
-                                <th>IP Address</th>
+                                <th data-i18n="activity_col_timestamp">Waktu</th>
+                                <th data-i18n="activity_col_user">Pengguna Admin</th>
+                                <th data-i18n="activity_col_module">Modul</th>
+                                <th data-i18n="activity_col_action">Deskripsi Tindakan</th>
+                                <th data-i18n="activity_col_ip">Alamat IP</th>
                             </tr>
                             </thead>
                             <tfoot>
                             <tr>
-                                <th>Timestamp</th>
-                                <th>Admin User</th>
-                                <th>Module</th>
-                                <th>Action Description</th>
-                                <th>IP Address</th>
+                                <th data-i18n="activity_col_timestamp">Waktu</th>
+                                <th data-i18n="activity_col_user">Pengguna Admin</th>
+                                <th data-i18n="activity_col_module">Modul</th>
+                                <th data-i18n="activity_col_action">Deskripsi Tindakan</th>
+                                <th data-i18n="activity_col_ip">Alamat IP</th>
                             </tr>
                             </tfoot>
                             <tbody>
@@ -125,11 +125,20 @@
 
 <script>
     document.getElementById('clear-logs-btn').addEventListener('click', function() {
-        if (confirm('Are you sure you want to clear all system logs? This action cannot be undone.')) {
-            alert('Logs cleared successfully!');
-            // Reload page to simulate empty state
+        const confirmMsg = window.i18n ? window.i18n.t('activity_confirm_clear') : 'Apakah Anda yakin ingin membersihkan semua log sistem? Tindakan ini tidak dapat dibatalkan.';
+        if (confirm(confirmMsg)) {
+            const successMsg = window.i18n ? window.i18n.t('activity_clear_success') : 'Log sistem berhasil dibersihkan.';
+            alert(successMsg);
             location.reload();
         }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.i18n) window.i18n.applyTranslations();
+    });
+
+    window.addEventListener('languageChanged', () => {
+        if (window.i18n) window.i18n.applyTranslations();
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

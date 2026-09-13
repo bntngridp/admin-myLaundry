@@ -108,7 +108,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <button class="btn btn-outline-secondary btn-sm px-3 py-2 fw-semibold" style="border-radius: 10px;" onclick="loadHistory(true)">
                                     <i class="fas fa-rotate-right me-1"></i>
-                                    <span>Refresh</span>
+                                    <span data-i18n="history_refresh">Refresh</span>
                                 </button>
                                 <button class="btn btn-outline-success btn-sm px-3 py-2 fw-semibold" style="border-radius: 10px;" onclick="exportHistoryCSV()">
                                     <i class="fas fa-file-excel me-1"></i>
@@ -325,7 +325,8 @@
                 if (statCompleted) statCompleted.textContent = completedCount;
                 if (statCancelled) statCancelled.textContent = cancelledCount;
                 if (statRevenue) {
-                    statRevenue.textContent = new Intl.NumberFormat('id-ID', {
+                    const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                    statRevenue.textContent = new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'id-ID', {
                         style: 'currency',
                         currency: 'IDR',
                         minimumFractionDigits: 0
@@ -440,7 +441,8 @@
 
                         const serviceName = order.service ? (order.service.title || 'Dry Clean') : 'Layanan Laundry';
                         const priceVal = Number(order.total_price || 0);
-                        const formattedTotal = new Intl.NumberFormat('id-ID', {
+                        const lang = window.i18n ? window.i18n.getLanguage() : 'id';
+                        const formattedTotal = new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'id-ID', {
                             style: 'currency',
                             currency: 'IDR',
                             minimumFractionDigits: 0
@@ -503,7 +505,7 @@
                                     <p class="text-muted small mb-2" style="max-width: 400px;">${emptyDesc}</p>
                                     ${(searchKeyword || selectedServiceFilter || currentFilterTab !== 'all') ? `
                                         <button class="btn btn-sm btn-light border px-3 py-1 fw-semibold mt-1" onclick="resetAllFilters()">
-                                            <i class="fas fa-filter-circle-xmark me-1"></i> Reset Filter
+                                            <i class="fas fa-filter-circle-xmark me-1"></i> <span>${window.i18n ? window.i18n.t('history_reset_filter') : 'Reset Filter'}</span>
                                         </button>
                                     ` : ''}
                                 </div>
@@ -657,6 +659,8 @@
 
             window.addEventListener('languageChanged', () => {
                 if (window.i18n) window.i18n.applyTranslations();
+                updateHistoryStats(allHistoryOrders);
+                updateServiceFilterOptions(allHistoryOrders);
                 renderHistoryTable();
             });
 

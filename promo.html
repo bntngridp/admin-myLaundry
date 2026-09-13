@@ -195,20 +195,20 @@
     <!-- Modal Form Tambah/Edit Promo -->
     <div id="promoModal" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="modalTitle" style="margin-top: 0; color: #0F172A; font-size: 18px;" data-i18n="promo_add_btn">Tambah Promo Baru</h3>
+            <h3 id="modalTitle" style="margin-top: 0; color: #0F172A; font-size: 18px;" data-i18n="modal_promo_add_title">Tambah Promo Baru</h3>
             <form id="promoForm" onsubmit="savePromo(event)">
                 <input type="hidden" id="promoId">
                 <div class="form-group">
-                    <label data-i18n="promo_code">Kode Promo (Contoh: DISKON50)</label>
-                    <input type="text" id="promoCode" required placeholder="Masukkan kode promo (tanpa spasi)">
+                    <label data-i18n="modal_promo_code">Kode Promo</label>
+                    <input type="text" id="promoCode" required placeholder="Masukkan kode promo (tanpa spasi)" data-i18n-placeholder="modal_promo_code_ph">
                 </div>
                 <div class="form-group">
-                    <label>Judul Promo</label>
-                    <input type="text" id="promoTitle" required placeholder="Contoh: Diskon 50% Super Hemat">
+                    <label data-i18n="modal_promo_title_label">Judul Promo</label>
+                    <input type="text" id="promoTitle" required placeholder="Contoh: Promo Gajian Diskon 50%" data-i18n-placeholder="modal_promo_title_ph">
                 </div>
                 <div class="form-group">
-                    <label>Deskripsi Subtitle</label>
-                    <input type="text" id="promoSubtitle" placeholder="Contoh: Diskon hingga Rp 10.000 untuk cucian kiloan">
+                    <label data-i18n="modal_promo_subtitle">Deskripsi Subtitle</label>
+                    <input type="text" id="promoSubtitle" placeholder="Contoh: Diskon hingga Rp 10.000 untuk cucian kiloan" data-i18n-placeholder="modal_promo_subtitle_ph">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -216,17 +216,17 @@
                         <input type="number" id="promoDiscount" required min="1" max="100" placeholder="50">
                     </div>
                     <div class="form-group">
-                        <label>Maksimal Diskon (Rp)</label>
+                        <label data-i18n="modal_promo_max_discount">Maksimal Diskon (Rp)</label>
                         <input type="number" id="promoMaxDiscount" required placeholder="10000">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Minimal Transaksi (Rp)</label>
+                        <label data-i18n="modal_promo_min_order">Minimal Transaksi (Rp)</label>
                         <input type="number" id="promoMinOrder" required placeholder="20000">
                     </div>
                     <div class="form-group">
-                        <label>Status Promo</label>
+                        <label data-i18n="modal_promo_status">Status Promo</label>
                         <select id="promoIsActive">
                             <option value="true" data-i18n="promo_active">Aktif</option>
                             <option value="false" data-i18n="promo_inactive">Nonaktif</option>
@@ -234,12 +234,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label data-i18n="promo_expiry">Batas Waktu Kedaluwarsa (Expired At)</label>
+                    <label data-i18n="promo_expiry">Batas Waktu Kedaluwarsa</label>
                     <input type="datetime-local" id="promoExpiredAt">
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
                     <button type="button" class="btn-action btn-edit" onclick="closeModal()" style="padding: 10px 18px;" data-i18n="btn_cancel">Batal</button>
-                    <button type="submit" class="btn-primary-custom" style="padding: 10px 18px;" data-i18n="btn_save">Simpan Promo</button>
+                    <button type="submit" class="btn-primary-custom" style="padding: 10px 18px;" data-i18n="modal_promo_save_btn">Simpan Promo</button>
                 </div>
             </form>
         </div>
@@ -378,7 +378,7 @@
         }
 
         function openAddModal() {
-            document.getElementById('modalTitle').innerText = 'Tambah Promo Baru';
+            document.getElementById('modalTitle').innerText = window.i18n ? window.i18n.t('modal_promo_add_title') : 'Tambah Promo Baru';
             document.getElementById('promoId').value = '';
             document.getElementById('promoForm').reset();
             document.getElementById('promoIsActive').value = "true";
@@ -386,7 +386,7 @@
         }
 
         function editPromo(id, code, title, subtitle, discount, maxDiscount, minOrder, isActive, expiredAt) {
-            document.getElementById('modalTitle').innerText = 'Edit Promo';
+            document.getElementById('modalTitle').innerText = window.i18n ? window.i18n.t('modal_promo_edit_title') : 'Edit Kode Promo';
             document.getElementById('promoId').value = id;
             document.getElementById('promoCode').value = code;
             document.getElementById('promoTitle').value = title;

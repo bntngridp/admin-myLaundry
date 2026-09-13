@@ -185,16 +185,16 @@
                 <!-- Page Title and Back Button (Clean, Reachable Header UI) -->
                 <div class="d-flex align-items-center justify-content-between mt-2 mb-4">
                     <div class="d-flex align-items-center">
-                        <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders">
+                        <a href="pesanan.html" class="btn btn-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dee2e6; color: #0B1739; transition: all 0.2s;" title="Back to Orders" data-i18n-title="btn_back_to_orders">
                             <i class="fas fa-arrow-left"></i>
                         </a>
                         <div>
-                            <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;">Detail Pesanan <span class="text-muted" style="font-weight: 400;" id="order-title-id">#...</span></h1>
-                            <p class="text-muted m-0" style="font-size: 0.88rem;">Informasi lengkap rincian pesanan, status penanganan, dan histori penugasan kurir</p>
+                            <h1 class="m-0 fw-bold" style="color: #0B1739; font-size: 1.75rem;"><span data-i18n="detail_order_title">Detail Pesanan</span> <span class="text-muted" style="font-weight: 400;" id="order-title-id">#...</span></h1>
+                            <p class="text-muted m-0" style="font-size: 0.88rem;" data-i18n="detail_order_subtitle">Informasi lengkap rincian pesanan, status penanganan, dan histori penugasan kurir</p>
                         </div>
                     </div>
                     <button class="btn btn-outline-primary fw-bold px-3 py-2" onclick="window.print()" style="border-radius: 10px; font-size: 0.88rem;">
-                        <i class="fas fa-print me-2"></i>Cetak Invoice Struk (PDF)
+                        <i class="fas fa-print me-2"></i><span data-i18n="detail_btn_print_receipt">Cetak Invoice Struk (PDF)</span>
                     </button>
                 </div>
 
@@ -203,20 +203,20 @@
                     <div class="col-lg-8">
                         <!-- Customer & Delivery Card -->
                         <div class="detail-card">
-                            <h5><i class="fas fa-user-circle me-2" style="color: #0007B0;"></i>Customer & Delivery Info</h5>
+                            <h5><i class="fas fa-user-circle me-2" style="color: #0007B0;"></i><span data-i18n="detail_customer_info">Informasi Pelanggan & Pengiriman</span></h5>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="info-label">Customer Name</div>
+                                    <div class="info-label" data-i18n="order_customer_name">Nama Pelanggan</div>
                                     <div class="info-value" id="customer-name">Loading...</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="info-label">Order Date</div>
+                                    <div class="info-label" data-i18n="order_date_label">Tanggal Pesanan</div>
                                     <div class="info-value" id="order-date">Loading...</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="info-label">Delivery Address</div>
+                                    <div class="info-label" data-i18n="order_delivery_address">Alamat Pengiriman</div>
                                     <div class="info-value" id="delivery-address">
                                         <i class="fas fa-map-marker-alt text-danger me-1"></i>
                                         Loading...
@@ -225,7 +225,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="info-label">Special Notes</div>
+                                    <div class="info-label" data-i18n="order_special_notes">Catatan Khusus</div>
                                     <div class="info-value mb-0" style="background-color: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107;" id="special-notes">
                                         <i class="fas fa-sticky-note text-warning me-1"></i>
                                         None
@@ -237,8 +237,8 @@
                         <!-- Live Courier Tracking Map Card -->
                         <div class="detail-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="m-0 border-0 p-0"><i class="fas fa-motorcycle me-2" style="color: #0007B0;"></i>Pelacakan Posisi Kurir Live</h5>
-                                <span class="badge bg-success px-3 py-2" id="trackingStatusBadge"><i class="fas fa-satellite-dish me-1"></i> Realtime Syncing</span>
+                                <h5 class="m-0 border-0 p-0"><i class="fas fa-motorcycle me-2" style="color: #0007B0;"></i><span data-i18n="order_courier_tracking_title">Pelacakan Posisi Kurir Live</span></h5>
+                                <span class="badge bg-success px-3 py-2" id="trackingStatusBadge"><i class="fas fa-satellite-dish me-1"></i> <span data-i18n="order_realtime_syncing">Realtime Syncing</span></span>
                             </div>
 
                             <!-- Live Distance & ETA Widget Overlay -->
@@ -246,21 +246,21 @@
                                 <div class="d-flex align-items-center me-4">
                                     <i class="fas fa-user-ninja fa-lg me-2 text-primary"></i>
                                     <div>
-                                        <div class="text-muted small fw-semibold">Kurir Pengantar</div>
+                                        <div class="text-muted small fw-semibold" data-i18n="order_courier_delivery">Kurir Pengantar</div>
                                         <div id="liveCourierName" class="fw-bold text-dark">Memuat kurir...</div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center me-4">
                                     <i class="fas fa-route fa-lg me-2 text-warning"></i>
                                     <div>
-                                        <div class="text-muted small fw-semibold">Sisa Jarak Realtime</div>
+                                        <div class="text-muted small fw-semibold" data-i18n="order_remaining_distance">Sisa Jarak Realtime</div>
                                         <div id="liveDistanceStr" class="fw-bold text-warning" style="font-size: 1.1rem;">- meter</div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-hourglass-half fa-lg me-2 text-success"></i>
                                     <div>
-                                        <div class="text-muted small fw-semibold">Estimasi Tiba (ETA)</div>
+                                        <div class="text-muted small fw-semibold" data-i18n="order_eta">Estimasi Tiba (ETA)</div>
                                         <div id="liveEtaStr" class="fw-bold text-success" style="font-size: 1.1rem;">- menit</div>
                                     </div>
                                 </div>
@@ -273,8 +273,8 @@
                         <!-- Chat & Proof of Delivery Card -->
                         <div class="detail-card">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5><i class="fas fa-comments me-2" style="color: #0007B0;"></i>Chat & Bukti Pengiriman (Proof of Delivery)</h5>
-                                <span class="badge bg-primary px-3 py-2"><i class="fas fa-camera me-1"></i> Foto Digantung di Pagar/Kamar</span>
+                                <h5><i class="fas fa-comments me-2" style="color: #0007B0;"></i><span data-i18n="order_chat_proof_title">Chat & Bukti Pengiriman (Proof of Delivery)</span></h5>
+                                <span class="badge bg-primary px-3 py-2"><i class="fas fa-camera me-1"></i> <span data-i18n="order_proof_badge">Foto Digantung di Pagar/Kamar</span></span>
                             </div>
 
                             <!-- Chat Messages Timeline Container -->
@@ -285,13 +285,13 @@
                             <!-- Send Message / Upload Delivery Proof Form -->
                             <form id="chatForm" onsubmit="sendAdminChatMessage(event)">
                                 <div class="input-group">
-                                    <input type="text" id="chatInputMessage" class="form-control" placeholder="Tulis pesan atau catatan pengiriman..." style="border-radius: 10px 0 0 10px;">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="triggerProofUpload()" title="Unggah Bukti Foto Laundry Digantung">
-                                        <i class="fas fa-camera text-danger"></i> Bukti Foto
+                                    <input type="text" id="chatInputMessage" class="form-control" data-i18n-placeholder="detail_chat_ph" placeholder="Tulis pesan atau catatan pengiriman..." style="border-radius: 10px 0 0 10px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="triggerProofUpload()" title="Unggah Bukti Foto Laundry Digantung" data-i18n-title="order_upload_proof_title">
+                                        <i class="fas fa-camera text-danger"></i> <span data-i18n="detail_proof_photo_btn">Bukti Foto</span>
                                     </button>
                                     <input type="file" id="proofFileInput" accept="image/*" style="display: none;" onchange="handleProofFileSelected(event)">
                                     <button class="btn btn-primary px-4" type="submit" style="border-radius: 0 10px 10px 0;">
-                                        <i class="fas fa-paper-plane me-1"></i> Kirim
+                                        <i class="fas fa-paper-plane me-1"></i> <span data-i18n="detail_btn_send_chat">Kirim</span>
                                     </button>
                                 </div>
                             </form>
@@ -299,15 +299,15 @@
 
                         <!-- Order Items Card -->
                         <div class="detail-card">
-                            <h5><i class="fas fa-box-open me-2" style="color: #0007B0;"></i>Order Items</h5>
+                            <h5><i class="fas fa-box-open me-2" style="color: #0007B0;"></i><span data-i18n="detail_order_items">Rincian Item & Layanan</span></h5>
                             <div class="table-responsive">
                                 <table class="table align-middle" style="min-width: 500px;">
                                     <thead style="background-color: #C2E9F9;">
                                         <tr>
-                                            <th style="color: #0B1739; font-weight: 600;">Item / Service</th>
-                                            <th style="color: #0B1739; font-weight: 600;" class="text-center">Qty / Weight</th>
-                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Unit Price</th>
-                                            <th style="color: #0B1739; font-weight: 600;" class="text-end">Total Price</th>
+                                            <th style="color: #0B1739; font-weight: 600;" data-i18n="th_item_service">Item / Service</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-center" data-i18n="th_qty_weight">Qty / Weight</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end" data-i18n="th_unit_price">Unit Price</th>
+                                            <th style="color: #0B1739; font-weight: 600;" class="text-end" data-i18n="th_total_price">Total Price</th>
                                         </tr>
                                     </thead>
                                     <tbody id="items-tbody">
@@ -370,19 +370,19 @@
                     <div class="col-lg-4">
                         <!-- Status & Action Card -->
                         <div class="detail-card">
-                            <h5><i class="fas fa-info-circle me-2" style="color: #0007B0;"></i>Order Status</h5>
+                            <h5><i class="fas fa-info-circle me-2" style="color: #0007B0;"></i><span data-i18n="detail_order_status">Status Pesanan</span></h5>
                             
-                            <div class="info-label">Current Status</div>
+                            <div class="info-label" data-i18n="order_current_status">Status Saat Ini</div>
                             <div class="mb-4" id="order-status-badge-container">
                                 <span class="badge bg-secondary py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
                                     Loading...
                                 </span>
                             </div>
                             
-                            <div class="info-label">Payment Method</div>
+                            <div class="info-label" data-i18n="detail_payment_method">Metode Pembayaran</div>
                             <div class="info-value" id="payment-method">Loading...</div>
                             
-                            <div class="info-label">Payment Status</div>
+                            <div class="info-label" data-i18n="detail_payment_status">Status Pembayaran</div>
                             <div class="info-value mb-4" id="payment-status-badge-container">
                                 <span class="badge bg-secondary py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
                                     Loading...
@@ -394,10 +394,10 @@
                             <!-- Operations Buttons -->
                             <div class="d-flex flex-column gap-2">
                                 <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-complete">
-                                    <i class="fas fa-check me-2"></i>Mark as Completed
+                                    <i class="fas fa-check me-2"></i><span data-i18n="order_mark_completed">Tandai Selesai</span>
                                 </button>
-                                <button class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-print">
-                                    <i class="fas fa-print me-2"></i>Print Receipt
+                                <button class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center" id="btn-print" onclick="window.print()">
+                                    <i class="fas fa-print me-2"></i><span data-i18n="order_print_receipt">Cetak Struk</span>
                                 </button>
                             </div>
                         </div>
@@ -405,9 +405,9 @@
                         <!-- Input Berat Laundry Card -->
                         <div class="detail-card" id="card-set-weight" style="display: none; border: 2px solid #e0f2fe; background: linear-gradient(135deg, #f0f9ff, #ffffff);">
                             <h5 style="color: #0369a1;">
-                                <i class="fas fa-weight-hanging me-2" style="color: #0369a1;"></i>Input Berat Laundry
+                                <i class="fas fa-weight-hanging me-2" style="color: #0369a1;"></i><span data-i18n="order_input_weight_title">Input Berat Laundry</span>
                             </h5>
-                            <p class="text-muted small mb-3">
+                            <p class="text-muted small mb-3" data-i18n="order_input_weight_desc">
                                 <i class="fas fa-info-circle me-1 text-info"></i>
                                 Masukkan berat/jumlah laundry dari outlet. Sistem akan menghitung total otomatis.
                             </p>
@@ -416,11 +416,11 @@
                             <div id="weight-service-info" class="mb-3 p-3 rounded" style="background: #f0f9ff; border: 1px solid #bae6fd;">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="text-muted small fw-semibold">Layanan</div>
+                                        <div class="text-muted small fw-semibold" data-i18n="order_service_label">Layanan</div>
                                         <div class="fw-bold" id="ws-service-name" style="color: #0B1739;">-</div>
                                     </div>
                                     <div class="text-end">
-                                        <div class="text-muted small fw-semibold">Harga Satuan</div>
+                                        <div class="text-muted small fw-semibold" data-i18n="order_unit_price_label">Harga Satuan</div>
                                         <div class="fw-bold text-primary" id="ws-unit-price">-</div>
                                     </div>
                                 </div>
@@ -428,7 +428,7 @@
 
                             <!-- Weight/Quantity Input -->
                             <div id="weight-input-group" class="mb-3">
-                                <label class="form-label fw-semibold text-muted small" id="ws-input-label">Berat (kg)</label>
+                                <label class="form-label fw-semibold text-muted small" id="ws-input-label" data-i18n="order_weight_label">Berat (kg)</label>
                                 <div class="input-group">
                                     <input 
                                         type="number" 
@@ -446,7 +446,7 @@
 
                             <!-- Live Preview Total -->
                             <div id="ws-preview-total" class="mb-4 p-3 rounded text-center" style="background: #dcfce7; border: 1px solid #86efac; display: none;">
-                                <div class="text-muted small fw-semibold">Estimasi Total</div>
+                                <div class="text-muted small fw-semibold" data-i18n="order_est_total">Estimasi Total</div>
                                 <div class="fw-bold" id="ws-preview-amount" style="font-size: 1.6rem; color: #15803d;">Rp0</div>
                                 <div class="text-muted" style="font-size: 0.75rem;" id="ws-preview-formula">-</div>
                             </div>
@@ -458,9 +458,9 @@
                                 style="background: linear-gradient(135deg, #0369a1, #0007B0); color: white; border-radius: 10px; font-size: 1rem;"
                                 onclick="submitWeight()"
                             >
-                                <i class="fas fa-save me-2"></i>Simpan & Kirim Notifikasi ke Customer
+                                <i class="fas fa-save me-2"></i><span data-i18n="order_btn_save_weight">Simpan & Kirim Notifikasi ke Customer</span>
                             </button>
-                            <div class="text-muted text-center mt-2" style="font-size: 0.75rem;">
+                            <div class="text-muted text-center mt-2" style="font-size: 0.75rem;" data-i18n="order_notif_customer_hint">
                                 <i class="fas fa-bell me-1"></i>Customer akan mendapat notifikasi total yang harus dibayar
                             </div>
                         </div>
@@ -469,8 +469,8 @@
                 <!-- Print Footer -->
                 <div class="d-none d-print-block text-center mt-5" id="print-footer">
                     <div style="border-top: 2px dashed #dee2e6; margin-bottom: 15px;"></div>
-                    <p class="fw-bold mb-1" style="font-size: 0.95rem; color: #0B1739;">Thank You For Your Business!</p>
-                    <p class="text-muted mb-0" style="font-size: 0.8rem;">If you have any questions about this receipt, contact support@mylaundry.com</p>
+                    <p class="fw-bold mb-1" style="font-size: 0.95rem; color: #0B1739;" data-i18n="order_receipt_thanks">Thank You For Your Business!</p>
+                    <p class="text-muted mb-0" style="font-size: 0.8rem;" data-i18n="order_receipt_contact">If you have any questions about this receipt, contact support@mylaundry.com</p>
                 </div>
             </div>
         </main>
@@ -483,15 +483,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold" id="confirmCompleteModalLabel" style="color: #0B1739;">Selesaikan Pesanan</h5>
+                <h5 class="modal-title fw-bold" id="confirmCompleteModalLabel" style="color: #0B1739;" data-i18n="modal_complete_title">Selesaikan Pesanan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body py-3" style="color: #475569;">
-                Apakah Anda yakin ingin menyelesaikan pesanan <strong id="modal-order-id">#...</strong> ini? Status pesanan akan diubah menjadi Completed.
+            <div class="modal-body py-3" style="color: #475569;" data-i18n="modal_complete_desc">
+                Apakah Anda yakin ingin menyelesaikan pesanan ini? Pastikan pakaian sudah rapi dan siap diserahkan.
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border: 1px solid #dee2e6; color: #6c757d; font-weight: 600; border-radius: 8px;">Batal</button>
-                <button type="button" id="btn-confirm-yes" class="btn btn-primary" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px; font-weight: 600; padding: 6px 20px;">Ya, Selesaikan</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border: 1px solid #dee2e6; color: #6c757d; font-weight: 600; border-radius: 8px;" data-i18n="btn_cancel">Batal</button>
+                <button type="button" id="btn-confirm-yes" class="btn btn-primary" style="background-color: #0007B0; border-color: #0007B0; border-radius: 8px; font-weight: 600; padding: 6px 20px;" data-i18n="modal_complete_confirm_btn">Ya, Selesaikan</button>
             </div>
         </div>
     </div>
@@ -502,7 +502,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" style="border-radius: 16px; overflow: hidden; background: #0F172A;">
             <div class="modal-header border-0 text-white">
-                <h5 class="modal-title fw-bold"><i class="fas fa-camera text-danger me-2"></i>Foto Bukti Pengiriman Laundry</h5>
+                <h5 class="modal-title fw-bold"><i class="fas fa-camera text-danger me-2"></i><span data-i18n="modal_proof_title">Foto Bukti Pengiriman Laundry</span></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center p-0">
@@ -510,7 +510,7 @@
             </div>
             <div class="modal-footer border-0 justify-content-between text-white-50 px-4 py-3" style="background: rgba(255,255,255,0.05);">
                 <small id="lightboxProofCaption"><i class="fas fa-info-circle me-1"></i> Laundry digantung di lokasi</small>
-                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" data-i18n="btn_close">Tutup</button>
             </div>
         </div>
     </div>
@@ -591,11 +591,13 @@
 
             // Populate Text Info
             document.getElementById('order-title-id').textContent = formatOrderId(order.id);
-            document.getElementById('customer-name').textContent = order.customer ? (order.customer.username || 'Guest') : 'Guest';
+            const guestLabel = window.i18n ? window.i18n.t('guest_customer') : 'Guest';
+            document.getElementById('customer-name').textContent = order.customer ? (order.customer.username || guestLabel) : guestLabel;
 
             const dateObj = new Date(order.created_at);
+            const lang = window.i18n ? window.i18n.getLanguage() : 'id';
             const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-            document.getElementById('order-date').textContent = dateObj.toLocaleDateString('en-US', options).replace(',', '');
+            document.getElementById('order-date').textContent = dateObj.toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', options).replace(',', '');
 
             // Delivery Address
             const address = order.address;
@@ -611,7 +613,8 @@
                     ${address.city || ''}
                 `;
             } else {
-                addressContainer.innerHTML = `<i class="fas fa-map-marker-alt text-danger me-1"></i>No Address`;
+                const noAddr = window.i18n ? window.i18n.t('no_address') : 'Tidak ada alamat';
+                addressContainer.innerHTML = `<i class="fas fa-map-marker-alt text-danger me-1"></i>${noAddr}`;
             }
 
             // Special Notes
@@ -619,7 +622,8 @@
             if (address && address.address_notes) {
                 notesContainer.innerHTML = `<i class="fas fa-sticky-note text-warning me-1"></i>${address.address_notes}`;
             } else {
-                notesContainer.innerHTML = `<i class="fas fa-sticky-note text-muted me-1"></i>Tidak ada catatan khusus.`;
+                const noneNotes = window.i18n ? window.i18n.t('order_none_notes') : 'Tidak ada catatan khusus.';
+                notesContainer.innerHTML = `<i class="fas fa-sticky-note text-muted me-1"></i>${noneNotes}`;
             }
 
             // Render Service / Items inside table body
@@ -636,11 +640,14 @@
             const formattedUnitPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
             const formattedTotal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(subtotal);
 
+            const serviceLabel = lang === 'en' ? 'Service' : 'Layanan';
+            const grandTotalLabel = window.i18n ? window.i18n.t('detail_total_amount') : 'Grand Total';
+
             tbody.innerHTML = `
                 <tr>
                     <td>
                         <div class="fw-semibold" style="color: #0B1739;">${serviceName}</div>
-                        <small class="text-muted">${serviceCategory} service</small>
+                        <small class="text-muted">${serviceCategory} ${serviceLabel}</small>
                     </td>
                     <td class="text-center">${qtyWeight} ${unit}</td>
                     <td class="text-end">${formattedUnitPrice} / ${unit}</td>
@@ -648,7 +655,7 @@
                 </tr>
                 <tr style="font-size: 1.15rem; border-top: 1px solid #dee2e6;">
                     <td colspan="2" class="border-0"></td>
-                    <td class="text-end border-0" style="color: #0B1739; font-weight: 700;">Grand Total:</td>
+                    <td class="text-end border-0" style="color: #0B1739; font-weight: 700;">${grandTotalLabel}:</td>
                     <td class="text-end border-0 info-value-highlight">${formattedTotal}</td>
                 </tr>
             `;
@@ -656,30 +663,35 @@
             // Payment and Status
             const cleanStatus = (order.status || '').toLowerCase();
             const statusConfig = statusClasses[cleanStatus] || { bg: '#e2e8f0', text: '#475569', label: order.status || 'Unknown' };
+            const statusKey = 'status_' + cleanStatus.replace(/\s+/g, '_').replace(/-/g, '_');
+            const translatedStatus = (window.i18n && window.i18n.t(statusKey) !== statusKey) ? window.i18n.t(statusKey) : statusConfig.label;
 
             // Status Badge
             const statusContainer = document.getElementById('order-status-badge-container');
             statusContainer.innerHTML = `
                 <span class="badge d-inline-block py-2 px-3 fs-6" style="background-color: ${statusConfig.bg}; color: ${statusConfig.text}; border-radius: 8px;">
-                    ${statusConfig.label}
+                    ${translatedStatus}
                 </span>
             `;
 
             // Payment Method
-            document.getElementById('payment-method').textContent = cleanStatus === 'awaiting payment' ? '-' : 'Cash / Courier Collection';
+            const payMethodLabel = window.i18n ? window.i18n.t('pay_cash_cod') : 'Cash / Courier Collection';
+            document.getElementById('payment-method').textContent = cleanStatus === 'awaiting payment' ? '-' : payMethodLabel;
 
             // Payment Status
             const paymentContainer = document.getElementById('payment-status-badge-container');
+            const paidLabel = window.i18n ? window.i18n.t('badge_paid') : 'Paid';
+            const unpaidLabel = window.i18n ? window.i18n.t('badge_unpaid') : 'Unpaid';
             if (cleanStatus === 'awaiting payment' || cleanStatus === 'pending') {
                 paymentContainer.innerHTML = `
                     <span class="badge bg-warning py-2 px-3 fs-6 text-dark" style="border-radius: 8px;">
-                        <i class="fas fa-exclamation-circle me-1"></i>Unpaid
+                        <i class="fas fa-exclamation-circle me-1"></i>${unpaidLabel}
                     </span>
                 `;
             } else {
                 paymentContainer.innerHTML = `
                     <span class="badge bg-success py-2 px-3 fs-6 text-white" style="border-radius: 8px;">
-                        <i class="fas fa-check-circle me-1"></i>Paid
+                        <i class="fas fa-check-circle me-1"></i>${paidLabel}
                     </span>
                 `;
             }
@@ -1095,9 +1107,15 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+        if (window.i18n) window.i18n.applyTranslations();
         loadOrderDetail();
         startLiveTrackingAutoRefresh();
         loadOrderChatTimeline();
+    });
+
+    window.addEventListener('languageChanged', () => {
+        if (window.i18n) window.i18n.applyTranslations();
+        loadOrderDetail();
     });
 
     window.addEventListener('beforeunload', () => {

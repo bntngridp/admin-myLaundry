@@ -45,23 +45,23 @@
                                     <table id="datatablesSimple" style="font-size: 13px">
                                         <thead>
                                         <tr>
-                                            <th data-i18n="orders_col_id">Order</th>
-                                            <th data-i18n="orders_col_customer">Customer</th>
-                                            <th>Date</th>
-                                            <th data-i18n="orders_col_status">Status</th>
-                                            <th>Address</th>
-                                            <th data-i18n="orders_col_price">Total</th>
+                                            <th data-i18n="th_order">Order</th>
+                                            <th data-i18n="th_customer">Customer</th>
+                                            <th data-i18n="th_date">Date</th>
+                                            <th data-i18n="th_status">Status</th>
+                                            <th data-i18n="th_address">Address</th>
+                                            <th data-i18n="th_total">Total</th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tfoot>
                                         <tr>
-                                            <th>Order</th>
-                                            <th>Customer</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Address</th>
-                                            <th>Total</th>
+                                            <th data-i18n="th_order">Order</th>
+                                            <th data-i18n="th_customer">Customer</th>
+                                            <th data-i18n="th_date">Date</th>
+                                            <th data-i18n="th_status">Status</th>
+                                            <th data-i18n="th_address">Address</th>
+                                            <th data-i18n="th_total">Total</th>
                                             <th></th>
                                         </tr>
                                         </tfoot>
@@ -139,9 +139,9 @@
                 if (s === 'completed' || s === 'done' || s === 'selesai') return window.i18n ? window.i18n.t('status_completed') : 'Selesai';
                 if (s === 'cancelled' || s === 'dibatalkan') return window.i18n ? window.i18n.t('status_cancelled') : 'Dibatalkan';
                 if (s === 'in progress' || s === 'diproses' || s === 'processing') return window.i18n ? window.i18n.t('status_in_progress') : 'Diproses';
-                if (s === 'penjemputan' || s === 'dijemput' || s === 'picking up') return 'Penjemputan';
-                if (s === 'pengantaran' || s === 'delivering' || s === 'diantar') return 'Pengantaran';
-                if (s === 'waiting for courier approval') return 'Menunggu Kurir';
+                if (s === 'penjemputan' || s === 'dijemput' || s === 'picking up') return window.i18n ? window.i18n.t('status_penjemputan') : 'Penjemputan';
+                if (s === 'pengantaran' || s === 'delivering' || s === 'diantar') return window.i18n ? window.i18n.t('status_pengantaran') : 'Pengantaran';
+                if (s === 'waiting for courier approval') return window.i18n ? window.i18n.t('status_waiting_courier') : 'Menunggu Kurir';
                 if (s.includes('courier') || s.includes('kurir') || s.includes('en route') || s.includes('on the way')) return window.i18n ? window.i18n.t('status_courier_en_route') : 'Kurir OTW';
                 if (s === 'awaiting payment' || s === 'pending' || s === 'menunggu pembayaran' || s === 'menunggu_pembayaran') return window.i18n ? window.i18n.t('status_awaiting_payment') : 'Menunggu Pembayaran';
                 return status.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -272,6 +272,7 @@
             }
 
             window.addEventListener('DOMContentLoaded', () => {
+                if (window.i18n) window.i18n.applyTranslations();
                 const successMsg = sessionStorage.getItem('success_message');
                 if (successMsg) {
                     showAlert(successMsg, 'success');
@@ -281,7 +282,10 @@
             });
 
             // Listen for languageChanged event to re-render table with active language
-            window.addEventListener('languageChanged', loadOrders);
+            window.addEventListener('languageChanged', () => {
+                if (window.i18n) window.i18n.applyTranslations();
+                loadOrders();
+            });
         </script>
     </body>
 </html>
