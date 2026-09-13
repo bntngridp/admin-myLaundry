@@ -422,7 +422,11 @@
             "activity_col_action": "Deskripsi Tindakan",
             "activity_col_ip": "Alamat IP",
             "activity_confirm_clear": "Apakah Anda yakin ingin membersihkan semua log sistem? Tindakan ini tidak dapat dibatalkan.",
-            "activity_clear_success": "Log sistem berhasil dibersihkan.",
+            "activity_empty": "Belum ada catatan aktivitas login atau sesi.",
+            "activity_action_login_success": "Berhasil masuk ke dalam sistem",
+            "activity_action_login_failed": "Gagal melakukan autentikasi login",
+            "activity_loading": "Memuat log aktivitas...",
+            "activity_clear_fail": "Gagal membersihkan log sistem.",
 
             "settings_title": "Pengaturan Akun",
             "settings_subtitle": "Kelola profil admin, branding outlet, dan preferensi keamanan",
@@ -448,6 +452,7 @@
             "settings_alert_strong": "Kata Sandi Baru harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, dan simbol.",
             "settings_alert_mismatch": "Konfirmasi kata sandi baru tidak cocok.",
             "settings_alert_success": "Pengaturan berhasil disimpan.",
+            "settings_alert_fail": "Gagal menyimpan pengaturan. Silakan coba lagi.",
 
             // Auth Pages (Login, Register, Forgot, Reset)
             "auth_signin": "Masuk",
@@ -935,6 +940,11 @@
             "activity_col_ip": "IP Address",
             "activity_confirm_clear": "Are you sure you want to clear all system logs? This action cannot be undone.",
             "activity_clear_success": "System logs cleared successfully.",
+            "activity_empty": "No login or session activity records found.",
+            "activity_action_login_success": "Successfully signed in to the system",
+            "activity_action_login_failed": "Failed login authentication attempt",
+            "activity_loading": "Loading activity logs...",
+            "activity_clear_fail": "Failed to clear system logs.",
 
             "settings_title": "Account Settings",
             "settings_subtitle": "Manage admin profile, outlet branding, and security preferences",
@@ -960,6 +970,7 @@
             "settings_alert_strong": "New Password must be at least 8 characters long and contain uppercase, lowercase, number, and symbol!",
             "settings_alert_mismatch": "New passwords do not match!",
             "settings_alert_success": "Settings saved successfully!",
+            "settings_alert_fail": "Failed to save settings. Please try again.",
 
             // Auth Pages (Login, Register, Forgot, Reset)
             "auth_signin": "Sign In",

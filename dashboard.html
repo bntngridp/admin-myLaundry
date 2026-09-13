@@ -373,10 +373,11 @@
                     const branchId = localStorage.getItem('selected_branch_id');
                     const branchParam = branchId ? `?branch_id=${branchId}` : '';
 
-                    // Fetch orders list and stats in parallel
-                    const [ordersRes, statsRes] = await Promise.all([
+                    // Fetch orders list, stats, and visitors activity in parallel
+                    const [ordersRes, statsRes, loginHistRes] = await Promise.all([
                         apiFetch(`/orders/${branchParam}`),
-                        apiFetch(`/admins/stats${branchParam}`)
+                        apiFetch(`/admins/stats${branchParam}`),
+                        apiFetch('/auth/login-history').catch(() => ({ data: [] }))
                     ]);
 
                     if (!ordersRes || !ordersRes.success) {
@@ -384,6 +385,7 @@
                     }
 
                     const orders = ordersRes.data || [];
+                    const loginLogs = (loginHistRes && loginHistRes.data && Array.isArray(loginHistRes.data)) ? loginHistRes.data : [];
                     
                     // 1. Populate table
                     if (tbody) {
@@ -564,12 +566,72 @@
                         salesDataSets.yearly.max = 100;
                     }
 
-                    // Trigger initial chart draw
+                    // Trigger initial sales chart draw
                     const activePeriod = document.getElementById('salesPeriodSelect').value;
                     salesChart.data.labels = salesDataSets[activePeriod].labels;
                     salesChart.data.datasets[0].data = salesDataSets[activePeriod].data;
                     salesChart.options.scales.yAxes[0].ticks.max = salesDataSets[activePeriod].max;
                     salesChart.update();
+
+                    // 3. Compute dynamic visitors stats from real login logs
+                    const visitorsToday = [0, 0, 0, 0];
+                    const visitorsWeekly = [0, 0, 0, 0, 0, 0, 0];
+                    const visitorsMonthly = [0, 0, 0, 0, 0, 0];
+                    const visitorsYearly = { 2022: 0, 2023: 0, 2024: 0, 2025: 0, 2026: 0 };
+
+                    const now = new Date();
+                    loginLogs.forEach(log => {
+                        const date = new Date(log.logged_at || log.CreatedAt);
+                        if (isNaN(date.getTime())) return;
+
+                        const year = date.getFullYear();
+                        const month = date.getMonth();
+                        const day = date.getDay();
+                        const hour = date.getHours();
+
+                        // Yearly
+                        if (visitorsYearly[year] !== undefined) {
+                            visitorsYearly[year] += 1;
+                        }
+
+                        // Monthly (Jan - Jun)
+                        if (year === now.getFullYear() && month < 6) {
+                            visitorsMonthly[month] += 1;
+                        }
+
+                        // Weekly (within 7 days)
+                        const diffTime = Math.abs(now - date);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (diffDays <= 7) {
+                            const index = (day + 6) % 7; // Mon=0 .. Sun=6
+                            visitorsWeekly[index] += 1;
+                        }
+
+                        // Today
+                        if (date.toDateString() === now.toDateString()) {
+                            if (hour >= 5 && hour < 12) visitorsToday[0] += 1; // Pagi
+                            else if (hour >= 12 && hour < 16) visitorsToday[1] += 1; // Siang
+                            else if (hour >= 16 && hour < 19) visitorsToday[2] += 1; // Sore
+                            else visitorsToday[3] += 1; // Malam
+                        }
+                    });
+
+                    visitorsDataSets.today.data = visitorsToday;
+                    visitorsDataSets.weekly.data = visitorsWeekly;
+                    visitorsDataSets.monthly.data = visitorsMonthly;
+                    visitorsDataSets.yearly.data = Object.keys(visitorsYearly).map(y => visitorsYearly[y]);
+
+                    visitorsDataSets.today.max = Math.ceil(Math.max(...visitorsToday, 4) * 1.5);
+                    visitorsDataSets.weekly.max = Math.ceil(Math.max(...visitorsWeekly, 4) * 1.5);
+                    visitorsDataSets.monthly.max = Math.ceil(Math.max(...visitorsMonthly, 4) * 1.5);
+                    visitorsDataSets.yearly.max = Math.ceil(Math.max(...visitorsDataSets.yearly.data, 4) * 1.5);
+
+                    // Trigger initial visitors chart draw
+                    const activeVisitorsPeriod = document.getElementById('visitorsPeriodSelect') ? document.getElementById('visitorsPeriodSelect').value : 'monthly';
+                    visitorsChart.data.labels = visitorsDataSets[activeVisitorsPeriod].labels;
+                    visitorsChart.data.datasets[0].data = visitorsDataSets[activeVisitorsPeriod].data;
+                    visitorsChart.options.scales.yAxes[0].ticks.max = visitorsDataSets[activeVisitorsPeriod].max;
+                    visitorsChart.update();
 
                 } catch (error) {
                     console.error('Error synchronizing database data:', error);

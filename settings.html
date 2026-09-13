@@ -11,6 +11,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Custom Web Components -->
+    <script src="js/api.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/components.js" defer></script>
 </head>
@@ -32,9 +33,13 @@
                         <!-- Left Column: Profile & Shop Branding -->
                         <div class="col-lg-5 col-md-6 mb-4">
                             <!-- Admin Profile Card -->
-                            <div class="bagian-gambar mb-4">
+                            <div class="bagian-gambar mb-4 text-center">
                                 <h5 class="mb-3 text-start" style="color: #0B1739; font-weight: 650; font-size: 1.15rem;" data-i18n="settings_profile_header">Profil Admin</h5>
                                 <img src="assets/img/gambar-satu.jpg" alt="Admin Avatar" class="img-fluid rounded-circle mb-3" id="preview-avatar" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #C2E9F9;">
+                                <div class="mb-3">
+                                    <h6 class="fw-bold mb-0" id="admin-display-name">Admin</h6>
+                                    <small class="text-muted" id="admin-display-email">admin@mylaundry.com</small>
+                                </div>
                                 <button class="informasi-nama-gambar btn btn-secondary w-100 text-truncate d-flex align-items-center justify-content-center mx-auto mb-2" id="file-name-btn" style="max-width:80%; overflow:hidden;">
                                     admin-avatar.jpg
                                 </button>
@@ -50,16 +55,20 @@
                                 <div class="bagian-satu">
                                     <h4 data-i18n="settings_shop_header">Informasi Toko</h4>
                                     <div class="mb-3">
+                                        <label for="branch-select" class="form-label fw-semibold">Pilih Outlet / Cabang</label>
+                                        <select class="form-select" id="branch-select"></select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="shop-name" class="form-label" data-i18n="settings_shop_name">Nama Toko</label>
-                                        <input type="text" class="form-control" id="shop-name" value="myLaundry Telkom University">
+                                        <input type="text" class="form-control" id="shop-name" placeholder="Nama outlet laundry">
                                     </div>
                                     <div class="mb-3">
                                         <label for="shop-phone" class="form-label" data-i18n="settings_shop_phone">Nomor Telepon</label>
-                                        <input type="text" class="form-control" id="shop-phone" value="+62 812-3456-7890">
+                                        <input type="text" class="form-control" id="shop-phone" placeholder="08xxxxxxxxxx">
                                     </div>
                                     <div class="mb-3">
                                         <label for="shop-address" class="form-label" data-i18n="settings_shop_address">Alamat</label>
-                                        <textarea class="form-control" id="shop-address" rows="3" style="resize: none;">Sukabirus No. 42, Dayeuhkolot, Bandung</textarea>
+                                        <textarea class="form-control" id="shop-address" rows="3" style="resize: none;" placeholder="Alamat outlet"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -74,17 +83,17 @@
                                     <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="tax-rate" class="form-label" data-i18n="settings_tax_rate">Tarif Pajak (%)</label>
-                                            <input type="number" class="form-control" id="tax-rate" value="10" min="0" max="100">
+                                            <input type="number" class="form-control" id="tax-rate" min="0" max="100">
                                         </div>
                                         <div class="col-sm-6 mb-3">
                                             <label for="service-charge" class="form-label" data-i18n="settings_service_charge">Biaya Layanan (Rp)</label>
-                                            <input type="number" class="form-control" id="service-charge" value="2000" min="0">
+                                            <input type="number" class="form-control" id="service-charge" min="0">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6 mb-3">
                                             <label for="min-order" class="form-label" data-i18n="settings_min_order">Minimal Nilai Pesanan (Rp)</label>
-                                            <input type="number" class="form-control" id="min-order" value="10000" min="0">
+                                            <input type="number" class="form-control" id="min-order" min="0">
                                         </div>
                                         <div class="col-sm-6 mb-3">
                                             <label for="currency-format" class="form-label" data-i18n="settings_currency_symbol">Simbol Mata Uang</label>
@@ -135,6 +144,10 @@
 </div>
 
 <script>
+    let currentAdminId = null;
+    let branchesList = [];
+    let selectedBranchId = null;
+
     // Handle image upload and preview
     document.getElementById('avatar-upload').addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -142,48 +155,175 @@
             document.getElementById('file-name-btn').textContent = file.name;
             const reader = new FileReader();
             reader.onload = function(event) {
-                document.getElementById('preview-avatar').src = event.target.result;
+                const base64Img = event.target.result;
+                document.getElementById('preview-avatar').src = base64Img;
+                localStorage.setItem('admin_avatar', base64Img);
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Mock settings saving notification
-    document.getElementById('save-settings-btn').addEventListener('click', function() {
+    async function loadSettingsData() {
+        try {
+            // 1. Muat profil admin riil
+            const adminRes = await apiFetch('/auth/me');
+            if (adminRes && adminRes.data) {
+                const admin = adminRes.data;
+                currentAdminId = admin.id;
+                const displayNameEl = document.getElementById('admin-display-name');
+                const displayEmailEl = document.getElementById('admin-display-email');
+                if (displayNameEl) displayNameEl.textContent = admin.username || 'Admin';
+                if (displayEmailEl) displayEmailEl.textContent = admin.email || '';
+                if (admin.phone_number && !document.getElementById('shop-phone').value) {
+                    document.getElementById('shop-phone').value = admin.phone_number;
+                }
+            }
+
+            // 2. Muat avatar jika ada di localStorage
+            const savedAvatar = localStorage.getItem('admin_avatar');
+            if (savedAvatar) {
+                document.getElementById('preview-avatar').src = savedAvatar;
+            }
+
+            // 3. Muat cabang toko riil dari backend
+            const branchesRes = await apiFetch('/branches');
+            if (branchesRes && branchesRes.data && Array.isArray(branchesRes.data)) {
+                branchesList = branchesRes.data;
+                const selectEl = document.getElementById('branch-select');
+                if (selectEl && branchesList.length > 0) {
+                    selectEl.innerHTML = branchesList.map(b => `<option value="${b.id}">${escapeHtml(b.name)}</option>`).join('');
+                    selectEl.value = branchesList[0].id;
+                    selectedBranchId = branchesList[0].id;
+                    applyBranchData(branchesList[0]);
+
+                    selectEl.addEventListener('change', (e) => {
+                        selectedBranchId = Number(e.target.value);
+                        const branch = branchesList.find(b => b.id === selectedBranchId);
+                        if (branch) applyBranchData(branch);
+                    });
+                }
+            }
+
+            // 4. Muat ketentuan operasional dari storage
+            const savedOps = JSON.parse(localStorage.getItem('operational_settings') || '{}');
+            document.getElementById('tax-rate').value = savedOps.taxRate ?? 10;
+            document.getElementById('service-charge').value = savedOps.serviceCharge ?? 2000;
+            document.getElementById('min-order').value = savedOps.minOrder ?? 10000;
+
+        } catch (err) {
+            console.error('Error loading settings data:', err);
+        }
+    }
+
+    function applyBranchData(branch) {
+        document.getElementById('shop-name').value = branch.name || '';
+        document.getElementById('shop-address').value = branch.address || '';
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // Save settings handler
+    document.getElementById('save-settings-btn').addEventListener('click', async function() {
         const newPassword = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
+        const shopName = document.getElementById('shop-name').value.trim();
+        const shopPhone = document.getElementById('shop-phone').value.trim();
+        const shopAddress = document.getElementById('shop-address').value.trim();
+        const taxRate = document.getElementById('tax-rate').value;
+        const serviceCharge = document.getElementById('service-charge').value;
+        const minOrder = document.getElementById('min-order').value;
 
-        if (newPassword) {
-            const isStrong = newPassword.length >= 8 && 
-                             /[A-Z]/.test(newPassword) && 
-                             /[a-z]/.test(newPassword) && 
-                             /[0-9]/.test(newPassword) && 
-                             /[^A-Za-z0-9]/.test(newPassword);
+        try {
+            // Validasi kata sandi baru jika diisi
+            if (newPassword) {
+                const isStrong = newPassword.length >= 8 && 
+                                 /[A-Z]/.test(newPassword) && 
+                                 /[a-z]/.test(newPassword) && 
+                                 /[0-9]/.test(newPassword) && 
+                                 /[^A-Za-z0-9]/.test(newPassword);
 
-            if (!isStrong) {
-                const strongMsg = window.i18n ? window.i18n.t('settings_alert_strong') : 'Kata Sandi Baru harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, dan simbol.';
-                alert(strongMsg);
-                return;
+                if (!isStrong) {
+                    const strongMsg = window.i18n ? window.i18n.t('settings_alert_strong') : 'Kata Sandi Baru harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, dan simbol.';
+                    alert(strongMsg);
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    const mismatchMsg = window.i18n ? window.i18n.t('settings_alert_mismatch') : 'Konfirmasi kata sandi baru tidak cocok.';
+                    alert(mismatchMsg);
+                    return;
+                }
+
+                if (currentAdminId) {
+                    await apiFetch(`/admins/${currentAdminId}`, {
+                        method: 'PUT',
+                        body: {
+                            password: newPassword,
+                            phone_number: shopPhone
+                        }
+                    });
+                }
+            } else if (currentAdminId && shopPhone) {
+                await apiFetch(`/admins/${currentAdminId}`, {
+                    method: 'PUT',
+                    body: {
+                        phone_number: shopPhone
+                    }
+                });
             }
 
-            if (newPassword !== confirmPassword) {
-                const mismatchMsg = window.i18n ? window.i18n.t('settings_alert_mismatch') : 'Konfirmasi kata sandi baru tidak cocok.';
-                alert(mismatchMsg);
-                return;
+            // Simpan perubahan cabang ke backend
+            if (selectedBranchId && (shopName || shopAddress)) {
+                await apiFetch(`/branches/${selectedBranchId}`, {
+                    method: 'PUT',
+                    body: {
+                        name: shopName,
+                        address: shopAddress
+                    }
+                });
             }
+
+            // Simpan aturan operasional ke storage
+            const opsData = {
+                taxRate: Number(taxRate) || 0,
+                serviceCharge: Number(serviceCharge) || 0,
+                minOrder: Number(minOrder) || 0,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('operational_settings', JSON.stringify(opsData));
+
+            const successMsg = window.i18n ? window.i18n.t('settings_alert_success') : 'Pengaturan berhasil disimpan.';
+            alert(successMsg);
+            await loadSettingsData();
+
+            // Kosongkan field kata sandi setelah disimpan
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+
+        } catch (err) {
+            console.error('Error saving settings:', err);
+            const failMsg = window.i18n ? window.i18n.t('settings_alert_fail') : 'Gagal menyimpan pengaturan. Silakan coba lagi.';
+            alert(failMsg);
         }
-
-        const successMsg = window.i18n ? window.i18n.t('settings_alert_success') : 'Pengaturan berhasil disimpan.';
-        alert(successMsg);
-        window.location.href = 'dashboard.html';
     });
 
     window.addEventListener('DOMContentLoaded', () => {
         if (window.i18n) window.i18n.applyTranslations();
+        loadSettingsData();
     });
 
     window.addEventListener('languageChanged', () => {
         if (window.i18n) window.i18n.applyTranslations();
+        loadSettingsData();
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

@@ -11,6 +11,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Custom Web Components -->
+    <script src="js/api.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/components.js" defer></script>
 </head>
@@ -56,62 +57,11 @@
                                 <th data-i18n="activity_col_ip">Alamat IP</th>
                             </tr>
                             </tfoot>
-                            <tbody>
+                            <tbody id="activityTableBody">
                             <tr>
-                                <td>Jul 17, 2024 15:45:12</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-primary">Auth</span></td>
-                                <td>Successful administrator login</td>
-                                <td>192.168.1.10</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 17, 2024 15:20:44</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-success">Products</span></td>
-                                <td>Created new product: <strong>Wash & Fold Express</strong></td>
-                                <td>192.168.1.10</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 17, 2024 14:10:02</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-info text-dark">Orders</span></td>
-                                <td>Updated order <strong>#1531</strong> status to <em>Completed</em></td>
-                                <td>192.168.1.10</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 17, 2024 13:05:15</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-warning text-dark">Settings</span></td>
-                                <td>Updated operational tax rate to <strong>10%</strong></td>
-                                <td>192.168.1.12</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 16, 2024 18:30:22</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-info text-dark">Orders</span></td>
-                                <td>Assigned Courier <strong>Maya Putri</strong> to order <strong>#1530</strong></td>
-                                <td>192.168.1.10</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 16, 2024 17:15:39</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-success">Products</span></td>
-                                <td>Modified price of product <strong>Suit Jacket</strong> to <em>Rp12,000.00</em></td>
-                                <td>192.168.1.10</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 16, 2024 12:45:00</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-danger">Auth</span></td>
-                                <td>Logout operation requested and processed</td>
-                                <td>192.168.1.15</td>
-                            </tr>
-                            <tr>
-                                <td>Jul 15, 2024 09:30:11</td>
-                                <td>Bintang Ridwan</td>
-                                <td><span class="badge bg-warning text-dark">Settings</span></td>
-                                <td>Modified minimum laundry order limit to <em>Rp10,000.00</em></td>
-                                <td>192.168.1.10</td>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    <span data-i18n="activity_loading">Memuat log aktivitas...</span>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -123,26 +73,112 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script>
-    document.getElementById('clear-logs-btn').addEventListener('click', function() {
+    let activityDataTable = null;
+
+    async function loadActivityLogs() {
+        const tbody = document.getElementById('activityTableBody');
+        if (!tbody) return;
+
+        try {
+            const res = await apiFetch('/auth/login-history');
+            const logs = (res && res.data) ? res.data : [];
+
+            if (activityDataTable) {
+                activityDataTable.destroy();
+                activityDataTable = null;
+            }
+
+            if (logs.length === 0) {
+                const emptyText = window.i18n ? window.i18n.t('activity_empty') : 'Belum ada catatan aktivitas login atau sesi.';
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">${emptyText}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = logs.map(item => {
+                const dateObj = new Date(item.logged_at || item.CreatedAt);
+                const isEn = window.i18n && window.i18n.currentLang === 'en';
+                const dateStr = !isNaN(dateObj.getTime()) ? dateObj.toLocaleString(isEn ? 'en-US' : 'id-ID', {
+                    dateStyle: 'medium',
+                    timeStyle: 'medium'
+                }) : '-';
+
+                const username = (item.user && item.user.username) ? item.user.username : ((item.user && item.user.email) ? item.user.email : ('User #' + item.user_id));
+                
+                const role = (item.role || (item.user && item.user.role) || 'USER').toUpperCase();
+                let badgeClass = 'bg-secondary';
+                if (role === 'ADMIN') badgeClass = 'bg-primary';
+                else if (role === 'COURIER') badgeClass = 'bg-info text-dark';
+                else if (role === 'CUSTOMER') badgeClass = 'bg-success';
+
+                const actionText = item.success 
+                    ? (window.i18n ? window.i18n.t('activity_action_login_success') : 'Berhasil masuk ke dalam sistem')
+                    : (window.i18n ? window.i18n.t('activity_action_login_failed') : 'Gagal melakukan autentikasi login');
+
+                const ip = item.ip || '-';
+
+                return `
+                    <tr>
+                        <td>${dateStr}</td>
+                        <td class="fw-semibold">${escapeHtml(username)}</td>
+                        <td><span class="badge ${badgeClass}">${escapeHtml(role)}</span></td>
+                        <td>${escapeHtml(actionText)}</td>
+                        <td><code>${escapeHtml(ip)}</code></td>
+                    </tr>
+                `;
+            }).join('');
+
+            const tableEl = document.getElementById('datatablesSimple');
+            if (tableEl && !tableEl.classList.contains('dataTable-table')) {
+                activityDataTable = new simpleDatatables.DataTable(tableEl, {
+                    perPage: 10,
+                    perPageSelect: false
+                });
+            }
+        } catch (err) {
+            console.error('Error loading activity logs:', err);
+            const emptyText = window.i18n ? window.i18n.t('activity_empty') : 'Belum ada catatan aktivitas login atau sesi.';
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">${emptyText}</td></tr>`;
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    document.getElementById('clear-logs-btn').addEventListener('click', async function() {
         const confirmMsg = window.i18n ? window.i18n.t('activity_confirm_clear') : 'Apakah Anda yakin ingin membersihkan semua log sistem? Tindakan ini tidak dapat dibatalkan.';
         if (confirm(confirmMsg)) {
-            const successMsg = window.i18n ? window.i18n.t('activity_clear_success') : 'Log sistem berhasil dibersihkan.';
-            alert(successMsg);
-            location.reload();
+            try {
+                await apiFetch('/auth/login-history', { method: 'DELETE' });
+                const successMsg = window.i18n ? window.i18n.t('activity_clear_success') : 'Log sistem berhasil dibersihkan.';
+                alert(successMsg);
+                await loadActivityLogs();
+            } catch (err) {
+                console.error('Failed to clear logs:', err);
+                const failMsg = window.i18n ? window.i18n.t('activity_clear_fail') : 'Gagal membersihkan log sistem.';
+                alert(failMsg);
+            }
         }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
         if (window.i18n) window.i18n.applyTranslations();
+        loadActivityLogs();
     });
 
     window.addEventListener('languageChanged', () => {
         if (window.i18n) window.i18n.applyTranslations();
+        loadActivityLogs();
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="js/datatables-simple-demo.js"></script>
 </body>
 </html>
