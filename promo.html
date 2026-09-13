@@ -247,15 +247,18 @@
 
     <!-- Modal Konfirmasi Hapus Promo -->
     <div id="deleteModal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 400px; text-align: center; padding: 28px;">
-            <div style="width: 64px; height: 64px; border-radius: 50%; background: #FEE2E2; color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
-                <i class="fas fa-trash-alt"></i>
+        <div class="modal-box" style="max-width: 420px; text-align: center; padding: 28px; border-radius: 20px; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16); position: relative; background: #ffffff;">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" onclick="closeDeleteModal()" aria-label="Close" style="font-size: 0.8rem;"></button>
+            <div style="width: 58px; height: 58px; border-radius: 50%; background: #fef2f2; border: 1px solid #fee2e2; display: flex; align-items: center; justify-content: center; margin: 4px auto 16px;">
+                <i class="fas fa-trash-alt" style="color: #dc2626; font-size: 1.35rem;"></i>
             </div>
-            <h3 style="margin: 0 0 8px; color: #0F172A; font-size: 18px; font-weight: 700;" data-i18n="promo_delete_confirm_title">Hapus Promo Permanen?</h3>
-            <p style="color: #64748B; font-size: 14px; margin-bottom: 24px; line-height: 1.5;" id="deleteModalMessage" data-i18n="promo_delete_confirm_desc">Apakah Anda yakin ingin menghapus promo ini?</p>
-            <div style="display: flex; gap: 12px; justify-content: center;">
-                <button type="button" class="btn-action btn-edit" onclick="closeDeleteModal()" style="padding: 12px 20px; flex: 1; font-weight: 600;" data-i18n="btn_cancel">Batal</button>
-                <button type="button" class="btn-action btn-delete" id="btnConfirmDelete" style="padding: 12px 20px; flex: 1; font-weight: 600;" data-i18n="promo_delete_confirm_btn">Ya, Hapus Promo</button>
+            <h5 class="fw-bold mb-2" style="color: #0f172a; font-size: 1.2rem;" data-i18n="promo_delete_confirm_title">Hapus Promo?</h5>
+            <p class="text-muted mb-4" style="font-size: 0.9rem; line-height: 1.5;" id="deleteModalMessage" data-i18n="promo_delete_confirm_desc">Apakah Anda yakin ingin menghapus promo ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <div class="d-flex gap-2 w-100">
+                <button type="button" class="btn btn-light" onclick="closeDeleteModal()" style="flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem;" data-i18n="btn_cancel">Batal</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmDelete" style="flex: 1.2; background: #dc2626 !important; border: 1px solid #dc2626 !important; color: #ffffff !important; font-weight: 600 !important; border-radius: 10px !important; padding: 10px 16px !important; font-size: 0.9rem !important; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);" data-i18n="promo_delete_confirm_btn">
+                    <i class="fas fa-trash-alt me-1"></i> Ya, Hapus Promo
+                </button>
             </div>
         </div>
     </div>
@@ -340,8 +343,8 @@
                                 ${p.is_active ? activeText : inactiveText}
                             </span>
                             <div class="promo-actions">
-                                <button class="btn-action btn-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle || ''}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-edit"></i> ${editBtnText}</button>
-                                <button class="btn-action btn-delete" onclick="openDeleteModal(${p.id}, '${p.code}')"><i class="fas fa-trash"></i> ${deleteBtnText}</button>
+                                <button class="btn-card-action btn-card-action-edit" onclick="editPromo(${p.id}, '${p.code}', '${p.title}', '${p.subtitle || ''}', ${p.discount_percentage}, ${p.max_discount_amount}, ${p.min_order_amount}, ${p.is_active}, '${p.expired_at || ''}')"><i class="fas fa-pencil-alt"></i> ${editBtnText}</button>
+                                <button class="btn-card-action btn-card-action-delete" onclick="openDeleteModal(${p.id}, '${p.code}')"><i class="fas fa-trash-alt"></i> ${deleteBtnText}</button>
                             </div>
                         </div>
                     </div>

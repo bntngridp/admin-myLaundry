@@ -248,37 +248,49 @@ table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table t
 }
 
 /* ==========================================================================
-   PRODUCT TABLE BUTTON ACTION OVERRIDES
+   CARD ACTION BUTTONS (MODERN & MINIMALIST - CABANG, PROMO, ETC.)
    ========================================================================== */
-.produk-button-edit, a.btn-success, table .btn-success {
-    background-color: rgba(25, 135, 84, 0.1) !important;
-    color: #198754 !important;
-    border: 1px solid rgba(25, 135, 84, 0.15) !important;
+.btn-card-action {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    font-size: 0.82rem !important;
     font-weight: 500 !important;
-    border-radius: 6px !important;
-    padding: 5px 12px !important;
-    font-size: 0.8rem !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
-.produk-button-edit:hover, a.btn-success:hover, table .btn-success:hover {
-    background-color: #198754 !important;
-    color: #ffffff !important;
-    border-color: #198754 !important;
+
+.btn-card-action:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
 }
-.produk-button-hapus, button.btn-danger, table .btn-danger {
-    background-color: rgba(220, 53, 69, 0.1) !important;
-    color: #dc3545 !important;
-    border: 1px solid rgba(220, 53, 69, 0.15) !important;
-    font-weight: 500 !important;
-    border-radius: 6px !important;
-    padding: 5px 12px !important;
-    font-size: 0.8rem !important;
-    transition: all 0.2s ease !important;
+
+/* Edit pill button hover */
+.btn-card-action-edit:hover {
+    background-color: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #2563eb !important;
 }
-.produk-button-hapus:hover, button.btn-danger:hover, table .btn-danger:hover {
-    background-color: #dc3545 !important;
-    color: #ffffff !important;
-    border-color: #dc3545 !important;
+
+/* Delete pill button hover */
+.btn-card-action-delete:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fecaca !important;
+    color: #dc2626 !important;
+}
+
+.btn-card-action:active {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
 }
 
 /* ==========================================================================
