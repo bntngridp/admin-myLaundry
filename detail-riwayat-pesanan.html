@@ -304,14 +304,42 @@
 
     // Status classes for display badges
     const statusClasses = {
-        'pending': { bg: '#fee2e2', text: '#b91c1c', label: 'Pending' },
-        'awaiting payment': { bg: '#fef3c7', text: '#d97706', label: 'Awaiting Payment' },
-        'courier en route': { bg: '#dbeafe', text: '#1d4ed8', label: 'Courier En Route' },
-        'arrived': { bg: '#e0e7ff', text: '#4338ca', label: 'Courier Arrived' },
-        'in progress': { bg: '#e0f2fe', text: '#0369a1', label: 'In Progress' },
-        'completed': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
-        'done': { bg: '#dcfce7', text: '#15803d', label: 'Completed' },
-        'cancelled': { bg: '#fee2e2', text: '#b91c1c', label: 'Cancelled' }
+        // Selesai
+        'completed': { bg: '#dcfce7', text: '#15803d', label: 'Selesai' },
+        'done': { bg: '#dcfce7', text: '#15803d', label: 'Selesai' },
+        'selesai': { bg: '#dcfce7', text: '#15803d', label: 'Selesai' },
+
+        // Penjemputan
+        'penjemputan': { bg: '#fef3c7', text: '#b45309', label: 'Penjemputan' },
+        'dijemput': { bg: '#fef3c7', text: '#b45309', label: 'Penjemputan' },
+        'picking up': { bg: '#fef3c7', text: '#b45309', label: 'Penjemputan' },
+        'waiting for courier approval': { bg: '#fef3c7', text: '#b45309', label: 'Menunggu Kurir' },
+
+        // Diproses
+        'in progress': { bg: '#e0f2fe', text: '#0369a1', label: 'Sedang Diproses' },
+        'diproses': { bg: '#e0f2fe', text: '#0369a1', label: 'Sedang Diproses' },
+        'processing': { bg: '#e0f2fe', text: '#0369a1', label: 'Sedang Diproses' },
+        'dikonfirmasi': { bg: '#e0f2fe', text: '#0369a1', label: 'Dikonfirmasi' },
+
+        // Pengantaran
+        'delivering': { bg: '#ccfbf1', text: '#0f766e', label: 'Sedang Diantar' },
+        'pengantaran': { bg: '#ccfbf1', text: '#0f766e', label: 'Pengantaran' },
+        'diantar': { bg: '#ccfbf1', text: '#0f766e', label: 'Sedang Diantar' },
+
+        // Kurir OTW / Arrived
+        'courier en route': { bg: '#e0e7ff', text: '#4338ca', label: 'Kurir Dalam Perjalanan' },
+        'kurir on the way': { bg: '#e0e7ff', text: '#4338ca', label: 'Kurir On The Way' },
+        'arrived': { bg: '#e0e7ff', text: '#4338ca', label: 'Kurir Tiba' },
+
+        // Menunggu Pembayaran
+        'pending': { bg: '#f3e8ff', text: '#7e22ce', label: 'Menunggu Pembayaran' },
+        'awaiting payment': { bg: '#f3e8ff', text: '#7e22ce', label: 'Menunggu Pembayaran' },
+        'menunggu pembayaran': { bg: '#f3e8ff', text: '#7e22ce', label: 'Menunggu Pembayaran' },
+        'menunggu_pembayaran': { bg: '#f3e8ff', text: '#7e22ce', label: 'Menunggu Pembayaran' },
+
+        // Dibatalkan
+        'cancelled': { bg: '#fee2e2', text: '#b91c1c', label: 'Dibatalkan' },
+        'dibatalkan': { bg: '#fee2e2', text: '#b91c1c', label: 'Dibatalkan' }
     };
 
     async function loadOrderDetail() {
