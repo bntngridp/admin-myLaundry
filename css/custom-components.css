@@ -485,7 +485,7 @@ admin-sidebar, admin-navbar {
     margin-left: 225px !important;
     padding-left: 0 !important;
     transition: margin-left 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    padding-top: 56px !important;
+    padding-top: 0 !important;
 }
 
 #sidebarToggle {
