@@ -687,27 +687,42 @@
 
         <!-- ═══ Modal: Hapus Kurir ═════════════════════════════════════════════════ -->
         <div class="modal fade" id="deleteCourierModal" tabindex="-1" aria-labelledby="deleteCourierModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-                    <div class="modal-header bg-danger text-white py-3 px-4">
-                        <h5 class="modal-title fs-6 fw-bold" id="deleteCourierModalLabel">
-                            <i class="fas fa-exclamation-triangle me-2"></i>Hapus Akun Kurir
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-4 text-center">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+                <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16); overflow: hidden; background: #ffffff;">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10; font-size: 0.8rem;"></button>
+                    <div class="modal-body p-4 pt-4 text-center">
                         <div id="deleteCourierAlert"></div>
                         <input type="hidden" id="deleteCourierId">
-                        <i class="fas fa-user-slash fa-3x text-danger mb-3"></i>
-                        <p class="mb-1">Anda yakin ingin menghapus akun kurir:</p>
-                        <p class="fw-bold fs-6 mb-0" id="deleteCourierName"></p>
-                        <p class="small text-muted mt-2">Tindakan ini tidak dapat dibatalkan.</p>
-                    </div>
-                    <div class="modal-footer bg-light py-2 px-4 justify-content-center">
-                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-danger btn-sm rounded-pill px-4" id="btnConfirmDeleteCourier">
-                            <i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir
-                        </button>
+                        
+                        <!-- Danger Icon Circle -->
+                        <div style="width: 58px; height: 58px; border-radius: 50%; background-color: #fef2f2; border: 1px solid #fee2e2; display: flex; align-items: center; justify-content: center; margin: 4px auto 16px;">
+                            <i class="fas fa-trash-alt" style="color: #dc2626; font-size: 1.35rem;"></i>
+                        </div>
+                        
+                        <!-- Title & Subtitle -->
+                        <h5 class="fw-bold mb-2" id="deleteCourierModalLabel" style="color: #0f172a; font-size: 1.2rem;">Hapus Akun Kurir?</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.9rem; line-height: 1.5;">Apakah Anda yakin ingin menghapus akun kurir ini?</p>
+                        
+                        <!-- Courier Info Preview Card -->
+                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px; text-align: left;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background-color: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+                                <i class="fas fa-user-slash"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div class="fw-bold text-dark text-truncate" id="deleteCourierName" style="font-size: 0.95rem;">-</div>
+                                <div class="text-muted text-truncate" style="font-size: 0.78rem;">Tindakan ini tidak dapat dibatalkan</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 w-100">
+                            <button type="button" class="btn" data-bs-dismiss="modal" style="flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 16px; font-size: 0.9rem; transition: all 0.2s;">
+                                Batal
+                            </button>
+                            <button type="button" class="btn" id="btnConfirmDeleteCourier" style="flex: 1.2; background: #dc2626 !important; border: 1px solid #dc2626 !important; color: #ffffff !important; font-weight: 600 !important; border-radius: 10px !important; padding: 10px 16px !important; font-size: 0.9rem !important; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);">
+                                <i class="fas fa-trash-alt me-1"></i> Ya, Hapus Kurir
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

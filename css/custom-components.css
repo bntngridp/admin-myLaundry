@@ -145,7 +145,7 @@ table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table t
 /* ==========================================================================
    BADGES & BUTTONS (GLOBAL)
    ========================================================================== */
-.btn-success, .bg-success, .badge-success {
+.badge-success {
     background-color: rgba(25, 135, 84, 0.1) !important;
     color: #198754 !important;
     border: 1px solid rgba(25, 135, 84, 0.15) !important;
@@ -156,7 +156,7 @@ table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table t
     display: inline-block !important;
     text-align: center !important;
 }
-.btn-danger, .bg-danger, .badge-danger {
+.badge-danger {
     background-color: rgba(220, 53, 69, 0.1) !important;
     color: #dc3545 !important;
     border: 1px solid rgba(220, 53, 69, 0.15) !important;
@@ -167,7 +167,7 @@ table.table tbody tr:hover, #datatablesSimple tbody tr:hover, .datatable-table t
     display: inline-block !important;
     text-align: center !important;
 }
-.btn-warning, .bg-warning, .badge-warning {
+.badge-warning {
     background-color: rgba(25, 23, 57, 0.05) !important;
     color: #b28900 !important;
     border: 1px solid rgba(255, 193, 7, 0.15) !important;
@@ -1095,7 +1095,26 @@ a.dataTable-sorter:hover,
     color: #0007b0 !important;
     font-weight: 600 !important;
 }
-
-
-
-
+/* ==========================================================================
+   MODERN CONFIRMATION MODALS
+   ========================================================================== */
+#deleteCourierModal .btn-close {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+#deleteCourierModal .btn-close:hover {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+#deleteCourierModal .btn[data-bs-dismiss="modal"]:hover {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+#deleteCourierModal #btnConfirmDeleteCourier {
+    transition: all 0.2s ease !important;
+}
+#deleteCourierModal #btnConfirmDeleteCourier:hover {
+    background-color: #b91c1c !important;
+    border-color: #b91c1c !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35) !important;
+}
